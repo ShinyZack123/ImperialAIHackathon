@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.env.*
+!.env.example
+.databrickscfg
+token-cache.json
+data/
+artifacts/
+.databricks/
+tools/databricks
