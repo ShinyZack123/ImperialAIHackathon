@@ -1,0 +1,1109 @@
+{
+  "scenarioId": "B09-reserved-ports-link-down",
+  "title": "Two switch ports report link down permanently",
+  "expected": {
+    "flag": false,
+    "category": "expected_state",
+    "reason": "Ports have no connection/cable in the graph and are reserved for a future server under maint-0043. Down is their correct state.",
+    "naiveRuleThatWouldFalselyTrigger": "port.link_up = false",
+    "suppressionEvidence": [
+      "port has no connectedPortId / connectionId",
+      "port listed in an active reservation record"
+    ]
+  },
+  "window": {
+    "start": "2026-11-14T00:00:00Z",
+    "end": "2026-11-14T01:00:00Z",
+    "sampleIntervalSeconds": 300
+  },
+  "primaryEntityIds": [
+    "leaf-13-p05",
+    "leaf-13-p06"
+  ],
+  "affectedWorkloadIds": [],
+  "context": {
+    "maintenanceRecordId": "maint-0043"
+  },
+  "telemetry": [
+    {
+      "id": "tel-B09-reserved-ports-link-down-00001",
+      "entityId": "leaf-13-p05",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00002",
+      "entityId": "leaf-13-p05",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:05:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00003",
+      "entityId": "leaf-13-p05",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:10:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00004",
+      "entityId": "leaf-13-p05",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:15:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00005",
+      "entityId": "leaf-13-p05",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:20:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00006",
+      "entityId": "leaf-13-p05",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:25:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00007",
+      "entityId": "leaf-13-p05",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:30:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00008",
+      "entityId": "leaf-13-p05",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:35:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00009",
+      "entityId": "leaf-13-p05",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:40:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00010",
+      "entityId": "leaf-13-p05",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:45:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00011",
+      "entityId": "leaf-13-p05",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:50:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00012",
+      "entityId": "leaf-13-p05",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:55:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00013",
+      "entityId": "leaf-13-p05",
+      "metric": "port.rx_bytes_total",
+      "timestamp": "2026-11-14T00:00:00Z",
+      "value": 0,
+      "unit": "B",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00014",
+      "entityId": "leaf-13-p05",
+      "metric": "port.rx_bytes_total",
+      "timestamp": "2026-11-14T00:05:00Z",
+      "value": 0,
+      "unit": "B",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00015",
+      "entityId": "leaf-13-p05",
+      "metric": "port.rx_bytes_total",
+      "timestamp": "2026-11-14T00:10:00Z",
+      "value": 0,
+      "unit": "B",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00016",
+      "entityId": "leaf-13-p05",
+      "metric": "port.rx_bytes_total",
+      "timestamp": "2026-11-14T00:15:00Z",
+      "value": 0,
+      "unit": "B",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00017",
+      "entityId": "leaf-13-p05",
+      "metric": "port.rx_bytes_total",
+      "timestamp": "2026-11-14T00:20:00Z",
+      "value": 0,
+      "unit": "B",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00018",
+      "entityId": "leaf-13-p05",
+      "metric": "port.rx_bytes_total",
+      "timestamp": "2026-11-14T00:25:00Z",
+      "value": 0,
+      "unit": "B",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00019",
+      "entityId": "leaf-13-p05",
+      "metric": "port.rx_bytes_total",
+      "timestamp": "2026-11-14T00:30:00Z",
+      "value": 0,
+      "unit": "B",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00020",
+      "entityId": "leaf-13-p05",
+      "metric": "port.rx_bytes_total",
+      "timestamp": "2026-11-14T00:35:00Z",
+      "value": 0,
+      "unit": "B",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00021",
+      "entityId": "leaf-13-p05",
+      "metric": "port.rx_bytes_total",
+      "timestamp": "2026-11-14T00:40:00Z",
+      "value": 0,
+      "unit": "B",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00022",
+      "entityId": "leaf-13-p05",
+      "metric": "port.rx_bytes_total",
+      "timestamp": "2026-11-14T00:45:00Z",
+      "value": 0,
+      "unit": "B",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00023",
+      "entityId": "leaf-13-p05",
+      "metric": "port.rx_bytes_total",
+      "timestamp": "2026-11-14T00:50:00Z",
+      "value": 0,
+      "unit": "B",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00024",
+      "entityId": "leaf-13-p05",
+      "metric": "port.rx_bytes_total",
+      "timestamp": "2026-11-14T00:55:00Z",
+      "value": 0,
+      "unit": "B",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00025",
+      "entityId": "leaf-13-p06",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00026",
+      "entityId": "leaf-13-p06",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:05:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00027",
+      "entityId": "leaf-13-p06",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:10:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00028",
+      "entityId": "leaf-13-p06",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:15:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00029",
+      "entityId": "leaf-13-p06",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:20:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00030",
+      "entityId": "leaf-13-p06",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:25:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00031",
+      "entityId": "leaf-13-p06",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:30:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00032",
+      "entityId": "leaf-13-p06",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:35:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00033",
+      "entityId": "leaf-13-p06",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:40:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00034",
+      "entityId": "leaf-13-p06",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:45:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00035",
+      "entityId": "leaf-13-p06",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:50:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00036",
+      "entityId": "leaf-13-p06",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:55:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00037",
+      "entityId": "leaf-13-p06",
+      "metric": "port.rx_bytes_total",
+      "timestamp": "2026-11-14T00:00:00Z",
+      "value": 0,
+      "unit": "B",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00038",
+      "entityId": "leaf-13-p06",
+      "metric": "port.rx_bytes_total",
+      "timestamp": "2026-11-14T00:05:00Z",
+      "value": 0,
+      "unit": "B",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00039",
+      "entityId": "leaf-13-p06",
+      "metric": "port.rx_bytes_total",
+      "timestamp": "2026-11-14T00:10:00Z",
+      "value": 0,
+      "unit": "B",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00040",
+      "entityId": "leaf-13-p06",
+      "metric": "port.rx_bytes_total",
+      "timestamp": "2026-11-14T00:15:00Z",
+      "value": 0,
+      "unit": "B",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00041",
+      "entityId": "leaf-13-p06",
+      "metric": "port.rx_bytes_total",
+      "timestamp": "2026-11-14T00:20:00Z",
+      "value": 0,
+      "unit": "B",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00042",
+      "entityId": "leaf-13-p06",
+      "metric": "port.rx_bytes_total",
+      "timestamp": "2026-11-14T00:25:00Z",
+      "value": 0,
+      "unit": "B",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00043",
+      "entityId": "leaf-13-p06",
+      "metric": "port.rx_bytes_total",
+      "timestamp": "2026-11-14T00:30:00Z",
+      "value": 0,
+      "unit": "B",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00044",
+      "entityId": "leaf-13-p06",
+      "metric": "port.rx_bytes_total",
+      "timestamp": "2026-11-14T00:35:00Z",
+      "value": 0,
+      "unit": "B",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00045",
+      "entityId": "leaf-13-p06",
+      "metric": "port.rx_bytes_total",
+      "timestamp": "2026-11-14T00:40:00Z",
+      "value": 0,
+      "unit": "B",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00046",
+      "entityId": "leaf-13-p06",
+      "metric": "port.rx_bytes_total",
+      "timestamp": "2026-11-14T00:45:00Z",
+      "value": 0,
+      "unit": "B",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00047",
+      "entityId": "leaf-13-p06",
+      "metric": "port.rx_bytes_total",
+      "timestamp": "2026-11-14T00:50:00Z",
+      "value": 0,
+      "unit": "B",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00048",
+      "entityId": "leaf-13-p06",
+      "metric": "port.rx_bytes_total",
+      "timestamp": "2026-11-14T00:55:00Z",
+      "value": 0,
+      "unit": "B",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00049",
+      "entityId": "leaf-13-p03",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:00:00Z",
+      "value": true,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00050",
+      "entityId": "leaf-13-p03",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:05:00Z",
+      "value": true,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00051",
+      "entityId": "leaf-13-p03",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:10:00Z",
+      "value": true,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00052",
+      "entityId": "leaf-13-p03",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:15:00Z",
+      "value": true,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00053",
+      "entityId": "leaf-13-p03",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:20:00Z",
+      "value": true,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00054",
+      "entityId": "leaf-13-p03",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:25:00Z",
+      "value": true,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00055",
+      "entityId": "leaf-13-p03",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:30:00Z",
+      "value": true,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00056",
+      "entityId": "leaf-13-p03",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:35:00Z",
+      "value": true,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00057",
+      "entityId": "leaf-13-p03",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:40:00Z",
+      "value": true,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00058",
+      "entityId": "leaf-13-p03",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:45:00Z",
+      "value": true,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00059",
+      "entityId": "leaf-13-p03",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:50:00Z",
+      "value": true,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B09-reserved-ports-link-down-00060",
+      "entityId": "leaf-13-p03",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T00:55:00Z",
+      "value": true,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    }
+  ]
+}

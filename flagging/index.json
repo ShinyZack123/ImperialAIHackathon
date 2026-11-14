@@ -1,0 +1,243 @@
+{
+  "description": "Scenarios are independent snapshots: counters and step numbers do not carry over between files. Labelled example scenarios for a deterministic 'escalate to agent?' filter. Each scenario file = window of TelemetryRecord[] plus expected label. topology.json = shared baseline DataCenter object that all scenarios reference by ID.",
+  "datacenterId": "dc-lon-01",
+  "topologyFile": "topology.json",
+  "generatedBy": "gen.py (seeded, deterministic)",
+  "labelFormat": {
+    "expected.flag": "true = escalate to the low-level agent",
+    "expected.keySignals": "signals that justify flagging",
+    "expected.naiveRuleThatWouldFalselyTrigger": "the simple rule this benign case is designed to trip",
+    "expected.suppressionEvidence": "the context that shows it is benign"
+  },
+  "pairs": [
+    [
+      "B01-checkpoint-utilisation-dip",
+      "F10-checkpoint-overrun-storage-stall"
+    ],
+    [
+      "B04-maintenance-window-outage",
+      "F11-offline-after-maintenance-window"
+    ],
+    [
+      "B06-background-correctable-ecc",
+      "F02-gpu-ecc-xid-fell-off-bus"
+    ],
+    [
+      "B10-job-completed-gpus-idle",
+      "F07-hung-rank-silent-stall"
+    ],
+    [
+      "B05-single-spurious-sample",
+      "F01-gpu-thermal-throttle"
+    ]
+  ],
+  "scenarios": [
+    {
+      "scenarioId": "F01-gpu-thermal-throttle",
+      "title": "Single GPU thermal throttling turns it into a straggler for a 16-GPU training job",
+      "flag": true,
+      "severity": "critical",
+      "category": "thermal_throttling",
+      "file": "scenarios/F01-gpu-thermal-throttle.json",
+      "telemetryRecords": 2220
+    },
+    {
+      "scenarioId": "F02-gpu-ecc-xid-fell-off-bus",
+      "title": "Uncorrectable (double-bit) ECC error followed by GPU falling off the bus; training job crashes",
+      "flag": true,
+      "severity": "critical",
+      "category": "gpu_hardware_error",
+      "file": "scenarios/F02-gpu-ecc-xid-fell-off-bus.json",
+      "telemetryRecords": 1347
+    },
+    {
+      "scenarioId": "F03-network-link-crc-errors",
+      "title": "Rising CRC/symbol errors on a leaf-to-spine cable slow down distributed training",
+      "flag": true,
+      "severity": "warning",
+      "category": "network_link_degradation",
+      "file": "scenarios/F03-network-link-crc-errors.json",
+      "telemetryRecords": 520
+    },
+    {
+      "scenarioId": "F04-cdu-flow-drop",
+      "title": "CDU pump fault halves coolant flow; every liquid-cooled GPU on the loop heats up together",
+      "flag": true,
+      "severity": "critical",
+      "category": "facility_cooling_degradation",
+      "file": "scenarios/F04-cdu-flow-drop.json",
+      "telemetryRecords": 2160
+    },
+    {
+      "scenarioId": "F05-pdu-overload-redundancy-lost",
+      "title": "Rack 13 loses its B power feed; PDU A carries the whole rack and reaches 97% of capacity",
+      "flag": true,
+      "severity": "critical",
+      "category": "power_redundancy_loss",
+      "file": "scenarios/F05-pdu-overload-redundancy-lost.json",
+      "telemetryRecords": 390
+    },
+    {
+      "scenarioId": "F06-stale-telemetry-exporter-hung",
+      "title": "GPU metrics exporter hangs; collector keeps re-sending frozen values while the node serves traffic",
+      "flag": true,
+      "severity": "warning",
+      "category": "telemetry_quality",
+      "file": "scenarios/F06-stale-telemetry-exporter-hung.json",
+      "telemetryRecords": 1560
+    },
+    {
+      "scenarioId": "F07-hung-rank-silent-stall",
+      "title": "Training job silently stalls: one rank hangs, others spin at 100% 'utilisation' with no progress",
+      "flag": true,
+      "severity": "critical",
+      "category": "workload_stall",
+      "file": "scenarios/F07-hung-rank-silent-stall.json",
+      "telemetryRecords": 2115
+    },
+    {
+      "scenarioId": "F08-inference-sla-breach",
+      "title": "One of two inference replicas crash-loops; queue builds and p99 latency breaches the 800 ms SLA",
+      "flag": true,
+      "severity": "critical",
+      "category": "sla_breach",
+      "file": "scenarios/F08-inference-sla-breach.json",
+      "telemetryRecords": 601
+    },
+    {
+      "scenarioId": "F09-pcie-downtrain-replays",
+      "title": "GPU PCIe link drops from Gen5 x16 to Gen4 x8 with thousands of replay errors",
+      "flag": true,
+      "severity": "warning",
+      "category": "pcie_degradation",
+      "file": "scenarios/F09-pcie-downtrain-replays.json",
+      "telemetryRecords": 240
+    },
+    {
+      "scenarioId": "F10-checkpoint-overrun-storage-stall",
+      "title": "Checkpoint starts normally but stalls for 24 minutes because the storage metadata server hangs",
+      "flag": true,
+      "severity": "critical",
+      "category": "storage_stall",
+      "file": "scenarios/F10-checkpoint-overrun-storage-stall.json",
+      "telemetryRecords": 2100
+    },
+    {
+      "scenarioId": "F11-offline-after-maintenance-window",
+      "title": "Server still down 50+ minutes after its maintenance window closed and the change was marked complete",
+      "flag": true,
+      "severity": "warning",
+      "category": "failed_return_from_maintenance",
+      "file": "scenarios/F11-offline-after-maintenance-window.json",
+      "telemetryRecords": 90
+    },
+    {
+      "scenarioId": "F12-gradual-thermal-drift",
+      "title": "One GPU's temperature creeps up 14C over 3 days at unchanged power and coolant temperature",
+      "flag": true,
+      "severity": "warning",
+      "category": "gradual_degradation",
+      "file": "scenarios/F12-gradual-thermal-drift.json",
+      "telemetryRecords": 720
+    },
+    {
+      "scenarioId": "B01-checkpoint-utilisation-dip",
+      "title": "All 16 GPUs drop to ~4% utilisation for 90 seconds while the job writes a checkpoint",
+      "flag": false,
+      "severity": null,
+      "category": "expected_workload_phase",
+      "file": "scenarios/B01-checkpoint-utilisation-dip.json",
+      "telemetryRecords": 1380
+    },
+    {
+      "scenarioId": "B02-job-start-temperature-rise",
+      "title": "Fine-tune job starts: 8 idle GPUs warm from 34C to 67C and power jumps 6x in a minute",
+      "flag": false,
+      "severity": null,
+      "category": "expected_load_change",
+      "file": "scenarios/B02-job-start-temperature-rise.json",
+      "telemetryRecords": 975
+    },
+    {
+      "scenarioId": "B03-power-transient-within-limit",
+      "title": "GPU power briefly spikes to 688 W (limit 700 W) for 5-10 seconds during large matrix ops",
+      "flag": false,
+      "severity": null,
+      "category": "within_limits_transient",
+      "file": "scenarios/B03-power-transient-within-limit.json",
+      "telemetryRecords": 500
+    },
+    {
+      "scenarioId": "B04-maintenance-window-outage",
+      "title": "Server, its NICs and GPUs go offline for 98 minutes during a scheduled firmware upgrade",
+      "flag": false,
+      "severity": null,
+      "category": "planned_maintenance",
+      "file": "scenarios/B04-maintenance-window-outage.json",
+      "telemetryRecords": 144
+    },
+    {
+      "scenarioId": "B05-single-spurious-sample",
+      "title": "One temperature reading of 127C, marked invalid/low-confidence, between normal 66C readings",
+      "flag": false,
+      "severity": null,
+      "category": "sensor_noise",
+      "file": "scenarios/B05-single-spurious-sample.json",
+      "telemetryRecords": 120
+    },
+    {
+      "scenarioId": "B06-background-correctable-ecc",
+      "title": "A GPU logs 4 corrected single-bit memory errors in 24 hours with no uncorrectable errors",
+      "flag": false,
+      "severity": null,
+      "category": "background_error_rate",
+      "file": "scenarios/B06-background-correctable-ecc.json",
+      "telemetryRecords": 96
+    },
+    {
+      "scenarioId": "B07-diurnal-ambient-rise",
+      "title": "Hall inlet air temperature swings 20-25C over the day, tracking outdoor temperature",
+      "flag": false,
+      "severity": null,
+      "category": "seasonal_or_diurnal_pattern",
+      "file": "scenarios/B07-diurnal-ambient-rise.json",
+      "telemetryRecords": 240
+    },
+    {
+      "scenarioId": "B08-overnight-inference-traffic-drop",
+      "title": "Inference GPUs fall from 71% to 18% utilisation overnight as user traffic drops",
+      "flag": false,
+      "severity": null,
+      "category": "demand_driven_change",
+      "file": "scenarios/B08-overnight-inference-traffic-drop.json",
+      "telemetryRecords": 792
+    },
+    {
+      "scenarioId": "B09-reserved-ports-link-down",
+      "title": "Two switch ports report link down permanently",
+      "flag": false,
+      "severity": null,
+      "category": "expected_state",
+      "file": "scenarios/B09-reserved-ports-link-down.json",
+      "telemetryRecords": 60
+    },
+    {
+      "scenarioId": "B10-job-completed-gpus-idle",
+      "title": "Fine-tune job finishes; its 8 GPUs drop to 0% utilisation and cool down",
+      "flag": false,
+      "severity": null,
+      "category": "expected_workload_phase",
+      "file": "scenarios/B10-job-completed-gpus-idle.json",
+      "telemetryRecords": 1020
+    },
+    {
+      "scenarioId": "B11-operator-power-cap-demand-response",
+      "title": "GPU clocks drop and training slows 12% after a deliberate power cap for a grid demand-response event",
+      "flag": false,
+      "severity": null,
+      "category": "intended_intervention",
+      "file": "scenarios/B11-operator-power-cap-demand-response.json",
+      "telemetryRecords": 1381
+    }
+  ]
+}

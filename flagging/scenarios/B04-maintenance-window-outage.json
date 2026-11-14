@@ -1,0 +1,2728 @@
+{
+  "scenarioId": "B04-maintenance-window-outage",
+  "title": "Server, its NICs and GPUs go offline for 98 minutes during a scheduled firmware upgrade",
+  "expected": {
+    "flag": false,
+    "category": "planned_maintenance",
+    "reason": "All outages fall inside maint-0042 (02:00-04:00), on entities listed in the record, with matching expectedEffects. The node was drained first, so no workload was affected.",
+    "naiveRuleThatWouldFalselyTrigger": "node.up = false, link down, telemetry gap",
+    "suppressionEvidence": [
+      "entity in maintenance.entityIds",
+      "timestamp within scheduledStart..scheduledEnd",
+      "effect type in expectedEffects",
+      "no running workload allocated"
+    ]
+  },
+  "window": {
+    "start": "2026-11-14T02:00:00Z",
+    "end": "2026-11-14T03:45:00Z",
+    "sampleIntervalSeconds": 60
+  },
+  "primaryEntityIds": [
+    "server-13-02"
+  ],
+  "affectedWorkloadIds": [],
+  "context": {
+    "maintenanceRecordId": "maint-0042",
+    "note": "Pair with F11."
+  },
+  "telemetry": [
+    {
+      "id": "tel-B04-maintenance-window-outage-00001",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T02:00:00Z",
+      "value": true,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00002",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T02:03:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00003",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T02:06:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00004",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T02:09:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00005",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T02:12:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00006",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T02:15:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00007",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T02:18:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00008",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T02:21:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00009",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T02:24:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00010",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T02:27:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00011",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T02:30:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00012",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T02:33:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00013",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T02:36:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00014",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T02:39:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00015",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T02:42:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00016",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T02:45:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00017",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T02:48:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00018",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T02:51:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00019",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T02:54:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00020",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T02:57:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00021",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T03:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00022",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T03:03:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00023",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T03:06:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00024",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T03:09:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00025",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T03:12:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00026",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T03:15:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00027",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T03:18:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00028",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T03:21:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00029",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T03:24:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00030",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T03:27:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00031",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T03:30:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00032",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T03:33:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00033",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T03:36:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00034",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T03:39:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00035",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T03:42:00Z",
+      "value": true,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00036",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:00:00Z",
+      "value": true,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00037",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:03:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00038",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:06:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00039",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:09:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00040",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:12:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00041",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:15:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00042",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:18:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00043",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:21:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00044",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:24:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00045",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:27:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00046",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:30:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00047",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:33:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00048",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:36:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00049",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:39:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00050",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:42:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00051",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:45:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00052",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:48:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00053",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:51:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00054",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:54:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00055",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:57:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00056",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00057",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:03:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00058",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:06:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00059",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:09:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00060",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:12:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00061",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:15:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00062",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:18:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00063",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:21:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00064",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:24:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00065",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:27:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00066",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:30:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00067",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:33:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00068",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:36:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00069",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:39:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00070",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:42:00Z",
+      "value": true,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00071",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:00:00Z",
+      "value": true,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00072",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:03:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00073",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:06:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00074",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:09:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00075",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:12:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00076",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:15:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00077",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:18:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00078",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:21:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00079",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:24:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00080",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:27:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00081",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:30:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00082",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:33:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00083",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:36:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00084",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:39:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00085",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:42:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00086",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:45:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00087",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:48:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00088",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:51:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00089",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:54:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00090",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:57:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00091",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00092",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:03:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00093",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:06:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00094",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:09:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00095",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:12:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00096",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:15:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00097",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:18:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00098",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:21:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00099",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:24:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00100",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:27:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00101",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:30:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00102",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:33:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00103",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:36:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00104",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:39:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00105",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:42:00Z",
+      "value": true,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00106",
+      "entityId": "gpu-13-02-00",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T02:00:00Z",
+      "value": 32.5,
+      "unit": "C",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00107",
+      "entityId": "gpu-13-02-00",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T03:42:00Z",
+      "value": 32.7,
+      "unit": "C",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00108",
+      "entityId": "gpu-13-02-01",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T02:00:00Z",
+      "value": 33.2,
+      "unit": "C",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00109",
+      "entityId": "gpu-13-02-01",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T03:42:00Z",
+      "value": 33.2,
+      "unit": "C",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00110",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:00:00Z",
+      "value": true,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00111",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:03:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00112",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:06:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00113",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:09:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00114",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:12:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00115",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:15:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00116",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:18:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00117",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:21:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00118",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:24:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00119",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:27:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00120",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:30:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00121",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:33:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00122",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:36:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00123",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:39:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00124",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:42:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00125",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:45:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00126",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:48:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00127",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:51:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00128",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:54:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00129",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T02:57:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00130",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00131",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:03:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00132",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:06:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00133",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:09:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00134",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:12:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00135",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:15:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00136",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:18:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00137",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:21:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00138",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:24:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00139",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:27:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00140",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:30:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00141",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:33:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00142",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:36:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00143",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:39:00Z",
+      "value": false,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B04-maintenance-window-outage-00144",
+      "entityId": "leaf-13",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T03:42:00Z",
+      "value": true,
+      "unit": "bool",
+      "labels": {
+        "port": "leaf-13-p03"
+      },
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    }
+  ]
+}

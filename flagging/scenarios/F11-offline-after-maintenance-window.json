@@ -1,0 +1,1660 @@
+{
+  "scenarioId": "F11-offline-after-maintenance-window",
+  "title": "Server still down 50+ minutes after its maintenance window closed and the change was marked complete",
+  "expected": {
+    "flag": true,
+    "severity": "warning",
+    "category": "failed_return_from_maintenance",
+    "reason": "maint-0042 ended at 03:41 (marked completed) but the node is stuck in POST (boot self-test) at PCI init, likely a bad firmware flash. A queued job is waiting for it.",
+    "keySignals": [
+      "entity offline AND now > maintenance.scheduledEnd (+ grace)",
+      "maintenance.status = completed but entity not healthy",
+      "bmc.post_code not advancing",
+      "a workload is queued on the entity"
+    ],
+    "rootCauseEntityId": "server-13-02",
+    "escalateTo": "agent-rack-13"
+  },
+  "window": {
+    "start": "2026-11-14T04:30:00Z",
+    "end": "2026-11-14T05:00:00Z",
+    "sampleIntervalSeconds": 60
+  },
+  "primaryEntityIds": [
+    "server-13-02"
+  ],
+  "affectedWorkloadIds": [
+    "finetune-job-311"
+  ],
+  "context": {
+    "maintenanceRecordId": "maint-0042",
+    "note": "Pair with B04: same signals, but outside the window."
+  },
+  "stateAtWindowEnd": {
+    "server-13-02": {
+      "operationalStatus": "failed"
+    }
+  },
+  "telemetry": [
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00001",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:30:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00002",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:31:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00003",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:32:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00004",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:33:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00005",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:34:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00006",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:35:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00007",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:36:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00008",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:37:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00009",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:38:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00010",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:39:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00011",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:40:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00012",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:41:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00013",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:42:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00014",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:43:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00015",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:44:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00016",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:45:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00017",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:46:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00018",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:47:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00019",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:48:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00020",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:49:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00021",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:50:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00022",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:51:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00023",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:52:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00024",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:53:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00025",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:54:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00026",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:55:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00027",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:56:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00028",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:57:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00029",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:58:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00030",
+      "entityId": "server-13-02",
+      "metric": "node.up",
+      "timestamp": "2026-11-14T04:59:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00031",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:30:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00032",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:31:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00033",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:32:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00034",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:33:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00035",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:34:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00036",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:35:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00037",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:36:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00038",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:37:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00039",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:38:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00040",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:39:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00041",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:40:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00042",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:41:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00043",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:42:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00044",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:43:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00045",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:44:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00046",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:45:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00047",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:46:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00048",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:47:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00049",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:48:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00050",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:49:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00051",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:50:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00052",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:51:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00053",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:52:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00054",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:53:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00055",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:54:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00056",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:55:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00057",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:56:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00058",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:57:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00059",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:58:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00060",
+      "entityId": "server-13-02",
+      "metric": "bmc.power_state",
+      "timestamp": "2026-11-14T04:59:00Z",
+      "value": "on",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00061",
+      "entityId": "server-13-02",
+      "metric": "bmc.post_code",
+      "timestamp": "2026-11-14T04:30:00Z",
+      "value": "0x92 (PCI bus init) - stuck",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00062",
+      "entityId": "server-13-02",
+      "metric": "bmc.post_code",
+      "timestamp": "2026-11-14T04:35:00Z",
+      "value": "0x92 (PCI bus init) - stuck",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00063",
+      "entityId": "server-13-02",
+      "metric": "bmc.post_code",
+      "timestamp": "2026-11-14T04:40:00Z",
+      "value": "0x92 (PCI bus init) - stuck",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00064",
+      "entityId": "server-13-02",
+      "metric": "bmc.post_code",
+      "timestamp": "2026-11-14T04:45:00Z",
+      "value": "0x92 (PCI bus init) - stuck",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00065",
+      "entityId": "server-13-02",
+      "metric": "bmc.post_code",
+      "timestamp": "2026-11-14T04:50:00Z",
+      "value": "0x92 (PCI bus init) - stuck",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00066",
+      "entityId": "server-13-02",
+      "metric": "bmc.post_code",
+      "timestamp": "2026-11-14T04:55:00Z",
+      "value": "0x92 (PCI bus init) - stuck",
+      "unit": null,
+      "source": {
+        "connectorId": "node-exporter-01",
+        "system": "Prometheus node_exporter",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00067",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T04:30:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00068",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T04:35:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00069",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T04:40:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00070",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T04:45:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00071",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T04:50:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00072",
+      "entityId": "nic-13-02-01",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T04:55:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00073",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T04:30:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00074",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T04:35:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00075",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T04:40:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00076",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T04:45:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00077",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T04:50:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00078",
+      "entityId": "nic-13-02-02",
+      "metric": "port.link_up",
+      "timestamp": "2026-11-14T04:55:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00079",
+      "entityId": "finetune-job-311",
+      "metric": "workload.status",
+      "timestamp": "2026-11-14T04:30:00Z",
+      "value": "queued",
+      "unit": null,
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00080",
+      "entityId": "finetune-job-311",
+      "metric": "workload.status",
+      "timestamp": "2026-11-14T04:35:00Z",
+      "value": "queued",
+      "unit": null,
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00081",
+      "entityId": "finetune-job-311",
+      "metric": "workload.status",
+      "timestamp": "2026-11-14T04:40:00Z",
+      "value": "queued",
+      "unit": null,
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00082",
+      "entityId": "finetune-job-311",
+      "metric": "workload.status",
+      "timestamp": "2026-11-14T04:45:00Z",
+      "value": "queued",
+      "unit": null,
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00083",
+      "entityId": "finetune-job-311",
+      "metric": "workload.status",
+      "timestamp": "2026-11-14T04:50:00Z",
+      "value": "queued",
+      "unit": null,
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00084",
+      "entityId": "finetune-job-311",
+      "metric": "workload.status",
+      "timestamp": "2026-11-14T04:55:00Z",
+      "value": "queued",
+      "unit": null,
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00085",
+      "entityId": "finetune-job-311",
+      "metric": "workload.queue_wait_s",
+      "timestamp": "2026-11-14T04:30:00Z",
+      "value": 10800.0,
+      "unit": "s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00086",
+      "entityId": "finetune-job-311",
+      "metric": "workload.queue_wait_s",
+      "timestamp": "2026-11-14T04:35:00Z",
+      "value": 11100.0,
+      "unit": "s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00087",
+      "entityId": "finetune-job-311",
+      "metric": "workload.queue_wait_s",
+      "timestamp": "2026-11-14T04:40:00Z",
+      "value": 11400.0,
+      "unit": "s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00088",
+      "entityId": "finetune-job-311",
+      "metric": "workload.queue_wait_s",
+      "timestamp": "2026-11-14T04:45:00Z",
+      "value": 11700.0,
+      "unit": "s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00089",
+      "entityId": "finetune-job-311",
+      "metric": "workload.queue_wait_s",
+      "timestamp": "2026-11-14T04:50:00Z",
+      "value": 12000.0,
+      "unit": "s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F11-offline-after-maintenance-window-00090",
+      "entityId": "finetune-job-311",
+      "metric": "workload.queue_wait_s",
+      "timestamp": "2026-11-14T04:55:00Z",
+      "value": 12300.0,
+      "unit": "s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    }
+  ]
+}

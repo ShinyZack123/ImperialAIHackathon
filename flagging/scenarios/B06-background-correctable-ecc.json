@@ -1,0 +1,1760 @@
+{
+  "scenarioId": "B06-background-correctable-ecc",
+  "title": "A GPU logs 4 corrected single-bit memory errors in 24 hours with no uncorrectable errors",
+  "expected": {
+    "flag": false,
+    "category": "background_error_rate",
+    "reason": "Single-bit errors are corrected by ECC hardware and a few per day is normal for 80 GB of HBM. No double-bit errors, no retired pages, no pending row remaps.",
+    "naiveRuleThatWouldFalselyTrigger": "any increase in an error counter",
+    "suppressionEvidence": [
+      "only ecc_sbe increments",
+      "rate < SBE threshold (e.g. 100/day)",
+      "ecc_dbe = 0",
+      "retired_pages flat"
+    ]
+  },
+  "window": {
+    "start": "2026-11-14T00:00:00Z",
+    "end": "2026-11-15T00:00:00Z",
+    "sampleIntervalSeconds": 3600
+  },
+  "primaryEntityIds": [
+    "gpu-12-02-03"
+  ],
+  "affectedWorkloadIds": [
+    "training-job-104"
+  ],
+  "context": {
+    "note": "Contrast with F02: there SBE jumped 12 in 1.5 min and was followed by a DBE."
+  },
+  "telemetry": [
+    {
+      "id": "tel-B06-background-correctable-ecc-00001",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_sbe_total",
+      "timestamp": "2026-11-14T00:00:00Z",
+      "value": 37,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00002",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_sbe_total",
+      "timestamp": "2026-11-14T01:00:00Z",
+      "value": 37,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00003",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_sbe_total",
+      "timestamp": "2026-11-14T02:00:00Z",
+      "value": 38,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00004",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_sbe_total",
+      "timestamp": "2026-11-14T03:00:00Z",
+      "value": 38,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00005",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_sbe_total",
+      "timestamp": "2026-11-14T04:00:00Z",
+      "value": 38,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00006",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_sbe_total",
+      "timestamp": "2026-11-14T05:00:00Z",
+      "value": 38,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00007",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_sbe_total",
+      "timestamp": "2026-11-14T06:00:00Z",
+      "value": 38,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00008",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_sbe_total",
+      "timestamp": "2026-11-14T07:00:00Z",
+      "value": 39,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00009",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_sbe_total",
+      "timestamp": "2026-11-14T08:00:00Z",
+      "value": 39,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00010",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_sbe_total",
+      "timestamp": "2026-11-14T09:00:00Z",
+      "value": 39,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00011",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_sbe_total",
+      "timestamp": "2026-11-14T10:00:00Z",
+      "value": 39,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00012",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_sbe_total",
+      "timestamp": "2026-11-14T11:00:00Z",
+      "value": 39,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00013",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_sbe_total",
+      "timestamp": "2026-11-14T12:00:00Z",
+      "value": 39,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00014",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_sbe_total",
+      "timestamp": "2026-11-14T13:00:00Z",
+      "value": 39,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00015",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_sbe_total",
+      "timestamp": "2026-11-14T14:00:00Z",
+      "value": 40,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00016",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_sbe_total",
+      "timestamp": "2026-11-14T15:00:00Z",
+      "value": 40,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00017",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_sbe_total",
+      "timestamp": "2026-11-14T16:00:00Z",
+      "value": 40,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00018",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_sbe_total",
+      "timestamp": "2026-11-14T17:00:00Z",
+      "value": 40,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00019",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_sbe_total",
+      "timestamp": "2026-11-14T18:00:00Z",
+      "value": 40,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00020",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_sbe_total",
+      "timestamp": "2026-11-14T19:00:00Z",
+      "value": 40,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00021",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_sbe_total",
+      "timestamp": "2026-11-14T20:00:00Z",
+      "value": 40,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00022",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_sbe_total",
+      "timestamp": "2026-11-14T21:00:00Z",
+      "value": 41,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00023",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_sbe_total",
+      "timestamp": "2026-11-14T22:00:00Z",
+      "value": 41,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00024",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_sbe_total",
+      "timestamp": "2026-11-14T23:00:00Z",
+      "value": 41,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00025",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_dbe_total",
+      "timestamp": "2026-11-14T00:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00026",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_dbe_total",
+      "timestamp": "2026-11-14T01:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00027",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_dbe_total",
+      "timestamp": "2026-11-14T02:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00028",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_dbe_total",
+      "timestamp": "2026-11-14T03:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00029",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_dbe_total",
+      "timestamp": "2026-11-14T04:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00030",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_dbe_total",
+      "timestamp": "2026-11-14T05:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00031",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_dbe_total",
+      "timestamp": "2026-11-14T06:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00032",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_dbe_total",
+      "timestamp": "2026-11-14T07:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00033",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_dbe_total",
+      "timestamp": "2026-11-14T08:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00034",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_dbe_total",
+      "timestamp": "2026-11-14T09:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00035",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_dbe_total",
+      "timestamp": "2026-11-14T10:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00036",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_dbe_total",
+      "timestamp": "2026-11-14T11:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00037",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_dbe_total",
+      "timestamp": "2026-11-14T12:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00038",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_dbe_total",
+      "timestamp": "2026-11-14T13:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00039",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_dbe_total",
+      "timestamp": "2026-11-14T14:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00040",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_dbe_total",
+      "timestamp": "2026-11-14T15:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00041",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_dbe_total",
+      "timestamp": "2026-11-14T16:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00042",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_dbe_total",
+      "timestamp": "2026-11-14T17:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00043",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_dbe_total",
+      "timestamp": "2026-11-14T18:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00044",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_dbe_total",
+      "timestamp": "2026-11-14T19:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00045",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_dbe_total",
+      "timestamp": "2026-11-14T20:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00046",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_dbe_total",
+      "timestamp": "2026-11-14T21:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00047",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_dbe_total",
+      "timestamp": "2026-11-14T22:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00048",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.ecc_dbe_total",
+      "timestamp": "2026-11-14T23:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00049",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.retired_pages_total",
+      "timestamp": "2026-11-14T00:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00050",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.retired_pages_total",
+      "timestamp": "2026-11-14T01:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00051",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.retired_pages_total",
+      "timestamp": "2026-11-14T02:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00052",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.retired_pages_total",
+      "timestamp": "2026-11-14T03:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00053",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.retired_pages_total",
+      "timestamp": "2026-11-14T04:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00054",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.retired_pages_total",
+      "timestamp": "2026-11-14T05:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00055",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.retired_pages_total",
+      "timestamp": "2026-11-14T06:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00056",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.retired_pages_total",
+      "timestamp": "2026-11-14T07:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00057",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.retired_pages_total",
+      "timestamp": "2026-11-14T08:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00058",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.retired_pages_total",
+      "timestamp": "2026-11-14T09:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00059",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.retired_pages_total",
+      "timestamp": "2026-11-14T10:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00060",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.retired_pages_total",
+      "timestamp": "2026-11-14T11:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00061",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.retired_pages_total",
+      "timestamp": "2026-11-14T12:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00062",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.retired_pages_total",
+      "timestamp": "2026-11-14T13:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00063",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.retired_pages_total",
+      "timestamp": "2026-11-14T14:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00064",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.retired_pages_total",
+      "timestamp": "2026-11-14T15:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00065",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.retired_pages_total",
+      "timestamp": "2026-11-14T16:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00066",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.retired_pages_total",
+      "timestamp": "2026-11-14T17:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00067",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.retired_pages_total",
+      "timestamp": "2026-11-14T18:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00068",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.retired_pages_total",
+      "timestamp": "2026-11-14T19:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00069",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.retired_pages_total",
+      "timestamp": "2026-11-14T20:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00070",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.retired_pages_total",
+      "timestamp": "2026-11-14T21:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00071",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.retired_pages_total",
+      "timestamp": "2026-11-14T22:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00072",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.retired_pages_total",
+      "timestamp": "2026-11-14T23:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00073",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.remapped_rows_pending",
+      "timestamp": "2026-11-14T00:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00074",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.remapped_rows_pending",
+      "timestamp": "2026-11-14T01:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00075",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.remapped_rows_pending",
+      "timestamp": "2026-11-14T02:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00076",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.remapped_rows_pending",
+      "timestamp": "2026-11-14T03:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00077",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.remapped_rows_pending",
+      "timestamp": "2026-11-14T04:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00078",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.remapped_rows_pending",
+      "timestamp": "2026-11-14T05:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00079",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.remapped_rows_pending",
+      "timestamp": "2026-11-14T06:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00080",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.remapped_rows_pending",
+      "timestamp": "2026-11-14T07:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00081",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.remapped_rows_pending",
+      "timestamp": "2026-11-14T08:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00082",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.remapped_rows_pending",
+      "timestamp": "2026-11-14T09:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00083",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.remapped_rows_pending",
+      "timestamp": "2026-11-14T10:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00084",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.remapped_rows_pending",
+      "timestamp": "2026-11-14T11:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00085",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.remapped_rows_pending",
+      "timestamp": "2026-11-14T12:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00086",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.remapped_rows_pending",
+      "timestamp": "2026-11-14T13:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00087",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.remapped_rows_pending",
+      "timestamp": "2026-11-14T14:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00088",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.remapped_rows_pending",
+      "timestamp": "2026-11-14T15:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00089",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.remapped_rows_pending",
+      "timestamp": "2026-11-14T16:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00090",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.remapped_rows_pending",
+      "timestamp": "2026-11-14T17:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00091",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.remapped_rows_pending",
+      "timestamp": "2026-11-14T18:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00092",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.remapped_rows_pending",
+      "timestamp": "2026-11-14T19:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00093",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.remapped_rows_pending",
+      "timestamp": "2026-11-14T20:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00094",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.remapped_rows_pending",
+      "timestamp": "2026-11-14T21:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00095",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.remapped_rows_pending",
+      "timestamp": "2026-11-14T22:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B06-background-correctable-ecc-00096",
+      "entityId": "gpu-12-02-03",
+      "metric": "gpu.remapped_rows_pending",
+      "timestamp": "2026-11-14T23:00:00Z",
+      "value": false,
+      "unit": "bool",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    }
+  ]
+}

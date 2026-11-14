@@ -1,0 +1,211 @@
+{
+  "F01-gpu-thermal-throttle": {
+    "expectedFlag": true,
+    "flagged": true,
+    "why": "fired: cusum, hard_limit, peer_z, robust_z, state",
+    "messages": [
+      "[CRITICAL] gpu-12-02-05 (Rack 12 / Server 02 / GPU 5): gpu.temperature_c above its critical limit (87, from thermal.thermalLimitC) for 15 min, peak 90.9.\nCorroborating evidence:\n  - gpu-12-02-05 (Rack 12 / Server 02 / GPU 5): temperature drifting up relative to identical peers: offset +0.0C -> +22.1C over 29 min (CUSUM alarm at 09:09) [CUSUM change detection on peer-relative residual]\n  - gpu-12-02-05 (Rack 12 / Server 02 / GPU 5): gpu.temperature_c 90.3 vs median 67.2 of the other GPUs in training-job-104 (+23, peer z=19) for 19 min [peer comparison: robust z across GPUs doing identical work]\n  - gpu-12-02-05 (Rack 12 / Server 02 / GPU 5): hardware throttling (HW_THERMAL_SLOWDOWN) for 16 min [hardware throttle reason (class from the metric catalog), persistent]\n  - training-job-104 (LLM-70B pretrain run 4): workload.step_time_ms rose from baseline 2410 to 3184 (+32%, robust z=52) for 15 min [robust z-score (median/MAD) vs stored baseline from fault-free runs, with 5-min persistence]\nWhy flagged: hard limit from the metric catalog, with persistence window; CUSUM change detection on peer-relative residual; peer comparison: robust z across GPUs doing identical work; hardware throttle reason (class from the metric catalog), persistent; robust z-score (median/MAD) vs stored baseline from fault-free runs, with 5-min persistence.\nNot explained by: maintenance window, workload phase (checkpoint/finished), our own interventions, invalid or stale samples, ports unused by design.\nContext: Peers in the same job are normal, so this is local to the GPU (not facility cooling or workload-wide).\nBlast radius: training-job-104 (training, priority 70, status running, 16 GPUs on server-12-01, server-12-02).\nWindow: 2026-11-14 09:09 to 2026-11-14 09:29 UTC. Likely root entity: gpu-12-02-05."
+    ],
+    "suppressed": []
+  },
+  "F02-gpu-ecc-xid-fell-off-bus": {
+    "expectedFlag": true,
+    "flagged": true,
+    "why": "fired: event, hard_counter, poisson_rate, state, telemetry",
+    "messages": [
+      "[CRITICAL] gpu-12-01-03 (Rack 12 / Server 01 / GPU 3): gpu.ecc_dbe_total 0 -> 1 at 11:08 (this counter should never increase).\nCorroborating evidence:\n  - gpu-12-01-03 (Rack 12 / Server 01 / GPU 3): XID 48 (Double-bit ECC error (uncorrectable memory error)) at 11:08 [error-code table in the metric catalog]\n  - gpu-12-01-03 (Rack 12 / Server 01 / GPU 3): XID 79 (GPU has fallen off the bus (no longer reachable)) at 11:09 [error-code table in the metric catalog]\n  - gpu-12-01-03 (Rack 12 / Server 01 / GPU 3): gpu.ecc_sbe_total increased by 12 in 2 min vs ~0.1 expected at the normal rate (Poisson p<3e-20) [Poisson rate test on error counter vs measured normal rate]\n  - training-job-104 (LLM-70B pretrain run 4): workload status went to failed at 11:11 [state change to a fault value]\n  - gpu-12-01-03 (Rack 12 / Server 01 / GPU 3): gpu.temperature_c frozen/stale for 10 min (identical or stale-marked values) [frozen-value / staleness detector]\nWhy flagged: any-increment rule from the metric catalog (never normal); error-code table in the metric catalog; Poisson rate test on error counter vs measured normal rate; state change to a fault value; frozen-value / staleness detector.\nNot explained by: maintenance window, workload phase (checkpoint/finished), our own interventions, invalid or stale samples, ports unused by design.\nBlast radius: training-job-104 (training, priority 70, status failed, 16 GPUs on server-12-01, server-12-02).\nWindow: 2026-11-14 11:07 to 2026-11-14 11:19 UTC. Likely root entity: gpu-12-01-03."
+    ],
+    "suppressed": [
+      "quality: 11 sample(s) on gpu-12-01-03 marked invalid/stale/low-confidence or physically impossible: ignored"
+    ]
+  },
+  "F03-network-link-crc-errors": {
+    "expectedFlag": true,
+    "flagged": true,
+    "why": "fired: hard_counter, poisson_rate, robust_z",
+    "messages": [
+      "[WARNING] leaf-12-p07 (port7): port.crc_errors_total increased by 310 in 5 min vs ~5 expected at the normal rate (Poisson p<1e-300).\nCorroborating evidence:\n  - leaf-12-p07 (port7): port.symbol_errors_total increased by 52000 in 5 min vs ~5e+03 expected at the normal rate (Poisson p<1e-300) [Poisson rate test on error counter vs measured normal rate]\n  - leaf-12-p07 (port7): port.link_downed_total 3 -> 4 at 13:25 (this counter should never increase) [any-increment rule from the metric catalog (never normal)]\n  - training-job-104 (LLM-70B pretrain run 4): workload.step_time_ms rose from baseline 2410 to 2764 (+15%, robust z=24) for 27 min [robust z-score (median/MAD) vs stored baseline from fault-free runs, with 5-min persistence]\n  - training-job-104 (LLM-70B pretrain run 4): workload.comm_overhead_percent rose from baseline 14 to 24.1 (+72%, robust z=23) for 26 min [robust z-score (median/MAD) vs stored baseline from fault-free runs, with 5-min persistence]\nWhy flagged: Poisson rate test on error counter vs measured normal rate; any-increment rule from the metric catalog (never normal); robust z-score (median/MAD) vs stored baseline from fault-free runs, with 5-min persistence.\nNot explained by: maintenance window, workload phase (checkpoint/finished), our own interventions, invalid or stale samples, ports unused by design.\nContext: Link leaf-12-p07 <-> spine-01-p01 via cable-leaf12-p07; if the far end is clean, suspect the cable/optic.\nBlast radius: training-job-104 (training, priority 70, status running, 16 GPUs on server-12-01, server-12-02).\nWindow: 2026-11-14 13:06 to 2026-11-14 13:39 UTC. Likely root entity: leaf-12-p07."
+    ],
+    "suppressed": []
+  },
+  "F04-cdu-flow-drop": {
+    "expectedFlag": true,
+    "flagged": true,
+    "why": "fired: hard_limit, robust_z, state",
+    "messages": [
+      "[CRITICAL] cdu-02 (CDU 2 (racks 12-13)): cdu.pump_a_status = fault since 15:08.\nCorroborating evidence:\n  - cdu-02 (CDU 2 (racks 12-13)): cdu.flow_lpm below its critical limit (69, 60% of flowRateLitersPerMinute 115) for 28 min, lowest 55.9 [hard limit from the metric catalog, with persistence window]\n  - cdu-02 (CDU 2 (racks 12-13)): cdu.differential_pressure_kpa below its critical limit (130) for 11 min, lowest 127.2 [hard limit from the metric catalog, with persistence window]\n  - cdu-02 (CDU 2 (racks 12-13)): cdu.flow_lpm fell from baseline 114.9 to 55.9 (-51%, robust z=50) for 30 min [robust z-score (median/MAD) vs stored baseline from fault-free runs, with 5-min persistence]\n  - cdu-02 (CDU 2 (racks 12-13)): cdu.differential_pressure_kpa fell from baseline 210.1 to 124.2 (-41%, robust z=41) for 30 min [robust z-score (median/MAD) vs stored baseline from fault-free runs, with 5-min persistence]\n  - cdu-02 (CDU 2 (racks 12-13)): cdu.return_temp_c rose from baseline 40 to 50.1 (+25%, robust z=25) for 29 min [robust z-score (median/MAD) vs stored baseline from fault-free runs, with 5-min persistence]\n  - cdu-02 (CDU 2 (racks 12-13)): cdu.return_temp_c above its warning limit (45) for 29 min, peak 50.1 [hard limit from the metric catalog, with persistence window]\nWhy flagged: state change to a fault value; hard limit from the metric catalog, with persistence window; robust z-score (median/MAD) vs stored baseline from fault-free runs, with 5-min persistence.\nNot explained by: maintenance window, workload phase (checkpoint/finished), our own interventions, invalid or stale samples, ports unused by design.\nContext: 32 GPUs depend on this unit via the coolant loop; expect correlated temperature rise across them.\nBlast radius: finetune-job-311 (fine_tuning, priority 40, status queued, 8 GPUs on server-13-02); inference-svc-207 (inference, priority 90, status running, 8 GPUs on server-13-01); training-job-104 (training, priority 70, status running, 16 GPUs on server-12-01, server-12-02).\nWindow: 2026-11-14 15:08 to 2026-11-14 15:39 UTC. Likely root entity: cdu-02."
+    ],
+    "suppressed": []
+  },
+  "F05-pdu-overload-redundancy-lost": {
+    "expectedFlag": true,
+    "flagged": true,
+    "why": "fired: hard_limit, state",
+    "messages": [
+      "[CRITICAL] pdu-13-b (PDU 13B): pdu.input_status = breaker_tripped since 17:06.\nCorroborating evidence:\n  - pdu-13-a (PDU 13A): pdu.active_power_w above its critical limit (1.98e+04, 90% of capacityW 22000) for 12 min, peak 2.143e+04 [hard limit from the metric catalog, with persistence window]\n  - pdu-13-a (PDU 13A): pdu.load_percent_of_capacity above its critical limit (90) for 11 min, peak 97.4 [hard limit from the metric catalog, with persistence window]\n  - pdu-13-a (PDU 13A): pdu.current_a above its critical limit (28.8) for 10 min, peak 30.5 [hard limit from the metric catalog, with persistence window]\nWhy flagged: state change to a fault value; hard limit from the metric catalog, with persistence window.\nNot explained by: maintenance window, workload phase (checkpoint/finished), our own interventions, invalid or stale samples, ports unused by design.\nContext: Redundancy group rg-pdu-13 = ['pdu-13-a', 'pdu-13-b']; 1 member(s) in fault, so the rack has no power redundancy.\nBlast radius: finetune-job-311 (fine_tuning, priority 40, status queued, 8 GPUs on server-13-02); inference-svc-207 (inference, priority 90, status running, 8 GPUs on server-13-01).\nWindow: 2026-11-14 17:06 to 2026-11-14 17:29 UTC. Likely root entity: pdu-13-b."
+    ],
+    "suppressed": []
+  },
+  "F06-stale-telemetry-exporter-hung": {
+    "expectedFlag": true,
+    "flagged": true,
+    "why": "fired: telemetry",
+    "messages": [
+      "[WARNING] server-13-01 (Rack 13 / Server 01): metrics exporter dcgm_up down for 22 min: node is unmonitored.\nCorroborating evidence:\n  - 8 entities (gpu-13-01-00, gpu-13-01-01, gpu-13-01-02, gpu-13-01-03, gpu-13-01-04, gpu-13-01-05, gpu-13-01-06, gpu-13-01-07): gpu.temperature_c frozen/stale for 20 min (identical or stale-marked values) [frozen-value / staleness detector]\nWhy flagged: collector health check; frozen-value / staleness detector.\nNot explained by: maintenance window, workload phase (checkpoint/finished), our own interventions, invalid or stale samples, ports unused by design.\nContext: Readings from this entity cannot be trusted; treat its metrics as unknown, not as normal.\nBlast radius: inference-svc-207 (inference, priority 90, status running, 8 GPUs on server-13-01).\nWindow: 2026-11-14 19:08 to 2026-11-14 19:29 UTC. Likely root entity: server-13-01."
+    ],
+    "suppressed": [
+      "quality: 40 sample(s) on gpu-13-01-00 marked invalid/stale/low-confidence or physically impossible: ignored",
+      "quality: 40 sample(s) on gpu-13-01-01 marked invalid/stale/low-confidence or physically impossible: ignored",
+      "quality: 40 sample(s) on gpu-13-01-02 marked invalid/stale/low-confidence or physically impossible: ignored",
+      "quality: 40 sample(s) on gpu-13-01-03 marked invalid/stale/low-confidence or physically impossible: ignored",
+      "quality: 40 sample(s) on gpu-13-01-04 marked invalid/stale/low-confidence or physically impossible: ignored",
+      "quality: 40 sample(s) on gpu-13-01-05 marked invalid/stale/low-confidence or physically impossible: ignored",
+      "quality: 40 sample(s) on gpu-13-01-06 marked invalid/stale/low-confidence or physically impossible: ignored",
+      "quality: 40 sample(s) on gpu-13-01-07 marked invalid/stale/low-confidence or physically impossible: ignored"
+    ]
+  },
+  "F07-hung-rank-silent-stall": {
+    "expectedFlag": true,
+    "flagged": true,
+    "why": "fired: hard_limit, liveness, peer_z",
+    "messages": [
+      "[CRITICAL] gpu-12-02-02 (Rack 12 / Server 02 / GPU 2): gpu.utilization_percent 0 vs median 100 of the other GPUs in training-job-104 (-100, peer z=-50) for 21 min.\nCorroborating evidence:\n  - training-job-104 (LLM-70B pretrain run 4): no training steps for 20 min (stuck at step 41744) while scheduler reports running; expected one step every 2.4 s [progress heartbeat (counter must advance)]\n  - training-job-104 (LLM-70B pretrain run 4): workload.last_log_line_age_s above its critical limit (600) for 10 min, peak 1200 [hard limit from the metric catalog, with persistence window]\nWhy flagged: peer comparison: robust z across GPUs doing identical work; progress heartbeat (counter must advance); hard limit from the metric catalog, with persistence window.\nNot explained by: maintenance window, workload phase (checkpoint/finished), our own interventions, invalid or stale samples, ports unused by design.\nContext: Peers in the same job are normal, so this is local to the GPU (not facility cooling or workload-wide).\nBlast radius: training-job-104 (training, priority 70, status running, 16 GPUs on server-12-01, server-12-02).\nWindow: 2026-11-14 21:09 to 2026-11-14 21:29 UTC. Likely root entity: gpu-12-02-02."
+    ],
+    "suppressed": []
+  },
+  "F08-inference-sla-breach": {
+    "expectedFlag": true,
+    "flagged": true,
+    "why": "fired: event, hard_limit, robust_z",
+    "messages": [
+      "[CRITICAL] inference-svc-207 (Chat-assistant serving (8B)): inference.p99_latency_ms above its critical limit (800, from requirements.latencySlaMs) for 22 min, peak 2520.\nCorroborating evidence:\n  - inference-svc-207 (Chat-assistant serving (8B)): inference.healthy_replicas below its warning limit (2, from inference.desiredReplicas) for 23 min, lowest 1 [hard limit from the metric catalog, with persistence window]\n  - inference-svc-207 (Chat-assistant serving (8B)): replica event at 12:07: replica-1 OOMKilled; CrashLoopBackOff [known-bad event keywords]\n  - inference-svc-207 (Chat-assistant serving (8B)): inference.queue_depth rose from baseline 6.369 to 192 (30x, robust z=147) for 22 min [robust z-score (median/MAD) vs stored baseline, adjusted for current traffic, with 5-min persistence]\n  - inference-svc-207 (Chat-assistant serving (8B)): inference.ttft_ms rose from baseline 140 to 1119 (+699%, robust z=94) for 22 min [robust z-score (median/MAD) vs stored baseline from fault-free runs, with 5-min persistence]\n  - inference-svc-207 (Chat-assistant serving (8B)): inference.p99_latency_ms rose from baseline 627.9 to 2520 (+301%, robust z=93) for 22 min [robust z-score (median/MAD) vs stored baseline, adjusted for current traffic, with 5-min persistence]\n  - inference-svc-207 (Chat-assistant serving (8B)): inference.error_rate rose from baseline 0.001 to 0.034 (34x, robust z=330) for 21 min [robust z-score (median/MAD) vs stored baseline from fault-free runs, with 5-min persistence]\n  - inference-svc-207 (Chat-assistant serving (8B)): inference.error_rate above its warning limit (0.01) for 21 min, peak 0.034 [hard limit from the metric catalog, with persistence window]\nWhy flagged: hard limit from the metric catalog, with persistence window; known-bad event keywords; robust z-score (median/MAD) vs stored baseline, adjusted for current traffic, with 5-min persistence; robust z-score (median/MAD) vs stored baseline from fault-free runs, with 5-min persistence.\nNot explained by: maintenance window, workload phase (checkpoint/finished), our own interventions, invalid or stale samples, ports unused by design.\nBlast radius: inference-svc-207 (inference, priority 90, status running, 8 GPUs on server-13-01).\nWindow: 2026-11-14 12:07 to 2026-11-14 12:29 UTC. Likely root entity: inference-svc-207."
+    ],
+    "suppressed": []
+  },
+  "F09-pcie-downtrain-replays": {
+    "expectedFlag": true,
+    "flagged": true,
+    "why": "fired: hard_limit, poisson_rate, robust_z",
+    "messages": [
+      "[WARNING] gpu-12-01-06 (Rack 12 / Server 01 / GPU 6): gpu.pcie_replay_total increased by 725 in 5 min vs ~5 expected at the normal rate (Poisson p<1e-300).\nCorroborating evidence:\n  - gpu-12-01-06 (Rack 12 / Server 01 / GPU 6): PCIe link generation downtrained 5 -> 4 for 15 min [spec comparison (negotiated vs rated value on the entity)]\n  - gpu-12-01-06 (Rack 12 / Server 01 / GPU 6): PCIe link width downtrained 16 -> 8 for 15 min [spec comparison (negotiated vs rated value on the entity)]\n  - training-job-104 (LLM-70B pretrain run 4): workload.step_time_ms rose from baseline 2410 to 2566 (+6%, robust z=11) for 15 min [robust z-score (median/MAD) vs stored baseline from fault-free runs, with 5-min persistence]\nWhy flagged: Poisson rate test on error counter vs measured normal rate; spec comparison (negotiated vs rated value on the entity); robust z-score (median/MAD) vs stored baseline from fault-free runs, with 5-min persistence.\nNot explained by: maintenance window, workload phase (checkpoint/finished), our own interventions, invalid or stale samples, ports unused by design.\nBlast radius: training-job-104 (training, priority 70, status running, 16 GPUs on server-12-01, server-12-02).\nWindow: 2026-11-14 06:00 to 2026-11-14 06:19 UTC. Likely root entity: gpu-12-01-06."
+    ],
+    "suppressed": []
+  },
+  "F10-checkpoint-overrun-storage-stall": {
+    "expectedFlag": true,
+    "flagged": true,
+    "why": "fired: hard_limit, liveness, robust_z",
+    "messages": [
+      "[CRITICAL] storage-01 (Parallel FS (checkpoints)): storage.metadata_latency_ms above its critical limit (1000) for 24 min, peak 4801.\nCorroborating evidence:\n  - storage-01 (Parallel FS (checkpoints)): storage.metadata_latency_ms rose from baseline 2 to 4801 (2400x, robust z=16184) for 24 min [robust z-score (median/MAD) vs stored baseline from fault-free runs, with 5-min persistence]\n  - training-job-104 (LLM-70B pretrain run 4): checkpoint running 24 min vs expected 90 s (16x) with no step progress [phase-duration bound: checkpoint gate expired (budget = 3x expected = 270 s)]\nWhy flagged: hard limit from the metric catalog, with persistence window; robust z-score (median/MAD) vs stored baseline from fault-free runs, with 5-min persistence; phase-duration bound: checkpoint gate expired (budget = 3x expected = 270 s).\nNot explained by: maintenance window, workload phase (checkpoint/finished), our own interventions, invalid or stale samples, ports unused by design.\nBlast radius: training-job-104 (training, priority 70, status running, 16 GPUs on server-12-01, server-12-02).\nWindow: 2026-11-14 07:36 to 2026-11-14 07:59 UTC. Likely root entity: storage-01."
+    ],
+    "suppressed": []
+  },
+  "F11-offline-after-maintenance-window": {
+    "expectedFlag": true,
+    "flagged": true,
+    "why": "fired: availability",
+    "messages": [
+      "[WARNING] server-13-02 (Rack 13 / Server 02): node down for 30 min.\nCorroborating evidence:\n  - nic-13-02-01 (server-13-02 IB NIC 01): link down for 30 min [down-state persistence]\n  - nic-13-02-02 (server-13-02 IB NIC 02): link down for 30 min [down-state persistence]\nWhy flagged: down-state persistence.\nNot explained by: maintenance window, workload phase (checkpoint/finished), our own interventions, invalid or stale samples, ports unused by design.\nContext: Last maintenance maint-0042 (firmware_upgrade) ended 2026-11-14T03:41:00Z with status completed; entity has not come back.\nBlast radius: finetune-job-311 (fine_tuning, priority 40, status queued, 8 GPUs on server-13-02).\nWindow: 2026-11-14 04:30 to 2026-11-14 04:59 UTC. Likely root entity: server-13-02."
+    ],
+    "suppressed": []
+  },
+  "F12-gradual-thermal-drift": {
+    "expectedFlag": true,
+    "flagged": true,
+    "why": "fired: cusum",
+    "messages": [
+      "[WARNING] gpu-12-01-01 (Rack 12 / Server 01 / GPU 1): temperature drifting up relative to identical peers: offset +0.0C -> +11.8C over 72 h (CUSUM alarm at 07:00).\nWhy flagged: CUSUM change detection on peer-relative residual.\nNot explained by: maintenance window, workload phase (checkpoint/finished), our own interventions, invalid or stale samples, ports unused by design.\nContext: Peers in the same job are normal, so this is local to the GPU (not facility cooling or workload-wide).\nBlast radius: training-job-104 (training, priority 70, status running, 16 GPUs on server-12-01, server-12-02).\nWindow: 2026-11-11 07:00 to 2026-11-13 23:30 UTC. Likely root entity: gpu-12-01-01."
+    ],
+    "suppressed": []
+  },
+  "B01-checkpoint-utilisation-dip": {
+    "expectedFlag": false,
+    "flagged": false,
+    "why": "suppressed by gate: liveness: checkpoint lasted ~90 s, within its 270 s budget (3x the expected 90 s): GPU dip expected",
+    "messages": [],
+    "suppressed": [
+      "liveness: checkpoint lasted ~90 s, within its 270 s budget (3x the expected 90 s): GPU dip expected"
+    ]
+  },
+  "B02-job-start-temperature-rise": {
+    "expectedFlag": false,
+    "flagged": false,
+    "why": "nothing fired (statistics alone)",
+    "messages": [],
+    "suppressed": []
+  },
+  "B03-power-transient-within-limit": {
+    "expectedFlag": false,
+    "flagged": false,
+    "why": "nothing fired (statistics alone)",
+    "messages": [],
+    "suppressed": []
+  },
+  "B04-maintenance-window-outage": {
+    "expectedFlag": false,
+    "flagged": false,
+    "why": "suppressed by gate: availability: inside maint-0042 (firmware_upgrade)",
+    "messages": [],
+    "suppressed": [
+      "availability: inside maint-0042 (firmware_upgrade)"
+    ]
+  },
+  "B05-single-spurious-sample": {
+    "expectedFlag": false,
+    "flagged": false,
+    "why": "suppressed by gate: quality: 1 sample(s) on gpu-12-02-07 marked invalid/stale/low-confidence or physically impossible: ignored",
+    "messages": [],
+    "suppressed": [
+      "quality: 1 sample(s) on gpu-12-02-07 marked invalid/stale/low-confidence or physically impossible: ignored"
+    ]
+  },
+  "B06-background-correctable-ecc": {
+    "expectedFlag": false,
+    "flagged": false,
+    "why": "nothing fired (statistics alone)",
+    "messages": [],
+    "suppressed": []
+  },
+  "B07-diurnal-ambient-rise": {
+    "expectedFlag": false,
+    "flagged": false,
+    "why": "nothing fired (statistics alone)",
+    "messages": [],
+    "suppressed": []
+  },
+  "B08-overnight-inference-traffic-drop": {
+    "expectedFlag": false,
+    "flagged": false,
+    "why": "nothing fired (statistics alone)",
+    "messages": [],
+    "suppressed": []
+  },
+  "B09-reserved-ports-link-down": {
+    "expectedFlag": false,
+    "flagged": false,
+    "why": "suppressed by gate: availability: inside maint-0043 (port_reservation)",
+    "messages": [],
+    "suppressed": [
+      "availability: inside maint-0043 (port_reservation)"
+    ]
+  },
+  "B10-job-completed-gpus-idle": {
+    "expectedFlag": false,
+    "flagged": false,
+    "why": "suppressed by gate: liveness: finetune-job-311 status is 'completed': no further steps and idle GPUs are expected",
+    "messages": [],
+    "suppressed": [
+      "liveness: finetune-job-311 status is 'completed': no further steps and idle GPUs are expected"
+    ]
+  },
+  "B11-operator-power-cap-demand-response": {
+    "expectedFlag": false,
+    "flagged": false,
+    "why": "suppressed by gate: robust_z: expected effect of our own intervention int-0091 (12% vs up to 15% predicted); sw_throttle: requested by our own intervention int-0091 (power_cap)",
+    "messages": [],
+    "suppressed": [
+      "robust_z: expected effect of our own intervention int-0091 (12% vs up to 15% predicted)",
+      "sw_throttle: requested by our own intervention int-0091 (power_cap)"
+    ]
+  }
+}

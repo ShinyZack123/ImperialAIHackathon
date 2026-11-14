@@ -1,0 +1,4361 @@
+{
+  "scenarioId": "F09-pcie-downtrain-replays",
+  "title": "GPU PCIe link drops from Gen5 x16 to Gen4 x8 with thousands of replay errors",
+  "expected": {
+    "flag": true,
+    "severity": "warning",
+    "category": "pcie_degradation",
+    "reason": "Host link bandwidth falls to a quarter and replay (retransmit) errors climb ~1.4k/min. Data loading for that rank slows, adding ~5% to every step. Often a riser/slot fault that worsens.",
+    "keySignals": [
+      "gpu.pcie_link_gen < connectivity.pcieGeneration",
+      "gpu.pcie_link_width < connectivity.pcieLanes",
+      "rate(gpu.pcie_replay_total) > 0 sustained"
+    ],
+    "rootCauseEntityId": "gpu-12-01-06",
+    "escalateTo": "agent-rack-12"
+  },
+  "window": {
+    "start": "2026-11-14T06:00:00Z",
+    "end": "2026-11-14T06:20:00Z",
+    "sampleIntervalSeconds": 30
+  },
+  "primaryEntityIds": [
+    "gpu-12-01-06"
+  ],
+  "affectedWorkloadIds": [
+    "training-job-104"
+  ],
+  "context": {
+    "glossary": {
+      "PCIe replay": "Packet resent because it failed checksum on the CPU<->GPU link."
+    }
+  },
+  "stateAtWindowEnd": {
+    "gpu-12-01-06": {
+      "operationalStatus": "degraded",
+      "errors.pcieReplayErrors": 21750
+    }
+  },
+  "telemetry": [
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00001",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:00:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00002",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:00:30Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00003",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:01:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00004",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:01:30Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00005",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:02:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00006",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:02:30Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00007",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:03:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00008",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:03:30Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00009",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:04:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00010",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:04:30Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00011",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:05:00Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00012",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:05:30Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00013",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:06:00Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00014",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:06:30Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00015",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:07:00Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00016",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:07:30Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00017",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:08:00Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00018",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:08:30Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00019",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:09:00Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00020",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:09:30Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00021",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:10:00Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00022",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:10:30Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00023",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:11:00Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00024",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:11:30Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00025",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:12:00Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00026",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:12:30Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00027",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:13:00Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00028",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:13:30Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00029",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:14:00Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00030",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:14:30Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00031",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:15:00Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00032",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:15:30Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00033",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:16:00Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00034",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:16:30Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00035",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:17:00Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00036",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:17:30Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00037",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:18:00Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00038",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:18:30Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00039",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:19:00Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00040",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:19:30Z",
+      "value": 4,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00041",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:00:00Z",
+      "value": 16,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00042",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:00:30Z",
+      "value": 16,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00043",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:01:00Z",
+      "value": 16,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00044",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:01:30Z",
+      "value": 16,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00045",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:02:00Z",
+      "value": 16,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00046",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:02:30Z",
+      "value": 16,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00047",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:03:00Z",
+      "value": 16,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00048",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:03:30Z",
+      "value": 16,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00049",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:04:00Z",
+      "value": 16,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00050",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:04:30Z",
+      "value": 16,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00051",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:05:00Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00052",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:05:30Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00053",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:06:00Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00054",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:06:30Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00055",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:07:00Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00056",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:07:30Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00057",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:08:00Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00058",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:08:30Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00059",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:09:00Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00060",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:09:30Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00061",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:10:00Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00062",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:10:30Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00063",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:11:00Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00064",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:11:30Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00065",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:12:00Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00066",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:12:30Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00067",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:13:00Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00068",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:13:30Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00069",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:14:00Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00070",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:14:30Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00071",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:15:00Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00072",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:15:30Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00073",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:16:00Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00074",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:16:30Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00075",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:17:00Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00076",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:17:30Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00077",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:18:00Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00078",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:18:30Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00079",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:19:00Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00080",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_link_width",
+      "timestamp": "2026-11-14T06:19:30Z",
+      "value": 8,
+      "unit": "lanes",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00081",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00082",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:00:30Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00083",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:01:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00084",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:01:30Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00085",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:02:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00086",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:02:30Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00087",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:03:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00088",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:03:30Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00089",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:04:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00090",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:04:30Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00091",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:05:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00092",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:05:30Z",
+      "value": 725,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00093",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:06:00Z",
+      "value": 1450,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00094",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:06:30Z",
+      "value": 2175,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00095",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:07:00Z",
+      "value": 2900,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00096",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:07:30Z",
+      "value": 3625,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00097",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:08:00Z",
+      "value": 4350,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00098",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:08:30Z",
+      "value": 5075,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00099",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:09:00Z",
+      "value": 5800,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00100",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:09:30Z",
+      "value": 6525,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00101",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:10:00Z",
+      "value": 7250,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00102",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:10:30Z",
+      "value": 7975,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00103",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:11:00Z",
+      "value": 8700,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00104",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:11:30Z",
+      "value": 9425,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00105",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:12:00Z",
+      "value": 10150,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00106",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:12:30Z",
+      "value": 10875,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00107",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:13:00Z",
+      "value": 11600,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00108",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:13:30Z",
+      "value": 12325,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00109",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:14:00Z",
+      "value": 13050,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00110",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:14:30Z",
+      "value": 13775,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00111",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:15:00Z",
+      "value": 14500,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00112",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:15:30Z",
+      "value": 15225,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00113",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:16:00Z",
+      "value": 15950,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00114",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:16:30Z",
+      "value": 16675,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00115",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:17:00Z",
+      "value": 17400,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00116",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:17:30Z",
+      "value": 18125,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00117",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:18:00Z",
+      "value": 18850,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00118",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:18:30Z",
+      "value": 19575,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00119",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:19:00Z",
+      "value": 20300,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00120",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:19:30Z",
+      "value": 21025,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00121",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:00:00Z",
+      "value": 19.8,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00122",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:00:30Z",
+      "value": 20.2,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00123",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:01:00Z",
+      "value": 20.8,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00124",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:01:30Z",
+      "value": 20.0,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00125",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:02:00Z",
+      "value": 21.9,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00126",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:02:30Z",
+      "value": 19.8,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00127",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:03:00Z",
+      "value": 21.4,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00128",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:03:30Z",
+      "value": 21.3,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00129",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:04:00Z",
+      "value": 21.1,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00130",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:04:30Z",
+      "value": 21.3,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00131",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:05:00Z",
+      "value": 7.0,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00132",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:05:30Z",
+      "value": 6.9,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00133",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:06:00Z",
+      "value": 6.2,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00134",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:06:30Z",
+      "value": 5.9,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00135",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:07:00Z",
+      "value": 6.4,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00136",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:07:30Z",
+      "value": 5.3,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00137",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:08:00Z",
+      "value": 8.4,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00138",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:08:30Z",
+      "value": 6.7,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00139",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:09:00Z",
+      "value": 7.2,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00140",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:09:30Z",
+      "value": 7.3,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00141",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:10:00Z",
+      "value": 6.2,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00142",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:10:30Z",
+      "value": 5.9,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00143",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:11:00Z",
+      "value": 6.4,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00144",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:11:30Z",
+      "value": 6.8,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00145",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:12:00Z",
+      "value": 5.3,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00146",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:12:30Z",
+      "value": 6.4,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00147",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:13:00Z",
+      "value": 6.7,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00148",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:13:30Z",
+      "value": 7.0,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00149",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:14:00Z",
+      "value": 6.8,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00150",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:14:30Z",
+      "value": 6.5,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00151",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:15:00Z",
+      "value": 7.2,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00152",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:15:30Z",
+      "value": 5.5,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00153",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:16:00Z",
+      "value": 5.4,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00154",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:16:30Z",
+      "value": 5.7,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00155",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:17:00Z",
+      "value": 6.4,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00156",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:17:30Z",
+      "value": 6.7,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00157",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:18:00Z",
+      "value": 5.4,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00158",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:18:30Z",
+      "value": 5.7,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00159",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:19:00Z",
+      "value": 6.7,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00160",
+      "entityId": "gpu-12-01-06",
+      "metric": "gpu.pcie_rx_throughput_gbps",
+      "timestamp": "2026-11-14T06:19:30Z",
+      "value": 5.3,
+      "unit": "GB/s",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00161",
+      "entityId": "gpu-12-01-05",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:00:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00162",
+      "entityId": "gpu-12-01-05",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:02:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00163",
+      "entityId": "gpu-12-01-05",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:04:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00164",
+      "entityId": "gpu-12-01-05",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:06:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00165",
+      "entityId": "gpu-12-01-05",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:08:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00166",
+      "entityId": "gpu-12-01-05",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:10:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00167",
+      "entityId": "gpu-12-01-05",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:12:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00168",
+      "entityId": "gpu-12-01-05",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:14:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00169",
+      "entityId": "gpu-12-01-05",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:16:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00170",
+      "entityId": "gpu-12-01-05",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:18:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00171",
+      "entityId": "gpu-12-01-05",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00172",
+      "entityId": "gpu-12-01-05",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:02:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00173",
+      "entityId": "gpu-12-01-05",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:04:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00174",
+      "entityId": "gpu-12-01-05",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:06:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00175",
+      "entityId": "gpu-12-01-05",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:08:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00176",
+      "entityId": "gpu-12-01-05",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:10:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00177",
+      "entityId": "gpu-12-01-05",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:12:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00178",
+      "entityId": "gpu-12-01-05",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:14:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00179",
+      "entityId": "gpu-12-01-05",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:16:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00180",
+      "entityId": "gpu-12-01-05",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:18:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00181",
+      "entityId": "gpu-12-01-07",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:00:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00182",
+      "entityId": "gpu-12-01-07",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:02:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00183",
+      "entityId": "gpu-12-01-07",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:04:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00184",
+      "entityId": "gpu-12-01-07",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:06:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00185",
+      "entityId": "gpu-12-01-07",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:08:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00186",
+      "entityId": "gpu-12-01-07",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:10:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00187",
+      "entityId": "gpu-12-01-07",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:12:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00188",
+      "entityId": "gpu-12-01-07",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:14:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00189",
+      "entityId": "gpu-12-01-07",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:16:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00190",
+      "entityId": "gpu-12-01-07",
+      "metric": "gpu.pcie_link_gen",
+      "timestamp": "2026-11-14T06:18:00Z",
+      "value": 5,
+      "unit": "gen",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00191",
+      "entityId": "gpu-12-01-07",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:00:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00192",
+      "entityId": "gpu-12-01-07",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:02:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00193",
+      "entityId": "gpu-12-01-07",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:04:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00194",
+      "entityId": "gpu-12-01-07",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:06:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00195",
+      "entityId": "gpu-12-01-07",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:08:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00196",
+      "entityId": "gpu-12-01-07",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:10:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00197",
+      "entityId": "gpu-12-01-07",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:12:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00198",
+      "entityId": "gpu-12-01-07",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:14:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00199",
+      "entityId": "gpu-12-01-07",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:16:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00200",
+      "entityId": "gpu-12-01-07",
+      "metric": "gpu.pcie_replay_total",
+      "timestamp": "2026-11-14T06:18:00Z",
+      "value": 0,
+      "unit": "count",
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00201",
+      "entityId": "training-job-104",
+      "metric": "workload.step_time_ms",
+      "timestamp": "2026-11-14T06:00:00Z",
+      "value": 2396.0,
+      "unit": "ms",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00202",
+      "entityId": "training-job-104",
+      "metric": "workload.step_time_ms",
+      "timestamp": "2026-11-14T06:01:00Z",
+      "value": 2403.0,
+      "unit": "ms",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00203",
+      "entityId": "training-job-104",
+      "metric": "workload.step_time_ms",
+      "timestamp": "2026-11-14T06:02:00Z",
+      "value": 2431.0,
+      "unit": "ms",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00204",
+      "entityId": "training-job-104",
+      "metric": "workload.step_time_ms",
+      "timestamp": "2026-11-14T06:03:00Z",
+      "value": 2370.0,
+      "unit": "ms",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00205",
+      "entityId": "training-job-104",
+      "metric": "workload.step_time_ms",
+      "timestamp": "2026-11-14T06:04:00Z",
+      "value": 2422.0,
+      "unit": "ms",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00206",
+      "entityId": "training-job-104",
+      "metric": "workload.step_time_ms",
+      "timestamp": "2026-11-14T06:05:00Z",
+      "value": 2546.0,
+      "unit": "ms",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00207",
+      "entityId": "training-job-104",
+      "metric": "workload.step_time_ms",
+      "timestamp": "2026-11-14T06:06:00Z",
+      "value": 2542.0,
+      "unit": "ms",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00208",
+      "entityId": "training-job-104",
+      "metric": "workload.step_time_ms",
+      "timestamp": "2026-11-14T06:07:00Z",
+      "value": 2566.0,
+      "unit": "ms",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00209",
+      "entityId": "training-job-104",
+      "metric": "workload.step_time_ms",
+      "timestamp": "2026-11-14T06:08:00Z",
+      "value": 2537.0,
+      "unit": "ms",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00210",
+      "entityId": "training-job-104",
+      "metric": "workload.step_time_ms",
+      "timestamp": "2026-11-14T06:09:00Z",
+      "value": 2535.0,
+      "unit": "ms",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00211",
+      "entityId": "training-job-104",
+      "metric": "workload.step_time_ms",
+      "timestamp": "2026-11-14T06:10:00Z",
+      "value": 2549.0,
+      "unit": "ms",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00212",
+      "entityId": "training-job-104",
+      "metric": "workload.step_time_ms",
+      "timestamp": "2026-11-14T06:11:00Z",
+      "value": 2532.0,
+      "unit": "ms",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00213",
+      "entityId": "training-job-104",
+      "metric": "workload.step_time_ms",
+      "timestamp": "2026-11-14T06:12:00Z",
+      "value": 2550.0,
+      "unit": "ms",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00214",
+      "entityId": "training-job-104",
+      "metric": "workload.step_time_ms",
+      "timestamp": "2026-11-14T06:13:00Z",
+      "value": 2548.0,
+      "unit": "ms",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00215",
+      "entityId": "training-job-104",
+      "metric": "workload.step_time_ms",
+      "timestamp": "2026-11-14T06:14:00Z",
+      "value": 2547.0,
+      "unit": "ms",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00216",
+      "entityId": "training-job-104",
+      "metric": "workload.step_time_ms",
+      "timestamp": "2026-11-14T06:15:00Z",
+      "value": 2544.0,
+      "unit": "ms",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00217",
+      "entityId": "training-job-104",
+      "metric": "workload.step_time_ms",
+      "timestamp": "2026-11-14T06:16:00Z",
+      "value": 2521.0,
+      "unit": "ms",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00218",
+      "entityId": "training-job-104",
+      "metric": "workload.step_time_ms",
+      "timestamp": "2026-11-14T06:17:00Z",
+      "value": 2517.0,
+      "unit": "ms",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00219",
+      "entityId": "training-job-104",
+      "metric": "workload.step_time_ms",
+      "timestamp": "2026-11-14T06:18:00Z",
+      "value": 2536.0,
+      "unit": "ms",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00220",
+      "entityId": "training-job-104",
+      "metric": "workload.step_time_ms",
+      "timestamp": "2026-11-14T06:19:00Z",
+      "value": 2543.0,
+      "unit": "ms",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00221",
+      "entityId": "training-job-104",
+      "metric": "workload.tokens_per_second",
+      "timestamp": "2026-11-14T06:00:00Z",
+      "value": 3478874.0,
+      "unit": "tokens/s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00222",
+      "entityId": "training-job-104",
+      "metric": "workload.tokens_per_second",
+      "timestamp": "2026-11-14T06:01:00Z",
+      "value": 3471615.0,
+      "unit": "tokens/s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00223",
+      "entityId": "training-job-104",
+      "metric": "workload.tokens_per_second",
+      "timestamp": "2026-11-14T06:02:00Z",
+      "value": 3479749.0,
+      "unit": "tokens/s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00224",
+      "entityId": "training-job-104",
+      "metric": "workload.tokens_per_second",
+      "timestamp": "2026-11-14T06:03:00Z",
+      "value": 3476129.0,
+      "unit": "tokens/s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00225",
+      "entityId": "training-job-104",
+      "metric": "workload.tokens_per_second",
+      "timestamp": "2026-11-14T06:04:00Z",
+      "value": 3492379.0,
+      "unit": "tokens/s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00226",
+      "entityId": "training-job-104",
+      "metric": "workload.tokens_per_second",
+      "timestamp": "2026-11-14T06:05:00Z",
+      "value": 3316689.0,
+      "unit": "tokens/s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00227",
+      "entityId": "training-job-104",
+      "metric": "workload.tokens_per_second",
+      "timestamp": "2026-11-14T06:06:00Z",
+      "value": 3321492.0,
+      "unit": "tokens/s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00228",
+      "entityId": "training-job-104",
+      "metric": "workload.tokens_per_second",
+      "timestamp": "2026-11-14T06:07:00Z",
+      "value": 3310031.0,
+      "unit": "tokens/s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00229",
+      "entityId": "training-job-104",
+      "metric": "workload.tokens_per_second",
+      "timestamp": "2026-11-14T06:08:00Z",
+      "value": 3297527.0,
+      "unit": "tokens/s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00230",
+      "entityId": "training-job-104",
+      "metric": "workload.tokens_per_second",
+      "timestamp": "2026-11-14T06:09:00Z",
+      "value": 3290695.0,
+      "unit": "tokens/s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00231",
+      "entityId": "training-job-104",
+      "metric": "workload.tokens_per_second",
+      "timestamp": "2026-11-14T06:10:00Z",
+      "value": 3298505.0,
+      "unit": "tokens/s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00232",
+      "entityId": "training-job-104",
+      "metric": "workload.tokens_per_second",
+      "timestamp": "2026-11-14T06:11:00Z",
+      "value": 3305123.0,
+      "unit": "tokens/s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00233",
+      "entityId": "training-job-104",
+      "metric": "workload.tokens_per_second",
+      "timestamp": "2026-11-14T06:12:00Z",
+      "value": 3302372.0,
+      "unit": "tokens/s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00234",
+      "entityId": "training-job-104",
+      "metric": "workload.tokens_per_second",
+      "timestamp": "2026-11-14T06:13:00Z",
+      "value": 3305671.0,
+      "unit": "tokens/s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00235",
+      "entityId": "training-job-104",
+      "metric": "workload.tokens_per_second",
+      "timestamp": "2026-11-14T06:14:00Z",
+      "value": 3305057.0,
+      "unit": "tokens/s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00236",
+      "entityId": "training-job-104",
+      "metric": "workload.tokens_per_second",
+      "timestamp": "2026-11-14T06:15:00Z",
+      "value": 3305395.0,
+      "unit": "tokens/s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00237",
+      "entityId": "training-job-104",
+      "metric": "workload.tokens_per_second",
+      "timestamp": "2026-11-14T06:16:00Z",
+      "value": 3300153.0,
+      "unit": "tokens/s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00238",
+      "entityId": "training-job-104",
+      "metric": "workload.tokens_per_second",
+      "timestamp": "2026-11-14T06:17:00Z",
+      "value": 3301244.0,
+      "unit": "tokens/s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00239",
+      "entityId": "training-job-104",
+      "metric": "workload.tokens_per_second",
+      "timestamp": "2026-11-14T06:18:00Z",
+      "value": 3290029.0,
+      "unit": "tokens/s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-F09-pcie-downtrain-replays-00240",
+      "entityId": "training-job-104",
+      "metric": "workload.tokens_per_second",
+      "timestamp": "2026-11-14T06:19:00Z",
+      "value": 3286060.0,
+      "unit": "tokens/s",
+      "source": {
+        "connectorId": "slurm-01",
+        "system": "Slurm + job metrics",
+        "collectionMethod": "prometheus-scrape"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    }
+  ]
+}

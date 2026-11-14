@@ -1,0 +1,4352 @@
+{
+  "scenarioId": "B07-diurnal-ambient-rise",
+  "title": "Hall inlet air temperature swings 20-25C over the day, tracking outdoor temperature",
+  "expected": {
+    "flag": false,
+    "category": "seasonal_or_diurnal_pattern",
+    "reason": "Daily cycle that matches outdoor temperature and stays inside the ASHRAE recommended 18-27C band. Switch temps follow by 2C. Repeats every day.",
+    "naiveRuleThatWouldFalselyTrigger": "inlet temp > 1h rolling mean + 2C",
+    "suppressionEvidence": [
+      "value within envelope 18-27C",
+      "matches same-hour baseline from prior days",
+      "correlates with chiller.outdoor_temp_c"
+    ]
+  },
+  "window": {
+    "start": "2026-11-14T00:00:00Z",
+    "end": "2026-11-15T00:00:00Z",
+    "sampleIntervalSeconds": 1800
+  },
+  "primaryEntityIds": [
+    "room-01"
+  ],
+  "affectedWorkloadIds": [],
+  "context": {
+    "glossary": {
+      "ASHRAE": "Industry body whose guidelines set recommended data hall air temperatures (18-27C)."
+    },
+    "note": "Baselines need time-of-day seasonality, not a flat mean."
+  },
+  "telemetry": [
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00001",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T00:00:00Z",
+      "value": 19.3,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00002",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T00:30:00Z",
+      "value": 18.8,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00003",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T01:00:00Z",
+      "value": 18.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00004",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T01:30:00Z",
+      "value": 18.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00005",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T02:00:00Z",
+      "value": 18.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00006",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T02:30:00Z",
+      "value": 19.0,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00007",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T03:00:00Z",
+      "value": 18.8,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00008",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T03:30:00Z",
+      "value": 18.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00009",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T04:00:00Z",
+      "value": 19.0,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00010",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T04:30:00Z",
+      "value": 19.1,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00011",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T05:00:00Z",
+      "value": 19.0,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00012",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T05:30:00Z",
+      "value": 19.0,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00013",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T06:00:00Z",
+      "value": 19.1,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00014",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T06:30:00Z",
+      "value": 19.1,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00015",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T07:00:00Z",
+      "value": 19.3,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00016",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T07:30:00Z",
+      "value": 19.3,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00017",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T08:00:00Z",
+      "value": 19.5,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00018",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T08:30:00Z",
+      "value": 19.6,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00019",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T09:00:00Z",
+      "value": 19.4,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00020",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T09:30:00Z",
+      "value": 19.4,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00021",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T10:00:00Z",
+      "value": 19.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00022",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T10:30:00Z",
+      "value": 19.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00023",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T11:00:00Z",
+      "value": 19.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00024",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T11:30:00Z",
+      "value": 19.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00025",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T12:00:00Z",
+      "value": 19.7,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00026",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T12:30:00Z",
+      "value": 20.1,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00027",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T13:00:00Z",
+      "value": 20.2,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00028",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T13:30:00Z",
+      "value": 20.2,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00029",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T14:00:00Z",
+      "value": 19.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00030",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T14:30:00Z",
+      "value": 20.0,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00031",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T15:00:00Z",
+      "value": 19.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00032",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T15:30:00Z",
+      "value": 20.3,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00033",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T16:00:00Z",
+      "value": 20.1,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00034",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T16:30:00Z",
+      "value": 20.2,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00035",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T17:00:00Z",
+      "value": 20.0,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00036",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T17:30:00Z",
+      "value": 19.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00037",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T18:00:00Z",
+      "value": 19.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00038",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T18:30:00Z",
+      "value": 19.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00039",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T19:00:00Z",
+      "value": 19.6,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00040",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T19:30:00Z",
+      "value": 19.6,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00041",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T20:00:00Z",
+      "value": 19.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00042",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T20:30:00Z",
+      "value": 19.4,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00043",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T21:00:00Z",
+      "value": 19.1,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00044",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T21:30:00Z",
+      "value": 19.5,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00045",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T22:00:00Z",
+      "value": 19.4,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00046",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T22:30:00Z",
+      "value": 19.4,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00047",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T23:00:00Z",
+      "value": 19.2,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00048",
+      "entityId": "crac-01",
+      "metric": "crac.supply_air_temp_c",
+      "timestamp": "2026-11-14T23:30:00Z",
+      "value": 19.2,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00049",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T00:00:00Z",
+      "value": 20.6,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00050",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T00:30:00Z",
+      "value": 20.8,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00051",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T01:00:00Z",
+      "value": 20.6,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00052",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T01:30:00Z",
+      "value": 20.4,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00053",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T02:00:00Z",
+      "value": 20.0,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00054",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T02:30:00Z",
+      "value": 19.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00055",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T03:00:00Z",
+      "value": 19.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00056",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T03:30:00Z",
+      "value": 20.1,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00057",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T04:00:00Z",
+      "value": 19.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00058",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T04:30:00Z",
+      "value": 19.8,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00059",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T05:00:00Z",
+      "value": 20.2,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00060",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T05:30:00Z",
+      "value": 20.4,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00061",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T06:00:00Z",
+      "value": 20.5,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00062",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T06:30:00Z",
+      "value": 21.0,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00063",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T07:00:00Z",
+      "value": 21.0,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00064",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T07:30:00Z",
+      "value": 21.6,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00065",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T08:00:00Z",
+      "value": 21.4,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00066",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T08:30:00Z",
+      "value": 22.0,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00067",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T09:00:00Z",
+      "value": 22.7,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00068",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T09:30:00Z",
+      "value": 22.7,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00069",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T10:00:00Z",
+      "value": 23.3,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00070",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T10:30:00Z",
+      "value": 23.7,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00071",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T11:00:00Z",
+      "value": 23.8,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00072",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T11:30:00Z",
+      "value": 24.2,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00073",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T12:00:00Z",
+      "value": 24.0,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00074",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T12:30:00Z",
+      "value": 24.4,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00075",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T13:00:00Z",
+      "value": 24.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00076",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T13:30:00Z",
+      "value": 24.7,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00077",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T14:00:00Z",
+      "value": 24.7,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00078",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T14:30:00Z",
+      "value": 25.0,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00079",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T15:00:00Z",
+      "value": 25.4,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00080",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T15:30:00Z",
+      "value": 24.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00081",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T16:00:00Z",
+      "value": 24.6,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00082",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T16:30:00Z",
+      "value": 24.8,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00083",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T17:00:00Z",
+      "value": 24.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00084",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T17:30:00Z",
+      "value": 24.4,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00085",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T18:00:00Z",
+      "value": 24.4,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00086",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T18:30:00Z",
+      "value": 23.8,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00087",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T19:00:00Z",
+      "value": 23.8,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00088",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T19:30:00Z",
+      "value": 23.7,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00089",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T20:00:00Z",
+      "value": 23.4,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00090",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T20:30:00Z",
+      "value": 22.8,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00091",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T21:00:00Z",
+      "value": 22.2,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00092",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T21:30:00Z",
+      "value": 22.3,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00093",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T22:00:00Z",
+      "value": 22.1,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00094",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T22:30:00Z",
+      "value": 21.5,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00095",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T23:00:00Z",
+      "value": 21.2,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00096",
+      "entityId": "room-01",
+      "metric": "room.inlet_temp_c",
+      "timestamp": "2026-11-14T23:30:00Z",
+      "value": 21.2,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00097",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T00:00:00Z",
+      "value": 49.2,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00098",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T00:30:00Z",
+      "value": 49.9,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00099",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T01:00:00Z",
+      "value": 50.2,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00100",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T01:30:00Z",
+      "value": 50.3,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00101",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T02:00:00Z",
+      "value": 51.3,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00102",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T02:30:00Z",
+      "value": 51.0,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00103",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T03:00:00Z",
+      "value": 51.0,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00104",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T03:30:00Z",
+      "value": 51.1,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00105",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T04:00:00Z",
+      "value": 50.8,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00106",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T04:30:00Z",
+      "value": 51.9,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00107",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T05:00:00Z",
+      "value": 49.9,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00108",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T05:30:00Z",
+      "value": 49.3,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00109",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T06:00:00Z",
+      "value": 48.9,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00110",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T06:30:00Z",
+      "value": 48.1,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00111",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T07:00:00Z",
+      "value": 48.8,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00112",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T07:30:00Z",
+      "value": 47.0,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00113",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T08:00:00Z",
+      "value": 46.8,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00114",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T08:30:00Z",
+      "value": 45.8,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00115",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T09:00:00Z",
+      "value": 45.2,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00116",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T09:30:00Z",
+      "value": 43.8,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00117",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T10:00:00Z",
+      "value": 42.8,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00118",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T10:30:00Z",
+      "value": 42.0,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00119",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T11:00:00Z",
+      "value": 41.5,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00120",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T11:30:00Z",
+      "value": 40.9,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00121",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T12:00:00Z",
+      "value": 40.5,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00122",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T12:30:00Z",
+      "value": 39.7,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00123",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T13:00:00Z",
+      "value": 38.9,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00124",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T13:30:00Z",
+      "value": 39.4,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00125",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T14:00:00Z",
+      "value": 38.7,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00126",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T14:30:00Z",
+      "value": 40.6,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00127",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T15:00:00Z",
+      "value": 38.9,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00128",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T15:30:00Z",
+      "value": 39.2,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00129",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T16:00:00Z",
+      "value": 39.4,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00130",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T16:30:00Z",
+      "value": 40.4,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00131",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T17:00:00Z",
+      "value": 40.7,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00132",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T17:30:00Z",
+      "value": 41.3,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00133",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T18:00:00Z",
+      "value": 41.2,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00134",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T18:30:00Z",
+      "value": 41.3,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00135",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T19:00:00Z",
+      "value": 42.9,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00136",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T19:30:00Z",
+      "value": 41.8,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00137",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T20:00:00Z",
+      "value": 43.6,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00138",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T20:30:00Z",
+      "value": 43.6,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00139",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T21:00:00Z",
+      "value": 45.9,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00140",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T21:30:00Z",
+      "value": 45.4,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00141",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T22:00:00Z",
+      "value": 47.1,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00142",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T22:30:00Z",
+      "value": 46.8,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00143",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T23:00:00Z",
+      "value": 48.6,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00144",
+      "entityId": "room-01",
+      "metric": "room.humidity_percent",
+      "timestamp": "2026-11-14T23:30:00Z",
+      "value": 49.1,
+      "unit": "%",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00145",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T00:00:00Z",
+      "value": 4.4,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00146",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T00:30:00Z",
+      "value": 4.1,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00147",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T01:00:00Z",
+      "value": 3.3,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00148",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T01:30:00Z",
+      "value": 3.6,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00149",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T02:00:00Z",
+      "value": 3.2,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00150",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T02:30:00Z",
+      "value": 2.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00151",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T03:00:00Z",
+      "value": 2.8,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00152",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T03:30:00Z",
+      "value": 2.7,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00153",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T04:00:00Z",
+      "value": 2.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00154",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T04:30:00Z",
+      "value": 3.4,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00155",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T05:00:00Z",
+      "value": 3.6,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00156",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T05:30:00Z",
+      "value": 4.4,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00157",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T06:00:00Z",
+      "value": 4.1,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00158",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T06:30:00Z",
+      "value": 4.7,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00159",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T07:00:00Z",
+      "value": 5.2,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00160",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T07:30:00Z",
+      "value": 5.7,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00161",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T08:00:00Z",
+      "value": 6.3,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00162",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T08:30:00Z",
+      "value": 7.1,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00163",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T09:00:00Z",
+      "value": 8.5,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00164",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T09:30:00Z",
+      "value": 8.4,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00165",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T10:00:00Z",
+      "value": 9.1,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00166",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T10:30:00Z",
+      "value": 10.0,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00167",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T11:00:00Z",
+      "value": 10.0,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00168",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T11:30:00Z",
+      "value": 10.7,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00169",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T12:00:00Z",
+      "value": 12.1,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00170",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T12:30:00Z",
+      "value": 11.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00171",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T13:00:00Z",
+      "value": 12.1,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00172",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T13:30:00Z",
+      "value": 12.5,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00173",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T14:00:00Z",
+      "value": 13.0,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00174",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T14:30:00Z",
+      "value": 13.0,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00175",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T15:00:00Z",
+      "value": 12.7,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00176",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T15:30:00Z",
+      "value": 13.4,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00177",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T16:00:00Z",
+      "value": 12.7,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00178",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T16:30:00Z",
+      "value": 13.0,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00179",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T17:00:00Z",
+      "value": 12.2,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00180",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T17:30:00Z",
+      "value": 11.6,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00181",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T18:00:00Z",
+      "value": 11.4,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00182",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T18:30:00Z",
+      "value": 11.3,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00183",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T19:00:00Z",
+      "value": 10.6,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00184",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T19:30:00Z",
+      "value": 10.3,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00185",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T20:00:00Z",
+      "value": 9.4,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00186",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T20:30:00Z",
+      "value": 8.8,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00187",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T21:00:00Z",
+      "value": 8.0,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00188",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T21:30:00Z",
+      "value": 7.6,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00189",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T22:00:00Z",
+      "value": 6.7,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00190",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T22:30:00Z",
+      "value": 5.8,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00191",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T23:00:00Z",
+      "value": 5.5,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00192",
+      "entityId": "chiller-01",
+      "metric": "chiller.outdoor_temp_c",
+      "timestamp": "2026-11-14T23:30:00Z",
+      "value": 5.2,
+      "unit": "C",
+      "source": {
+        "connectorId": "bms-01",
+        "system": "Building Management System",
+        "collectionMethod": "bacnet-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00193",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T00:00:00Z",
+      "value": 46.4,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00194",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T00:30:00Z",
+      "value": 46.7,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00195",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T01:00:00Z",
+      "value": 46.6,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00196",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T01:30:00Z",
+      "value": 45.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00197",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T02:00:00Z",
+      "value": 46.4,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00198",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T02:30:00Z",
+      "value": 45.6,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00199",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T03:00:00Z",
+      "value": 46.1,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00200",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T03:30:00Z",
+      "value": 46.4,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00201",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T04:00:00Z",
+      "value": 46.0,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00202",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T04:30:00Z",
+      "value": 45.8,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00203",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T05:00:00Z",
+      "value": 45.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00204",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T05:30:00Z",
+      "value": 46.5,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00205",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T06:00:00Z",
+      "value": 46.5,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00206",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T06:30:00Z",
+      "value": 46.6,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00207",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T07:00:00Z",
+      "value": 47.1,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00208",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T07:30:00Z",
+      "value": 47.1,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00209",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T08:00:00Z",
+      "value": 47.1,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00210",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T08:30:00Z",
+      "value": 47.6,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00211",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T09:00:00Z",
+      "value": 47.7,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00212",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T09:30:00Z",
+      "value": 48.1,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00213",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T10:00:00Z",
+      "value": 48.8,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00214",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T10:30:00Z",
+      "value": 49.4,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00215",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T11:00:00Z",
+      "value": 49.2,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00216",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T11:30:00Z",
+      "value": 49.3,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00217",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T12:00:00Z",
+      "value": 49.3,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00218",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T12:30:00Z",
+      "value": 49.3,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00219",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T13:00:00Z",
+      "value": 49.7,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00220",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T13:30:00Z",
+      "value": 50.0,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00221",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T14:00:00Z",
+      "value": 50.1,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00222",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T14:30:00Z",
+      "value": 50.5,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00223",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T15:00:00Z",
+      "value": 49.7,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00224",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T15:30:00Z",
+      "value": 50.1,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00225",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T16:00:00Z",
+      "value": 49.8,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00226",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T16:30:00Z",
+      "value": 49.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00227",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T17:00:00Z",
+      "value": 49.7,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00228",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T17:30:00Z",
+      "value": 49.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00229",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T18:00:00Z",
+      "value": 49.5,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00230",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T18:30:00Z",
+      "value": 49.5,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00231",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T19:00:00Z",
+      "value": 49.7,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00232",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T19:30:00Z",
+      "value": 48.6,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00233",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T20:00:00Z",
+      "value": 48.7,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00234",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T20:30:00Z",
+      "value": 48.7,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00235",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T21:00:00Z",
+      "value": 47.6,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00236",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T21:30:00Z",
+      "value": 47.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00237",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T22:00:00Z",
+      "value": 47.6,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00238",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T22:30:00Z",
+      "value": 47.3,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00239",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T23:00:00Z",
+      "value": 47.0,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B07-diurnal-ambient-rise-00240",
+      "entityId": "leaf-12",
+      "metric": "switch.temperature_c",
+      "timestamp": "2026-11-14T23:30:00Z",
+      "value": 46.9,
+      "unit": "C",
+      "source": {
+        "connectorId": "ufm-ib-01",
+        "system": "NVIDIA UFM",
+        "collectionMethod": "rest-poll"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    }
+  ]
+}

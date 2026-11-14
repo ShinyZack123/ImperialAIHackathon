@@ -1,0 +1,2552 @@
+{
+  "scenarioId": "B05-single-spurious-sample",
+  "title": "One temperature reading of 127C, marked invalid/low-confidence, between normal 66C readings",
+  "expected": {
+    "flag": false,
+    "category": "sensor_noise",
+    "reason": "Physically impossible jump (61C in 30 s and back), quality.valid=false with confidence 0.15, and no corroboration: memory temp, clocks and throttle state all unchanged.",
+    "naiveRuleThatWouldFalselyTrigger": "gpu.temperature_c > thermalLimitC",
+    "suppressionEvidence": [
+      "quality.valid = false or confidence < 0.5",
+      "single sample (needs >= N consecutive)",
+      "no corroborating metric moved"
+    ]
+  },
+  "window": {
+    "start": "2026-11-14T14:00:00Z",
+    "end": "2026-11-14T14:15:00Z",
+    "sampleIntervalSeconds": 30
+  },
+  "primaryEntityIds": [
+    "gpu-12-02-07"
+  ],
+  "affectedWorkloadIds": [
+    "training-job-104"
+  ],
+  "context": {
+    "note": "If the same entity produced invalid samples repeatedly, that would become a sensor-health flag (low severity) instead."
+  },
+  "telemetry": [
+    {
+      "id": "tel-B05-single-spurious-sample-00001",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:00:00Z",
+      "value": 65.2,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00002",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:00:30Z",
+      "value": 65.9,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00003",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:01:00Z",
+      "value": 66.4,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00004",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:01:30Z",
+      "value": 65.1,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00005",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:02:00Z",
+      "value": 66.4,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00006",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:02:30Z",
+      "value": 66.2,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00007",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:03:00Z",
+      "value": 65.9,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00008",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:03:30Z",
+      "value": 66.8,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00009",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:04:00Z",
+      "value": 65.7,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00010",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:04:30Z",
+      "value": 65.3,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00011",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:05:00Z",
+      "value": 66.0,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00012",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:05:30Z",
+      "value": 65.4,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00013",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:06:00Z",
+      "value": 65.9,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00014",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:06:30Z",
+      "value": 66.7,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00015",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:07:00Z",
+      "value": 127.0,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": false,
+        "estimated": false,
+        "stale": false,
+        "confidence": 0.15
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00016",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:07:30Z",
+      "value": 66.5,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00017",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:08:00Z",
+      "value": 65.6,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00018",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:08:30Z",
+      "value": 66.5,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00019",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:09:00Z",
+      "value": 66.7,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00020",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:09:30Z",
+      "value": 65.3,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00021",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:10:00Z",
+      "value": 66.4,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00022",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:10:30Z",
+      "value": 66.6,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00023",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:11:00Z",
+      "value": 64.8,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00024",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:11:30Z",
+      "value": 66.7,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00025",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:12:00Z",
+      "value": 65.5,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00026",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:12:30Z",
+      "value": 64.8,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00027",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:13:00Z",
+      "value": 66.3,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00028",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:13:30Z",
+      "value": 66.8,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00029",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:14:00Z",
+      "value": 66.0,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00030",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.temperature_c",
+      "timestamp": "2026-11-14T14:14:30Z",
+      "value": 66.4,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00031",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:00:00Z",
+      "value": 57.5,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00032",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:00:30Z",
+      "value": 57.5,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00033",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:01:00Z",
+      "value": 57.9,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00034",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:01:30Z",
+      "value": 58.1,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00035",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:02:00Z",
+      "value": 58.0,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00036",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:02:30Z",
+      "value": 57.9,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00037",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:03:00Z",
+      "value": 57.3,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00038",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:03:30Z",
+      "value": 58.2,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00039",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:04:00Z",
+      "value": 57.6,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00040",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:04:30Z",
+      "value": 58.3,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00041",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:05:00Z",
+      "value": 58.1,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00042",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:05:30Z",
+      "value": 57.5,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00043",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:06:00Z",
+      "value": 58.6,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00044",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:06:30Z",
+      "value": 58.4,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00045",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:07:00Z",
+      "value": 58.2,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00046",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:07:30Z",
+      "value": 58.0,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00047",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:08:00Z",
+      "value": 59.0,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00048",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:08:30Z",
+      "value": 57.1,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00049",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:09:00Z",
+      "value": 57.7,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00050",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:09:30Z",
+      "value": 58.4,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00051",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:10:00Z",
+      "value": 57.3,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00052",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:10:30Z",
+      "value": 57.6,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00053",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:11:00Z",
+      "value": 58.1,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00054",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:11:30Z",
+      "value": 58.1,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00055",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:12:00Z",
+      "value": 58.3,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00056",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:12:30Z",
+      "value": 58.8,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00057",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:13:00Z",
+      "value": 58.2,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00058",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:13:30Z",
+      "value": 57.6,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00059",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:14:00Z",
+      "value": 58.4,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00060",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.memory_temperature_c",
+      "timestamp": "2026-11-14T14:14:30Z",
+      "value": 58.1,
+      "unit": "C",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00061",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:00:00Z",
+      "value": 1825.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00062",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:00:30Z",
+      "value": 1833.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00063",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:01:00Z",
+      "value": 1834.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00064",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:01:30Z",
+      "value": 1823.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00065",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:02:00Z",
+      "value": 1829.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00066",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:02:30Z",
+      "value": 1826.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00067",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:03:00Z",
+      "value": 1828.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00068",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:03:30Z",
+      "value": 1820.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00069",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:04:00Z",
+      "value": 1845.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00070",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:04:30Z",
+      "value": 1816.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00071",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:05:00Z",
+      "value": 1844.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00072",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:05:30Z",
+      "value": 1844.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00073",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:06:00Z",
+      "value": 1824.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00074",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:06:30Z",
+      "value": 1837.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00075",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:07:00Z",
+      "value": 1831.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00076",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:07:30Z",
+      "value": 1823.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00077",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:08:00Z",
+      "value": 1834.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00078",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:08:30Z",
+      "value": 1830.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00079",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:09:00Z",
+      "value": 1827.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00080",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:09:30Z",
+      "value": 1837.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00081",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:10:00Z",
+      "value": 1835.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00082",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:10:30Z",
+      "value": 1838.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00083",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:11:00Z",
+      "value": 1830.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00084",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:11:30Z",
+      "value": 1826.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00085",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:12:00Z",
+      "value": 1827.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00086",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:12:30Z",
+      "value": 1816.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00087",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:13:00Z",
+      "value": 1831.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00088",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:13:30Z",
+      "value": 1832.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00089",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:14:00Z",
+      "value": 1826.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00090",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.sm_clock_mhz",
+      "timestamp": "2026-11-14T14:14:30Z",
+      "value": 1814.0,
+      "unit": "MHz",
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00091",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:00:00Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00092",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:00:30Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00093",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:01:00Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00094",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:01:30Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00095",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:02:00Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00096",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:02:30Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00097",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:03:00Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00098",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:03:30Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00099",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:04:00Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00100",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:04:30Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00101",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:05:00Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00102",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:05:30Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00103",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:06:00Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00104",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:06:30Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00105",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:07:00Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00106",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:07:30Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00107",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:08:00Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00108",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:08:30Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00109",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:09:00Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00110",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:09:30Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00111",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:10:00Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00112",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:10:30Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00113",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:11:00Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00114",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:11:30Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00115",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:12:00Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00116",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:12:30Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00117",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:13:00Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00118",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:13:30Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00119",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:14:00Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    },
+    {
+      "id": "tel-B05-single-spurious-sample-00120",
+      "entityId": "gpu-12-02-07",
+      "metric": "gpu.throttle_reasons",
+      "timestamp": "2026-11-14T14:14:30Z",
+      "value": "none",
+      "unit": null,
+      "labels": {
+        "workloadId": "training-job-104"
+      },
+      "source": {
+        "connectorId": "dcgm-prod-01",
+        "system": "NVIDIA DCGM",
+        "collectionMethod": "metrics-export"
+      },
+      "quality": {
+        "valid": true,
+        "estimated": false,
+        "stale": false
+      }
+    }
+  ]
+}
