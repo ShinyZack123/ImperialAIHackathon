@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Crosslayer is an AI datacenter operations simulator. Trace incidents and compare scheduling policies on one shared digital twin.">
+  <meta name="color-scheme" content="light">
+  <title>Crosslayer — Datacenter operations</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#overview" aria-label="Crosslayer overview">
+        <span class="logomark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span>crosslayer<span class="brand-period">.</span></span>
+      </a>
+      <nav aria-label="Workspace">
+        <a href="#overview" data-view="overview" aria-current="page">Overview</a>
+        <a href="#experiments" data-view="experiments">Experiments</a>
+      </nav>
+      <div class="header-status">
+        <button type="button" id="open-tools" class="header-button"><span aria-hidden="true">⌘</span> MCP<span class="tools-word"> tools</span></button>
+        <span class="simulation-label"><i aria-hidden="true"></i> Simulation</span>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="workspace">
+    <div class="page-header">
+      <div>
+        <div class="breadcrumb"><span class="site-indicator" aria-hidden="true"></span> Operations <span aria-hidden="true">/</span> <strong>London 01</strong></div>
+        <h1 id="page-title" tabindex="-1">Infrastructure overview</h1>
+        <p id="page-summary" class="page-summary">Trace workload performance across the compute, network and facility layers.</p>
+      </div>
+      <label class="scenario-control" for="scenario">
+        <span class="mono">Incident scenario</span>
+        <span class="select-wrap"><select id="scenario"></select><i aria-hidden="true"></i></span>
+      </label>
+    </div>
+
+    <section id="overview" aria-labelledby="page-title">
+      <div class="metrics-strip" id="metrics" aria-label="Key metrics" role="group"></div>
+
+      <div class="workspace-grid">
+        <section class="panel topology-panel" aria-labelledby="topology-heading">
+          <div class="panel-head topology-head">
+            <div class="topology-title">
+              <h2 id="topology-heading">Infrastructure map</h2>
+              <p id="topology-summary">4 racks <span aria-hidden="true">·</span> 32 GPUs</p>
+            </div>
+            <div class="map-controls">
+              <div class="segment-control" id="layers" role="group" aria-label="Topology layer">
+                <button type="button" data-layer="fabric" aria-pressed="true">Fabric</button>
+                <button type="button" data-layer="power" aria-pressed="false">Power</button>
+                <button type="button" data-layer="cooling" aria-pressed="false">Cooling</button>
+              </div>
+              <button type="button" id="reset-map" class="icon-button" aria-label="Reset rack positions" title="Reset rack positions"><span aria-hidden="true">↺</span></button>
+            </div>
+          </div>
+          <div class="map" id="map">
+            <canvas id="wires" aria-hidden="true"></canvas>
+            <div id="sources" class="map-layer" aria-label="Infrastructure sources"></div>
+            <div id="links" class="map-layer" aria-label="Infrastructure links"></div>
+            <div id="racks" class="map-layer" aria-label="Compute racks"></div>
+            <div id="gpu-tooltip" class="gpu-tooltip" aria-hidden="true"></div>
+            <div class="map-readout mono" id="map-readout"></div>
+          </div>
+          <div class="legend-bar" aria-label="GPU status legend">
+            <span><i class="training"></i> Training</span>
+            <span><i class="inference"></i> Inference</span>
+            <span><i class="waiting"></i> Waiting on fabric</span>
+            <span><i class="idle"></i> Idle</span>
+            <span><i class="unknown"></i> Unknown</span>
+          </div>
+          <div class="replay">
+            <button type="button" id="play" class="icon-button play-button" aria-label="Play telemetry replay"><span class="play-glyph" aria-hidden="true"></span></button>
+            <div class="replay-range">
+              <div class="replay-times"><label for="minute">Telemetry replay</label><output id="replay-timestamp" for="minute" class="mono"></output></div>
+              <input id="minute" type="range" value="0" min="0" step="1" aria-label="Simulated minute">
+            </div>
+            <button type="button" id="policy" class="policy-button" hidden aria-pressed="false">View coordinated layout</button>
+          </div>
+        </section>
+
+        <aside class="panel inspector-panel" aria-labelledby="inspector-title">
+          <div class="inspector-head">
+            <div class="inspector-tabs" role="group" aria-label="Inspector view">
+              <button type="button" data-inspector="incident" aria-pressed="true">Incident</button>
+              <button type="button" data-inspector="selection" aria-pressed="false">Selection</button>
+            </div>
+            <span class="inspector-icon" aria-hidden="true">◎</span>
+          </div>
+          <div id="inspector"></div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="experiments" aria-labelledby="page-title" hidden>
+      <div class="experiment-actions">
+        <div id="experiment-meta" class="mono experiment-meta"></div>
+        <div class="action-group">
+          <button type="button" class="secondary-button" id="export-results">Export JSON <span aria-hidden="true">↓</span></button>
+          <button type="button" class="primary-button" id="show-placement">Inspect coordinated layout <span aria-hidden="true">→</span></button>
+        </div>
+      </div>
+      <div id="experiment-results"></div>
+    </section>
+
+    <footer class="workspace-footer">
+      <span>Crosslayer digital twin</span>
+      <span class="mono" id="footer-meta"></span>
+    </footer>
+  </main>
+
+  <dialog id="tools-dialog" aria-labelledby="tools-title">
+    <div class="dialog-top"><h2 id="tools-title">Connect to Crosslayer</h2><form method="dialog"><button class="icon-button" aria-label="Close MCP tools" type="submit">×</button></form></div>
+    <p>Use the local MCP server to inspect the same topology, incident evidence and simulation results.</p>
+    <dl class="tool-list">
+      <div><dt>get_snapshot</dt><dd>Inspect the topology and telemetry.</dd></div>
+      <div><dt>inspect_entity</dt><dd>Inspect a GPU, rack, or link and its relationships.</dd></div>
+      <div><dt>trace_incident</dt><dd>Read the signals behind a diagnosis.</dd></div>
+      <div><dt>compare_policies</dt><dd>Run a reproducible 24-minute comparison.</dd></div>
+    </dl>
+    <p class="dialog-note">Launch from the project directory with <code>node src/mcp-stdio.js</code>. The server exposes simulated data.</p>
+  </dialog>
+  <noscript><p class="noscript">Enable JavaScript to use the Crosslayer simulator.</p></noscript>
+  <script type="module" src="./ui.js"></script>
+</body>
+</html>
