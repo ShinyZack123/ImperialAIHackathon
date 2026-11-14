@@ -12,7 +12,7 @@ Run from this folder (Python 3, standard library only):
 
 See `FLAGGER_METHODS.md` for how the detectors and gates work, and `WORKLOG.md` for the build log.
 
-## In the operator console
+## In the operator console: simulated scenarios
 
 `bridge.py` connects the flagger to the Crosslayer console. Run `npm run dev` from the repo root, open http://127.0.0.1:4397 and pick a **Telemetry flagger** scenario from the scenario menu.
 
@@ -32,3 +32,25 @@ Scenarios:
     python3 test_bridge.py    # all 12 showcase scenarios match their labels, plus mapping, validation and stale-data tests
 
 All of the data is synthetic.
+
+## In the operator console: Databricks evidence
+
+The separate **Databricks** tab now invokes this same `flagger.flag_window` function through `../databricks/backend/flagging_adapter.py`. It preserves the Databricks fixture's native 24 GPUs and three racks, such as `gpu-001`, `rack-a` and `zone-a`; it does not use `TwinMap` or project this fleet onto the 32-GPU console. Databricks replay UUIDs and UTC timestamps are independent of the scenario names and ticks above.
+
+The official flow is:
+
+```text
+four Delta evidence tables → at most 15 minutes before the selected cursor
+  → validated source-to-detector adapter → flag_window
+  → confirmed official_detector_results write in Databricks → website/model tools
+```
+
+`OfficialDetector` in `../databricks/backend/official_detection.py` is shared by the website's snapshot API and the model adapter's `.health_assessments()`. It uses this module as the sole official detector. The six `baseline-v1` rules in Databricks notebook 02 and its `health_alerts` table are comparison-only; `.comparison_baseline()` exposes them for tests. A failure in the official detector or result persistence returns an error and never falls back to those six rules.
+
+The connector retains source units: job progress remains synthetic work units, cooling flow remains percent of nominal, and generic GPU clock readings are not relabelled as SM/memory clocks. It supplies only available evidence and does not load scenario labels or answer keys. Maintenance, operator interventions, workload phases, calibrated baselines and throttle reasons are absent, so detector messages cannot exclude those explanations.
+
+Flags describe observations within the selected analysis window, not confirmed current hardware failures. A recovered latest reading can coexist with an earlier finding. The existing 300-second persistence rule is retained; short windows may have no flags despite unusual readings. Missing/stale latest telemetry remains unknown, and no finding does not certify healthy hardware.
+
+Consecutive-condition and stalled-progress windows break across gaps longer than three sampling periods. The connector declares this fixture's five-second cadence; other sources should supply `samplingIntervalSeconds` in their metric definitions/catalog. Without that metadata the detector estimates cadence from the observed median interval, which cannot distinguish uniformly missing samples from a genuinely slower source.
+
+Each website review uses an explicit cursor; it does not start continuous monitoring, diagnostic LLM inference or hardware control. Official results include a detector/configuration/adapter fingerprint and evidence hash in `official_detector_results`. Repeating the same input/version updates the same record. See the [connection guide](../databricks/CONNECT.md) for Python API + same-origin Node proxy startup, shared warehouse permissions and live validation, and the [data contract](../databricks/contracts/data-contract.md) for API details.

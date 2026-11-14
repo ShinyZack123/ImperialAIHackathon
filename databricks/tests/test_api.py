@@ -1,11 +1,13 @@
 """HTTP contract tests; no Databricks authentication or network access."""
 from datetime import datetime, timezone
+import os
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 from fastapi.testclient import TestClient
 
-from backend.app import app, get_data
+with patch.dict(os.environ, {"FRONTEND_ORIGINS": "http://localhost:3000,http://127.0.0.1:4397"}):
+    from backend.app import app, get_data
 from backend.databricks_data import DataQueryError, DataQueryTimeout
 
 RUN = "c573ec80-c960-451a-92b3-a177f8ef4005"

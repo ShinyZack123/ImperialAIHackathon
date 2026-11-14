@@ -1,4 +1,4 @@
-"""Exercise SQL selection/aggregation using SQLite and a unix_timestamp UDF.
+"""Exercise SQL selection/aggregation using SQLite and timestamp UDFs.
 
 This validates the query logic on fixtures; it does NOT certify Databricks
 syntax/runtime support. Run the packaged notebook for Databricks validation.
@@ -6,7 +6,7 @@ syntax/runtime support. Run the packaged notebook for Databricks validation.
 
 import sqlite3
 import unittest
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -18,12 +18,20 @@ def epoch(value):
     return None if value is None else int(datetime.fromisoformat(value.replace("Z", "+00:00")).timestamp())
 
 
+def epoch_micros(value):
+    if value is None:
+        return None
+    delta = datetime.fromisoformat(value.replace("Z", "+00:00")) - datetime(1970, 1, 1, tzinfo=timezone.utc)
+    return (delta.days * 86400 + delta.seconds) * 1000000 + delta.microseconds
+
+
 class QueryTests(unittest.TestCase):
     def setUp(self):
         self.db = sqlite3.connect(":memory:")
         self.addCleanup(self.db.close)
         self.db.row_factory = sqlite3.Row
         self.db.create_function("unix_timestamp", 1, epoch)
+        self.db.create_function("unix_micros", 1, epoch_micros)
         self.db.executescript("""
           CREATE TABLE inventory (gpu_id TEXT, vendor TEXT, model TEXT,
             rack_id TEXT, server_id TEXT, cooling_zone_id TEXT,
@@ -76,6 +84,26 @@ class QueryTests(unittest.TestCase):
     def test_freshness_boundary_includes_fifteen_seconds(self):
         self.db.execute("UPDATE telemetry SET event_ts='2026-11-14T12:00:05Z' WHERE gpu_id='b'")
         self.assertEqual(self.query("overview.sql")[0]["observed_gpu_count"], 3)
+
+    def test_fractional_cursor_cannot_extend_freshness_to_fifteen_and_a_half_seconds(self):
+        self.db.execute("DELETE FROM telemetry WHERE gpu_id != 'a' OR event_ts != '2026-11-14T12:00:15Z'")
+        self.db.execute("UPDATE telemetry SET event_ts='2026-11-14T12:00:05Z'")
+        self.db.execute("UPDATE workloads SET event_ts='2026-11-14T12:00:05Z' WHERE run_id='run-a' AND job_id='job-a'")
+        self.db.execute("UPDATE cooling SET event_ts='2026-11-14T12:00:05Z' WHERE run_id='run-a' AND inlet_temp_c=20")
+        self.assertEqual(self.query("overview.sql")[0]["observed_gpu_count"], 1)
+        on_boundary = self.query("rack_context.sql", rack_id="rack-a")[0]
+        self.assertEqual(on_boundary["telemetry_age_seconds"], 15)
+        for field in ("telemetry_is_fresh", "telemetry_is_observed", "workload_is_fresh", "cooling_is_fresh"):
+            self.assertEqual(on_boundary[field], 1)
+        cursor = "2026-11-14T12:00:20.500000Z"
+        beyond = self.query("overview.sql", as_of_ts=cursor)[0]
+        self.assertEqual(beyond["observed_gpu_count"], 0)
+        self.assertEqual(beyond["unknown_gpu_count"], 5)
+        self.assertIsNone(beyond["observed_gpu_power_kw"])
+        context = self.query("rack_context.sql", rack_id="rack-a", as_of_ts=cursor)[0]
+        self.assertEqual(context["telemetry_age_seconds"], 15.5)
+        for field in ("telemetry_is_fresh", "telemetry_is_observed", "workload_is_fresh", "cooling_is_fresh"):
+            self.assertEqual(context[field], 0)
 
     def test_no_data_reports_unknown_and_null_aggregates_not_zero(self):
         result = self.query("overview.sql", run_id="missing")[0]

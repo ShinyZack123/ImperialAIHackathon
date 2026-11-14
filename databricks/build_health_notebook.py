@@ -23,16 +23,19 @@ def build_notebook():
     rule_source = (ROOT / "health_rules.py").read_text()
     cells = [
         cell("markdown", "intro", """
-        # GPU health processing on Databricks
+        # GPU health comparison baseline on Databricks
 
         Run **01_gpu_data_starter** first. This second notebook reads its four
         evidence tables, computes time-bounded health features with Spark SQL,
         evaluates transparent baseline rules, and uses Delta **MERGE** to store
-        repeatable snapshots for the website and diagnostic-model teammate.
+        repeatable comparison snapshots in `health_features` and `health_alerts`.
 
         The data and thresholds are synthetic. These rules flag observations;
         they do not diagnose a physical cause, train a model or repair hardware.
-        Your deterministic-model teammate can replace the rule implementation.
+        These six rules are for testing/comparison only. The website and model
+        escalation use the official `flagging/flagger.py` detector through the
+        backend adapter, which persists `official_detector_results`. This notebook
+        does not produce official alerts and is never a fallback for that detector.
 
         1. Import this `.ipynb` into the same Databricks folder and select Serverless.
         2. Run all. Defaults use `workspace.gpu_ops_hackathon`, the first run ID,
@@ -153,20 +156,22 @@ display(features)
         print(f"Validated {len(feature_rows)} features and {len(alert_rows)} rule evaluations.")
         display(persisted_alerts.groupBy("status", "severity").count().orderBy("status", "severity"))
         display(persisted_alerts.where("status = 'active'").orderBy("gpu_id", "rule_id"))
-        print(f"Website/model replay selection: run_id={RUN_ID}, as_of_ts={AS_OF.isoformat()}")
+        print(f"Comparison replay selection: run_id={RUN_ID}, as_of_ts={AS_OF.isoformat()}")
         """),
         cell("markdown", "handoff", """
-        ## Connect the website and model
+        ## Compare with the official detector
 
         Use the exact run ID and timestamp printed above to read `health_alerts`
         through the local backend. An empty result means this snapshot has not been
         processed; it does not mean that zero problems were detected. `clear` and
-        `unknown` rows allow the website to distinguish those outcomes explicitly.
+        `unknown` rows distinguish the comparison baseline's outcomes explicitly.
 
-        Give active observations, their `evidence_json`, GPU/rack IDs and the fixed
-        replay cursor to the investigating model. It can retrieve the corresponding
-        GPU history and cooling/workload context. Its output should state the evidence,
-        uncertainty and recommended action. The baseline alerts are not model diagnoses.
+        For official observations, use `/api/databricks/snapshot` or the backend
+        `OfficialDetector` service at the same replay cursor. It reads the four
+        evidence tables, invokes `flagging/flagger.py`, and saves its own result.
+        Only those official incidents should drive website health states and
+        diagnostic-model escalation. Compare this baseline separately; do not
+        combine its alerts with official incidents or substitute it after an error.
 
         To use a Databricks Job, add this notebook as a notebook task and pass the
         widget parameters `catalog`, `schema`, `run_id`, `as_of_ts`. Start with a manual

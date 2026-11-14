@@ -49,23 +49,25 @@ def interval(pts):
     if len(pts) < 2: return 0
     return statistics.median([b[0] - a[0] for a, b in zip(pts, pts[1:])])
 
-def longest_run(pts, pred):
-    """pts: [(t, v)]. Longest consecutive run where pred(v). Returns (start, end, duration_s, n) or None."""
-    best, cur = None, None
-    dt = interval(pts)
-    for t, v in pts:
-        if pred(v):
-            cur = (cur[0], t, cur[2] + 1) if cur else (t, t, 1)
-            if not best or cur[2] > best[2]: best = cur
-        else:
-            cur = None
-    if not best: return None
-    return best[0], best[1], best[1] - best[0] + dt, best[2]
+def sample_period(pts, declared=None):
+    if is_num(declared) and math.isfinite(declared) and declared > 0: return declared
+    return interval(pts)
 
-def all_runs(pts, pred):
+def gap_limit(pts, declared=None):
+    return sample_period(pts, declared) * CFG["max_sample_gap_multiple"]
+
+def longest_run(pts, pred, sample_interval=None):
+    """pts: [(t, v)]. Longest consecutive run where pred(v). Returns (start, end, duration_s, n) or None."""
+    return max(all_runs(pts, pred, sample_interval), key=lambda run: run[3], default=None)
+
+def all_runs(pts, pred, sample_interval=None):
     """Every consecutive run where pred(v): [(start, end, duration_s, n)]."""
-    out, cur, dt = [], None, interval(pts)
+    out, cur, dt = [], None, sample_period(pts, sample_interval)
+    max_gap = gap_limit(pts, sample_interval)
     for t, v in pts:
+        # Unobserved time is not evidence that the predicate persisted.
+        if cur and t - cur[1] > max_gap:
+            out.append((cur[0], cur[1], cur[1] - cur[0] + dt, cur[2])); cur = None
         if pred(v): cur = (cur[0], t, cur[2] + 1) if cur else (t, t, 1)
         elif cur: out.append((cur[0], cur[1], cur[1] - cur[0] + dt, cur[2])); cur = None
     if cur: out.append((cur[0], cur[1], cur[1] - cur[0] + dt, cur[2]))
@@ -164,6 +166,14 @@ class Graph:
 
     def etype(self, eid):
         return self.ent.get(eid, {}).get("type")
+
+    def sampling_interval(self, eid, metric):
+        definitions = self.ent.get(eid, {}).get("metricDefinitions", []) or []
+        for definition in definitions + [self.catalog.get(metric, {})]:
+            if definition.get("metric", metric) != metric: continue
+            value = definition.get("samplingIntervalSeconds")
+            if is_num(value) and math.isfinite(value) and value > 0: return value
+        return None
 
     def baseline(self, eid, metric, cond=None):
         """Most specific stored baseline for this entity/metric whose conditions all hold. None if absent."""
@@ -315,7 +325,7 @@ def flag_window(topo, telemetry, now=None):
         def bad(tv):
             t, v = tv
             return z(t, v) > CFG["robust_z"] and abs(v - exp(t)) > min_rel * max(abs(exp(t)), 1e-9)
-        run = longest_run([(t, (t, v)) for t, v in cand], bad)
+        run = longest_run([(t, (t, v)) for t, v in cand], bad, G.sampling_interval(eid, metric))
         if persistent(run):
             seg = [(t, v) for t, v in pts if run[0] <= t <= run[1]]
             t_w, worst = max(seg, key=lambda x: sign * x[1])
@@ -335,7 +345,7 @@ def flag_window(topo, telemetry, now=None):
                                 ("warn", "warning", True), ("warnBelow", "warning", False)):
             lim, src = G.limit((d.get("limits") or {}).get(key), eid)
             if lim is None: continue
-            run = longest_run(nums, (lambda v: v > lim) if above else (lambda v: v < lim))
+            run = longest_run(nums, (lambda v: v > lim) if above else (lambda v: v < lim), G.sampling_interval(eid, metric))
             if persistent(run):
                 seg = [v for t, v in nums if run[0] <= t <= run[1]]
                 peak = max(seg) if above else min(seg)
@@ -347,7 +357,7 @@ def flag_window(topo, telemetry, now=None):
         path = d.get("expectedFromEntity")
         if path:         # state that must match the hardware's rated value (e.g. PCIe generation/width)
             spec, _ = G.limit({"fromEntity": path}, eid)
-            run = longest_run(nums, lambda v: spec is not None and v < spec)
+            run = longest_run(nums, lambda v: spec is not None and v < spec, G.sampling_interval(eid, metric))
             if run and run[3] >= CFG["persist_min_samples"]:
                 lo = min(v for _, v in nums)
                 what = "PCIe link " + ("generation" if metric.endswith("gen") else "width") if metric.startswith("gpu.pcie") else metric
@@ -371,7 +381,7 @@ def flag_window(topo, telemetry, now=None):
             for eid, v in vals.items():
                 dev[eid].append((t, (v - m, (v - m) / s, m)))
         for eid, pts in dev.items():
-            run = longest_run(pts, lambda d: abs(d[1]) > CFG["peer_z"] and abs(d[0]) > min_abs)
+            run = longest_run(pts, lambda d: abs(d[1]) > CFG["peer_z"] and abs(d[0]) > min_abs, G.sampling_interval(eid, metric))
             if persistent(run):
                 seg = [d for t, d in pts if run[0] <= t <= run[1]]
                 d = max(seg, key=lambda x: abs(x[0]))
@@ -457,7 +467,7 @@ def flag_window(topo, telemetry, now=None):
                     F.append(Finding("event", "warning", eid, metric, t, t, f"replica event at {hm(t)}: {v}",
                                      "known-bad event keywords", {eid}))
         elif d.get("badValues") and metric.startswith(("cdu.", "pdu.")):
-            run = longest_run([(t, v) for t, v, _ in vals], lambda v: v in d["badValues"])
+            run = longest_run([(t, v) for t, v, _ in vals], lambda v: v in d["badValues"], G.sampling_interval(eid, metric))
             if run and run[3] >= 2:
                 bad_v = next(v for t, v, _ in vals if t >= run[0])
                 F.append(Finding("state", "critical", eid, metric, run[0], run[1],
@@ -471,7 +481,7 @@ def flag_window(topo, telemetry, now=None):
             cls = d.get("valueClasses", {})
             kind = lambda v: cls.get(str(v), "hardware" if str(v).startswith("HW_") else "software" if str(v).startswith("SW_") else "ok")
             for want, det, label in (("hardware", "state", "hardware throttling"), ("software", "sw_throttle", "software-requested throttling")):
-                run = longest_run([(t, v) for t, v, _ in vals], lambda v: kind(v) == want)
+                run = longest_run([(t, v) for t, v, _ in vals], lambda v: kind(v) == want, G.sampling_interval(eid, metric))
                 if run and run[3] >= CFG["persist_min_samples"]:
                     F.append(Finding(det, "warning", eid, metric, run[0], run[1],
                                      f"{label} ({next(v for t, v, _ in vals if t >= run[0] and kind(v) == want)}) for {mins(run[2])}",
@@ -484,7 +494,7 @@ def flag_window(topo, telemetry, now=None):
         cp_exp = (w.get("checkpointPolicy") or {}).get("expectedDurationSeconds") or (w.get("attributes") or {}).get("expectedCheckpointDurationSeconds")
         budget = CFG["checkpoint_overrun_multiple"] * cp_exp if cp_exp else None
         # 7a. workload-phase gate with a time budget: a checkpoint explains a pause, but only for so long
-        cps = all_runs(phase, lambda v: v == "checkpoint")
+        cps = all_runs(phase, lambda v: v == "checkpoint", G.sampling_interval(wid, "workload.phase"))
         for c0, c1, dur, n in cps:
             if budget is None: continue
             if dur > budget:
@@ -495,13 +505,17 @@ def flag_window(topo, telemetry, now=None):
                 gate_log.append((Finding("liveness", "info", wid, "workload.phase", c0, c1, f"checkpoint for {mins(dur)}", "workload phase gate"),
                                  f"checkpoint lasted ~{dur:.0f} s, within its {budget:g} s budget ({CFG['checkpoint_overrun_multiple']}x the expected {cp_exp} s): GPU dip expected"))
         # 7b. progress heartbeat: the step counter must advance while the scheduler says "running"
-        steps = clean.get((wid, "workload.steps_completed"), [])
+        progress_config = w.get("progress") or {}
+        progress_metric = progress_config.get("counterMetric", "workload.steps_completed")
+        progress_unit = progress_config.get("counterUnit", "training steps")
+        steps = clean.get((wid, progress_metric), [])
         if len(steps) < 3: continue
         step_s = ((w.get("progress") or {}).get("expectedStepTimeMs") or w.get("training", {}).get("stepTimeMs") or 1000) / 1000
         limit = max(CFG["liveness_min_s"], CFG["liveness_step_multiple"] * step_s)
         flats, cur = [], None
+        max_gap = gap_limit(steps, G.sampling_interval(wid, progress_metric))
         for (ta, a), (tb, b) in zip(steps, steps[1:]):
-            if b > a:
+            if tb - ta > max_gap or b > a:
                 if cur: flats.append(cur); cur = None
             else: cur = (cur[0], tb) if cur else (ta, tb)
         if cur: flats.append(cur)
@@ -514,32 +528,38 @@ def flag_window(topo, telemetry, now=None):
             not_running = [t for t, v in status if v != "running" and f0 <= t <= f1]
             if st == "running" and not_running and f1 - max(not_running) - in_cp <= limit: continue
             if st != "running":
-                gate_log.append((Finding("liveness", "info", wid, "workload.steps_completed", f0, f1, f"no steps for {mins(flat)}", "workload status gate"),
+                gate_unit = "steps" if progress_metric == "workload.steps_completed" else progress_unit
+                gate_log.append((Finding("liveness", "info", wid, progress_metric, f0, f1, f"no {gate_unit} for {mins(flat)}", "workload status gate"),
                                  f"{wid} status is '{st}': no further steps and idle GPUs are expected"))
                 continue
-            F.append(Finding("liveness", "critical", wid, "workload.steps_completed", f0, f1,
-                             f"no training steps for {mins(flat)} (stuck at step {steps[-1][1]}) while scheduler reports running; "
-                             f"expected one step every {step_s:.1f} s", "progress heartbeat (counter must advance)", {wid}))
+            if progress_metric == "workload.steps_completed":
+                description = (f"no training steps for {mins(flat)} (stuck at step {steps[-1][1]}) while scheduler reports running; "
+                               f"expected one step every {step_s:.1f} s")
+            else:
+                description = (f"no increase in {progress_unit} for {mins(flat)} (counter {steps[-1][1]}) while scheduler reports running; "
+                               f"configured progress timeout {limit:g} s")
+            F.append(Finding("liveness", "critical", wid, progress_metric, f0, f1,
+                             description, "progress heartbeat (counter must advance)", {wid}))
 
     # ---------- 8. availability and telemetry health
     for (eid, metric), rs in raw.items():
         pts = [(ts(r["timestamp"]), r["value"]) for r in rs]
         if metric in ("node.up", "port.link_up"):
             target = (rs[0].get("labels") or {}).get("port", eid)
-            run = longest_run(pts, lambda v: v is False)
+            run = longest_run(pts, lambda v: v is False, G.sampling_interval(eid, metric))
             if run and run[3] >= 2:
                 F.append(Finding("availability", "warning", target, metric, run[0], run[1],
                                  f"{'node down' if metric == 'node.up' else 'link down'} for {mins(run[2])}",
                                  "down-state persistence", wl_of(target)))
         elif metric.startswith("exporter.") and metric.endswith("_up"):
-            run = longest_run(pts, lambda v: v is False)
+            run = longest_run(pts, lambda v: v is False, G.sampling_interval(eid, metric))
             if run and run[3] >= 2:
                 F.append(Finding("telemetry", "warning", eid, metric, run[0], run[1],
                                  f"metrics exporter {metric.split('.')[1]} down for {mins(run[2])}: node is unmonitored",
                                  "collector health check", wl_of(eid)))
     stale_by_entity = {}
     for (eid, metric), rs in raw.items():
-        run = longest_run([(ts(r["timestamp"]), r["quality"].get("stale", False)) for r in rs], lambda v: v)
+        run = longest_run([(ts(r["timestamp"]), r["quality"].get("stale", False)) for r in rs], lambda v: v, G.sampling_interval(eid, metric))
         if run and run[3] >= 4:
             stale_by_entity.setdefault(eid, (metric, run))
         nums = [(ts(r["timestamp"]), r["value"]) for r in rs if is_num(r["value"])]
@@ -547,7 +567,7 @@ def flag_window(topo, telemetry, now=None):
             nb = max(4, int(len(nums) * CFG["baseline_frac"]))
             if len({v for _, v in nums[:nb]}) > 1:   # it used to move...
                 same = [(t, v == nums[i - 1][1] if i else False) for i, (t, v) in enumerate(nums)]
-                r2 = longest_run(same, lambda v: v)
+                r2 = longest_run(same, lambda v: v, G.sampling_interval(eid, metric))
                 frozen_v = next((v for t, v in nums if r2 and t == r2[1]), None)
                 at_bound = frozen_v is not None and (frozen_v == 0 or (rs[0].get("unit") == "%" and frozen_v >= 100))  # dead or saturated is not frozen
                 # a coarsely-rounded gauge repeats by chance: judge the run against this signal's own repeat habit

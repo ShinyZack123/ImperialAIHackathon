@@ -19,10 +19,11 @@
       <nav aria-label="Workspace">
         <a href="#overview" data-view="overview" aria-current="page">Overview</a>
         <a href="#experiments" data-view="experiments">Experiments</a>
+        <a href="#databricks" data-view="databricks">Databricks</a>
       </nav>
       <div class="header-status">
         <button type="button" id="open-tools" class="header-button"><span aria-hidden="true">⌘</span> MCP<span class="tools-word"> tools</span></button>
-        <span class="simulation-label"><i aria-hidden="true"></i> Simulation</span>
+        <span class="simulation-label" id="source-badge"><i aria-hidden="true"></i> Simulation</span>
       </div>
     </div>
   </header>
@@ -30,7 +31,7 @@
   <main id="main" class="workspace">
     <div class="page-header">
       <div>
-        <div class="breadcrumb"><span class="site-indicator" aria-hidden="true"></span> Operations <span aria-hidden="true">/</span> <strong>London 01</strong></div>
+        <div class="breadcrumb"><span class="site-indicator" aria-hidden="true"></span> Operations <span aria-hidden="true">/</span> <strong id="source-location">London 01</strong></div>
         <h1 id="page-title" tabindex="-1">Infrastructure overview</h1>
         <p id="page-summary" class="page-summary">Trace workload performance across the compute, network and facility layers.</p>
       </div>
@@ -106,6 +107,37 @@
         </div>
       </div>
       <div id="experiment-results"></div>
+    </section>
+
+    <section id="databricks" aria-labelledby="page-title" hidden>
+      <form id="db-form" class="panel db-controls">
+        <label for="db-run"><span class="mono">Databricks replay</span><select id="db-run" required disabled><option>Connecting…</option></select></label>
+        <label for="db-time"><span class="mono">Replay time · UTC</span><input id="db-time" type="datetime-local" step="5" required disabled></label>
+        <button class="primary-button" id="db-load" type="submit" disabled>Load snapshot <span aria-hidden="true">→</span></button>
+        <button class="secondary-button" id="db-retry" type="button">Refresh replays</button>
+        <p id="db-run-window" class="mono db-quiet"></p>
+      </form>
+      <p id="db-status" class="db-status" role="status" aria-live="polite">Connect to Databricks to inspect recorded GPU evidence.</p>
+      <div id="db-content" hidden>
+        <div class="metrics-strip" id="db-metrics" aria-label="Databricks GPU metrics" role="group"></div>
+        <div class="db-workspace-grid">
+          <section class="panel" aria-labelledby="db-fleet-heading">
+            <div class="panel-head"><div><h2 id="db-fleet-heading">GPU fleet</h2><p id="db-fleet-summary"></p></div><span class="db-source-label">Databricks · synthetic</span></div>
+            <div id="db-racks" class="db-racks"></div>
+            <div class="legend-bar db-legend"><span><i class="db-critical"></i> Critical finding</span><span><i class="db-warning"></i> Warning finding</span><span><i class="db-clear"></i> No findings</span><span><i class="unknown"></i> Unknown telemetry</span></div>
+          </section>
+          <aside class="panel" aria-labelledby="db-selection-heading"><div class="panel-head"><h2 id="db-selection-heading">GPU readings</h2></div><div id="db-selection" class="db-selection"><p class="db-empty">Select a GPU to inspect its readings.</p></div></aside>
+        </div>
+        <section class="panel db-analysis" aria-labelledby="db-analysis-heading">
+          <div class="panel-head"><div><h2 id="db-analysis-heading">Deterministic detector findings</h2><p>Findings in the selected analysis window · not confirmed physical diagnoses</p></div><span class="db-source-label">Team detector</span></div>
+          <p class="mono db-analysis-window" id="db-evidence-window"></p>
+          <p class="db-persistence" id="db-persistence" hidden></p>
+          <p class="db-coverage-note" id="db-coverage-note"></p>
+          <div id="db-incidents" class="db-incidents"></div>
+          <details class="db-context"><summary>Evidence coverage and detector context</summary><ul id="db-limitations"></ul></details>
+        </section>
+        <p class="db-readonly">Recorded synthetic evidence · observation only. This view does not execute hardware actions or simulate a repair.</p>
+      </div>
     </section>
 
     <footer class="workspace-footer">

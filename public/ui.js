@@ -1,8 +1,10 @@
 import { scenarioOptions, getSnapshot, inspectEntity, runComparison, traceIncident, duration, defaultSeed, schemaVersion } from './twin.js';
 import { invokeMcpTool, mcpToolCatalog } from './tool-catalog.js';
 import { escapeHtml, fetchFlagCatalog, fetchFlagAnalysis, fetchFlagEntity, worstState, flagStateNames, seriesKey, sortSeries, isoSeconds, shortMetric, compactValue, drawFlagChart } from './flagging.js';
+import { mountDatabricksView } from './databricks.js';
 
 const byId = id => document.getElementById(id);
+const databricksView = mountDatabricksView(byId('databricks'));
 const esc = escapeHtml;
 const scenarios = scenarioOptions();
 const statusNames = {
@@ -929,14 +931,20 @@ function updateMinute(minute) {
 }
 
 function changeView() {
-  const view = location.hash === '#experiments' ? 'experiments' : 'overview';
+  const view = location.hash === '#databricks' ? 'databricks' : location.hash === '#experiments' ? 'experiments' : 'overview';
   state.view = view;
   stopReplay();
   byId('overview').hidden = view !== 'overview';
   byId('experiments').hidden = view !== 'experiments';
+  byId('databricks').hidden = view !== 'databricks';
+  document.querySelector('.scenario-control').hidden = view === 'databricks';
+  byId('open-tools').hidden = view === 'databricks';
+  byId('source-location').textContent = view === 'databricks' ? 'Databricks replay' : 'London 01';
+  byId('source-badge').innerHTML = `<i aria-hidden="true"></i> ${view === 'databricks' ? 'Synthetic replay' : 'Simulation'}`;
+  byId('footer-meta').textContent = view === 'databricks' ? 'Databricks evidence · deterministic detector · observation only' : `Twin schema ${schemaVersion} · Seed ${defaultSeed}`;
   const title = byId('page-title');
-  title.textContent = view === 'overview' ? 'Infrastructure overview' : 'Policy experiments';
-  byId('page-summary').textContent = view === 'overview'
+  title.textContent = view === 'databricks' ? 'GPU evidence workspace' : view === 'overview' ? 'Infrastructure overview' : 'Policy experiments';
+  byId('page-summary').textContent = view === 'databricks' ? 'Explore stored GPU readings and investigate findings from the team’s deterministic detector.' : view === 'overview'
     ? flagMode() ? 'Replay GPU and facility telemetry through the deterministic flagger. Click any GPU to read its log.'
       : 'Trace workload performance across the compute, network and facility layers.'
     : 'Replay an incident under two scheduling policies and compare useful work, latency and energy.';
@@ -944,10 +952,12 @@ function changeView() {
     if (nav.dataset.view === view) nav.setAttribute('aria-current', 'page');
     else nav.removeAttribute('aria-current');
   }
+  if (view === 'databricks') databricksView.enter();
+  else databricksView.leave();
   if (view === 'experiments') {
     state.compared.add(state.scenario);
     renderExperiment();
-  } else renderOverview();
+  } else if (view === 'overview') renderOverview();
   window.scrollTo(0, 0);
 }
 

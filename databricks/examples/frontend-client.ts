@@ -1,8 +1,8 @@
-/** Copy into the coded website. These requests go to our local backend.
+/** Optional TypeScript client for the website's same-origin Databricks proxy.
  * Never put Databricks credentials in frontend code or VITE_/NEXT_PUBLIC_ values.
  * Keep the displayed replay time, source and synthetic-data label visible.
  */
-const API_BASE = "http://127.0.0.1:8010";
+const API_BASE = "";
 
 type Envelope<T> = {
   schema_version: string;
@@ -23,11 +23,18 @@ export type Overview = {
   observed_avg_gpu_util_pct: number | null;
   observed_avg_temp_c: number | null;
 };
-export type Assessment = {
-  alert_id: string; gpu_id: string; rack_id: string;
-  rule_id: string; status: "active" | "clear" | "unknown";
-  severity: "info" | "warning" | "critical";
-  summary: string; evidence_json: string;
+export type OfficialSnapshot = {
+  source: "databricks"; synthetic: true; run_id: string; as_of_ts: string;
+  state_scope: "analysis_window"; window: {start: string; end: string};
+  overview: Overview;
+  racks: {id: string; gpus: {
+    id: string; state: "clear" | "warning" | "critical" | "unknown";
+    telemetry_is_observed: boolean; metrics: Record<string, number | boolean | null>;
+  }[]}[];
+  incidents: {severity: string; rootEntity: string; affectedGpuIds: string[]; message: string; findings: Record<string, unknown>[]}[];
+  engine: {module: "flagging.flagger.flag_window"; version: string; deterministic: true};
+  persistence: {status: "saved"; table: string; evidence_sha256: string};
+  limitations: string[];
 };
 
 async function getJson<T>(path: string, params: Record<string, string> = {}): Promise<T> {
@@ -35,25 +42,24 @@ async function getJson<T>(path: string, params: Record<string, string> = {}): Pr
   const response = await fetch(`${API_BASE}${path}?${query}`);
   if (!response.ok) {
     const body = await response.json().catch(() => ({}));
-    throw new Error(typeof body.detail === "string" ? body.detail : `Data request failed (${response.status})`);
+    throw new Error(typeof body.error === "string" ? body.error : typeof body.detail === "string" ? body.detail : `Data request failed (${response.status})`);
   }
   return response.json();
 }
 
-export const listRuns = () => getJson<Envelope<ReplayRun[]>>("/api/runs");
-export const getOverview = (runId: string, replayTime: string) =>
-  getJson<Envelope<Overview>>("/api/overview", {run_id: runId, as_of_ts: replayTime});
-export const getRack = (runId: string, rackId: string, replayTime: string) =>
-  getJson<Envelope<Record<string, unknown>[]>>(`/api/racks/${encodeURIComponent(rackId)}`, {run_id: runId, as_of_ts: replayTime});
+export const listRuns = () => getJson<Envelope<ReplayRun[]>>("/api/databricks/runs");
+export const getSnapshot = (runId: string, replayTime: string) =>
+  getJson<Envelope<OfficialSnapshot>>("/api/databricks/snapshot", {run_id: runId, as_of_ts: replayTime});
 export const getGpuHistory = (runId: string, gpuId: string, replayTime: string) =>
-  getJson<Envelope<Record<string, unknown>[]>>(`/api/gpus/${encodeURIComponent(gpuId)}/history`, {run_id: runId, as_of_ts: replayTime, window_minutes: "5"});
-export const getAssessments = (runId: string, replayTime: string) =>
-  getJson<Envelope<Assessment[]> & {assessment_available: boolean; counts: Record<"active" | "clear" | "unknown", number>}>("/api/health-assessments", {run_id: runId, as_of_ts: replayTime});
+  getJson<Envelope<Record<string, unknown>[]>>(`/api/databricks/gpus/${encodeURIComponent(gpuId)}/history`, {run_id: runId, as_of_ts: replayTime, window_minutes: "5"});
+export const getWorkloadHistory = (runId: string, gpuId: string, replayTime: string) =>
+  getJson<Envelope<Record<string, unknown>[]>>(`/api/databricks/gpus/${encodeURIComponent(gpuId)}/workload-history`, {run_id: runId, as_of_ts: replayTime, window_minutes: "5"});
 
 // Example usage inside your page's load handler:
 // const { data: runs } = await listRuns();
-// const snapshot = await getOverview(runs[0].run_id, "2026-11-14T09:07:30Z");
-// const wattsLabel = snapshot.data.observed_gpu_power_kw?.toFixed(2) ?? "Unknown";
+// const snapshot = await getSnapshot(runs[0].run_id, "2026-11-14T09:10:45Z");
+// const wattsLabel = snapshot.data.overview.observed_gpu_power_kw?.toFixed(2) ?? "Unknown";
 // Display wattsLabel + " kW observed GPU power" with observed/total GPU counts.
-// Only show "no active rule alerts" if assessment_available is true; unknown is separate.
+// Use snapshot.data.incidents as the sole official findings; unknown is separate.
+// Clear means no findings in the analysis window, not a guarantee of healthy hardware.
 // Await each replay refresh before starting the next. SQL cold starts can take time.

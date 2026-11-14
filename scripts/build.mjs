@@ -6,12 +6,13 @@ await cp(file('../public'), file('../dist'), { recursive: true });
 await copyFile(file('../src/twin.js'), file('../dist/twin.js'));
 await copyFile(file('../src/tool-catalog.js'), file('../dist/tool-catalog.js'));
 
-const [html, css, twin, catalog, flagging, ui] = await Promise.all([
+const [html, css, twin, catalog, flagging, databricks, ui] = await Promise.all([
   readFile(file('../public/index.html'), 'utf8'),
   readFile(file('../public/styles.css'), 'utf8'),
   readFile(file('../src/twin.js'), 'utf8'),
   readFile(file('../src/tool-catalog.js'), 'utf8'),
   readFile(file('../public/flagging.js'), 'utf8'),
+  readFile(file('../public/databricks.js'), 'utf8'),
   readFile(file('../public/ui.js'), 'utf8'),
 ]);
 
@@ -22,7 +23,7 @@ function inlineModule(source) {
     .replace(/^export \{[^\n]+\};\s*$/gm, '');
   return exports ? `const { ${exports} } = (() => {\n${body}\nreturn { ${exports} };\n})();` : body;
 }
-const combined = [twin, catalog, flagging, ui].map(inlineModule).join('\n');
+const combined = [twin, catalog, flagging, databricks, ui].map(inlineModule).join('\n');
 const standalone = html
   .replace('<link rel="stylesheet" href="./styles.css">', () => '<style>\n' + css + '</style>')
   .replace('<script type="module" src="./ui.js"></script>', () => '<script type="module">\n' + combined.replaceAll('</script', '<\\/script') + '</script>');

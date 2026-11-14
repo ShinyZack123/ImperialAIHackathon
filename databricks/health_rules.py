@@ -1,8 +1,8 @@
-"""Transparent demo rules over Databricks-derived features, not a trained model.
+"""Comparison baseline over Databricks-derived features, not the official detector.
 
 Every rule emits active/clear/unknown for a snapshot. No lifecycle or root-cause
-claim is inferred, and no action is performed. The deterministic-model teammate
-can replace these rules while retaining this handoff contract.
+claim is inferred, and no action is performed. These six rules are for testing
+and comparison only. Official alerts and escalations come from flagging/flagger.py.
 """
 
 from datetime import datetime, timezone

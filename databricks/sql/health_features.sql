@@ -44,7 +44,7 @@ WITH t_latest AS (
     t.power_w AS raw_power_w, t.gpu_util_pct AS raw_util, t.temp_c AS raw_temp_c,
     t.throttled AS raw_throttled,
     CASE WHEN t.heartbeat_ok = TRUE
-      AND unix_timestamp(:as_of_ts) - unix_timestamp(t.event_ts) <= 15
+      AND unix_micros(:as_of_ts) - unix_micros(t.event_ts) <= 15000000
       THEN TRUE ELSE FALSE END AS telemetry_is_observed,
     ts.window_seconds AS ecc_window_seconds, ts.counter_delta,
     CASE WHEN ts.samples >= 2 AND ts.samples = ts.counter_samples
@@ -53,7 +53,7 @@ WITH t_latest AS (
       THEN TRUE ELSE FALSE END AS ecc_window_complete,
     w.event_ts AS workload_ts, w.job_id, w.job_state,
     CASE WHEN w.event_ts IS NOT NULL
-      AND unix_timestamp(:as_of_ts) - unix_timestamp(w.event_ts) <= 15
+      AND unix_micros(:as_of_ts) - unix_micros(w.event_ts) <= 15000000
       THEN TRUE ELSE FALSE END AS workload_is_fresh,
     ws.window_seconds AS progress_window_seconds, ws.progress_delta,
     CASE WHEN ws.samples >= 2 AND ws.samples = ws.progress_samples
@@ -62,7 +62,7 @@ WITH t_latest AS (
       THEN TRUE ELSE FALSE END AS progress_window_complete,
     c.event_ts AS cooling_ts, c.inlet_temp_c AS raw_inlet_temp_c, c.flow_pct AS raw_flow_pct,
     CASE WHEN c.event_ts IS NOT NULL
-      AND unix_timestamp(:as_of_ts) - unix_timestamp(c.event_ts) <= 15
+      AND unix_micros(:as_of_ts) - unix_micros(c.event_ts) <= 15000000
       THEN TRUE ELSE FALSE END AS cooling_is_fresh
   FROM inventory i
   LEFT JOIN t_latest t ON i.gpu_id = t.gpu_id AND t.rn = 1
@@ -73,6 +73,7 @@ WITH t_latest AS (
 )
 SELECT :run_id AS run_id, :as_of_ts AS as_of_ts, :rule_version AS rule_version,
   gpu_id, rack_id, vendor, cooling_zone_id,
+  -- Preserve the existing BIGINT display column; freshness above uses exact microseconds.
   telemetry_ts, unix_timestamp(:as_of_ts) - unix_timestamp(telemetry_ts) AS telemetry_age_seconds,
   telemetry_is_observed,
   CASE WHEN telemetry_is_observed THEN raw_power_w END AS power_w,

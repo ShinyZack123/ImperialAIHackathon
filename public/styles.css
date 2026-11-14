@@ -336,3 +336,80 @@ dialog p { font-size: 13px; line-height: 1.5; color: var(--muted); margin-top: 8
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0s !important; animation: none !important; }
 }
+
+/* Databricks source workspace: source IDs and topology are rendered as supplied. */
+.db-controls { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; padding: 16px; }
+.db-controls label { display: grid; gap: 7px; flex: 1 1 240px; }
+.db-controls label > .mono { color: var(--quiet); text-transform: uppercase; font-size: 10px; letter-spacing: .04em; }
+.db-controls input { height: 39px; width: 100%; min-width: 0; padding: 0 12px; border: 1px solid var(--line-dark); border-radius: 5px; color: var(--ink); background: white; font: 12px var(--mono); }
+.db-controls > p { flex-basis: 100%; }
+.db-controls .primary-button, .db-controls .secondary-button { min-height: 39px; }
+.db-quiet { color: var(--quiet); font-size: 11px; line-height: 1.55; overflow-wrap: anywhere; }
+.db-status { min-height: 46px; display: flex; align-items: center; padding: 10px 2px; color: var(--muted); font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
+.db-error { color: var(--rust); }
+.db-workspace-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(330px, 1fr); align-items: start; gap: 17px; }
+.db-source-label { border: 1px solid #c8dccd; border-radius: 4px; padding: 6px 8px; background: #edf7ed; color: var(--moss); font: 9px var(--mono); text-transform: uppercase; white-space: nowrap; }
+.db-racks { display: grid; gap: 12px; padding: 0 16px 16px; }
+.db-rack { border: 1px solid var(--line); border-radius: 6px; padding: 10px; background: #f6f8f2; }
+.db-rack-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+.db-rack-head h3 { font-size: 13px; font-weight: 650; }
+.db-rack-head > span { color: var(--quiet); font-size: 10px; }
+.db-rack-summary { margin: 0 0 9px; color: var(--quiet); font: 9px/1.5 var(--mono); }
+.db-gpu-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.db-gpu { display: grid; gap: 4px; min-width: 0; min-height: 83px; padding: 9px 8px; border: 1px solid #b6cec0; border-radius: 4px; color: #285e49; background: #eaf3e9; text-align: left; transition: box-shadow .12s, transform .12s; }
+.db-gpu:hover, .db-gpu[aria-pressed="true"] { box-shadow: inset 0 0 0 1px currentColor, 0 2px 5px #18262918; transform: translateY(-1px); }
+.db-gpu strong { font: 600 11px var(--mono); }
+.db-gpu span { font-size: 10px; line-height: 1.25; overflow-wrap: anywhere; }
+.db-gpu small { font: 8px/1.4 var(--mono); }
+.db-gpu[data-state="critical"], .db-critical { color: #903b25; background: #fce4d9; border-color: #dc9b85; }
+.db-gpu[data-state="warning"], .db-warning { color: #795319; background: #fff0d3; border-color: #d9b97d; }
+.db-gpu[data-state="unknown"] { color: #62706a; background: #f2f3ef; border: 1px dashed #a3b0a8; }
+.db-clear { color: #285e49; background: #eaf3e9; }
+.db-legend { flex-wrap: wrap; row-gap: 8px; }
+.db-selection { padding: 0 17px 17px; }
+.db-selection-head { display: flex; justify-content: space-between; gap: 12px; align-items: center; margin: 2px 0 8px; }
+.db-selection-head h3 { font: 600 16px var(--mono); }
+.db-badge { display: inline-flex; padding: 4px 6px; border: 1px solid var(--line); border-radius: 3px; font: 9px var(--mono); text-transform: uppercase; }
+.db-gpu-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0 12px; }
+.db-gpu-facts dt { color: var(--quiet); font-size: 10px; margin-bottom: 5px; }
+.db-gpu-facts dd { margin: 0; font: 14px var(--mono); overflow-wrap: anywhere; }
+.db-context-facts { border-top: 1px solid var(--line); padding-top: 12px; }
+.db-metric-control { display: grid; gap: 6px; margin-top: 18px; font-size: 11px; color: var(--muted); }
+.db-metric-control select { height: 34px; font-size: 11px; }
+.db-history-chart { display: block; width: 100%; height: auto; margin: 8px 0; }
+.db-history-chart text { font: 10px var(--mono); fill: var(--quiet); }
+.db-chart-grid { stroke: #e3eae1; stroke-width: 1; }
+.db-chart-line { fill: none; stroke: var(--moss); stroke-width: 2; stroke-linejoin: round; }
+.db-chart-point { fill: var(--moss); }
+.db-empty { padding: 18px 4px; color: var(--quiet); font-size: 12px; line-height: 1.6; }
+.db-analysis { margin-top: 17px; }
+.db-analysis-window { padding: 0 17px 12px; color: var(--quiet); font-size: 10px; overflow-wrap: anywhere; }
+.db-persistence { padding: 0 17px 12px; color: var(--moss); font-size: 11px; }
+.db-coverage-note { margin: 0 17px 14px; padding: 10px 12px; border: 1px solid #d9ddc6; border-radius: 4px; color: #61653d; background: #f7f7ea; font-size: 11px; line-height: 1.6; }
+.db-incidents { padding: 0 17px 17px; display: grid; gap: 10px; }
+.db-incident { border: 1px solid var(--line); border-left: 3px solid #c58a45; border-radius: 4px; padding: 12px; }
+.db-incident[data-severity="critical"] { border-left-color: var(--rust); }
+.db-incident-heading { display: flex; gap: 10px; align-items: center; margin-bottom: 9px; }
+.db-incident-heading h3 { font-size: 13px; overflow-wrap: anywhere; }
+.db-incident > p { font-size: 12px; line-height: 1.65; margin: 7px 0; overflow-wrap: anywhere; }
+.db-incident details { margin-top: 9px; }
+.db-incident summary, .db-context summary { color: var(--moss); cursor: pointer; font-size: 11px; }
+.db-incident ul, .db-context ul { margin: 9px 0 0; padding-left: 18px; }
+.db-incident li, .db-context li { padding: 5px 0; font-size: 11px; line-height: 1.6; overflow-wrap: anywhere; }
+.db-incident li p { margin-top: 3px; }
+.db-incident li small { color: var(--quiet); }
+.db-context { padding: 12px 17px; border-top: 1px solid var(--line); background: #f6f8f3; }
+.db-readonly { margin-top: 14px; color: var(--quiet); font-size: 11px; line-height: 1.6; }
+@media (max-width: 1040px) {
+  .db-workspace-grid { grid-template-columns: 1fr; }
+  .db-gpu-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .db-history-chart { max-height: 250px; }
+}
+@media (max-width: 600px) {
+  .db-controls { padding: 12px; }
+  .db-controls label { flex-basis: 100%; }
+  .db-gpu-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .db-source-label { white-space: normal; line-height: 1.5; max-width: 105px; text-align: center; }
+  .db-racks { padding: 0 10px 10px; }
+  .db-rack { padding: 8px; }
+}
