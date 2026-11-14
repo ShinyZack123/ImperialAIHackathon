@@ -1,5 +1,5 @@
-// Databricks evidence is fetched from the same-origin backend proxy. No credentials
-// or fallback fixtures enter this module. Device IDs stay as supplied by the source.
+// The same-origin service explicitly identifies connected or saved Databricks
+// evidence. Errors never change its mode; device IDs stay as supplied by the source.
 import { escapeHtml } from './flagging.js';
 
 const databricksTimeoutMs = 245_000; // Warehouse startup, detector and persisted result.
@@ -16,10 +16,50 @@ function dbNumber(value, digits = 1) {
     ? value.toLocaleString('en-GB', { maximumFractionDigits: digits }) : 'Unknown';
 }
 
+function databricksPresentation(body) {
+  const mode = body?.delivery ?? 'connected';
+  if (!['connected', 'saved_replay'].includes(mode)) throw new Error('The data service returned an unsupported delivery mode.');
+  if (mode === 'saved_replay') {
+    if (typeof body.exported_at !== 'string' || !Number.isFinite(Date.parse(body.exported_at))) throw new Error('The saved replay is missing its export timestamp.');
+    const exportedAt = new Date(body.exported_at).toISOString();
+    return {
+      mode, exportedAt, label: 'Saved Databricks replay',
+      description: `Synthetic evidence exported ${exportedAt}. The team’s deterministic detector runs locally. Assessments are not written to Databricks.`,
+      loading: 'Reading the saved Databricks export and running the team’s deterministic detector locally…',
+      footer: 'Saved Databricks replay · local detector · no Databricks writes',
+    };
+  }
+  return {
+    mode, exportedAt: null, label: 'Connected Databricks',
+    description: 'Synthetic evidence queried from Databricks. The team’s deterministic detector runs in the backend, and assessments are saved to Databricks.',
+    loading: 'Reading Databricks evidence, running the team’s deterministic detector and saving the assessment…',
+    footer: 'Connected Databricks · deterministic detector · observation only',
+  };
+}
+
+function assertDatabricksDelivery(body, expected) {
+  const actual = databricksPresentation(body);
+  if (expected && (actual.mode !== expected.mode || actual.exportedAt !== expected.exportedAt)) {
+    throw new Error('The data service changed delivery mode or export. Refresh replays before continuing.');
+  }
+  return actual;
+}
+
+function databricksPersistenceText(snapshot) {
+  if (databricksPresentation(snapshot).mode === 'saved_replay') {
+    if (snapshot.persistence?.status !== 'not_saved' || snapshot.persistence?.reason !== 'saved_replay') {
+      throw new Error('A saved replay cannot claim a new Databricks write.');
+    }
+    return 'Assessment computed locally · not written to Databricks';
+  }
+  return snapshot.persistence?.status === 'saved' ? 'Assessment saved in Databricks' : 'Databricks save not confirmed';
+}
+
 function parseReplayRuns(body) {
   if (body?.source !== 'databricks' || body?.synthetic !== true || !Array.isArray(body.data)) {
     throw new Error('The data service returned an unsupported replay catalogue.');
   }
+  databricksPresentation(body);
   return body.data.map(run => {
     if (!/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(run.run_id) || !Number.isFinite(Date.parse(run.start_ts)) || !Number.isFinite(Date.parse(run.end_ts)) || Date.parse(run.start_ts) > Date.parse(run.end_ts)) {
       throw new Error('The data service returned an invalid replay interval.');
@@ -28,12 +68,15 @@ function parseReplayRuns(body) {
   });
 }
 
-function parseDatabricksSnapshot(body, runId, cursor) {
+function parseDatabricksSnapshot(body, runId, cursor, expectedDelivery) {
   const snapshot = body?.data ?? body;
   if (snapshot?.source !== 'databricks' || snapshot?.synthetic !== true || snapshot?.run_id !== runId || Date.parse(snapshot.as_of_ts) !== Date.parse(cursor)
       || !snapshot.overview || !Array.isArray(snapshot.racks) || !Array.isArray(snapshot.incidents)) {
     throw new Error('The data service returned a snapshot for an unexpected source or replay time.');
   }
+  const delivery = assertDatabricksDelivery(body, expectedDelivery);
+  assertDatabricksDelivery(snapshot, delivery);
+  databricksPersistenceText(snapshot);
   const seen = new Set();
   for (const rack of snapshot.racks) {
     if (typeof rack.id !== 'string' || !Array.isArray(rack.gpus)) throw new Error('The data service returned an invalid rack.');
@@ -50,7 +93,7 @@ function parseDatabricksSnapshot(body, runId, cursor) {
 
 async function requestDatabricks(path, params = {}, signal) {
   if (typeof location !== 'undefined' && location.protocol === 'file:') {
-    throw new Error('Open the running website to connect to Databricks. This downloaded HTML copy has no data service.');
+    throw new Error('Open the website with npm run dev to use Databricks evidence. This downloaded HTML copy has no data service.');
   }
   const query = new URLSearchParams(params).toString();
   const timeout = AbortSignal.timeout(databricksTimeoutMs);
@@ -61,7 +104,7 @@ async function requestDatabricks(path, params = {}, signal) {
   let body;
   try { body = await response.json(); } catch { throw new Error('The data service did not return a readable response.'); }
   if (!response.ok || body?.error) {
-    throw new Error(typeof body?.detail === 'string' ? body.detail : typeof body?.error === 'string' ? body.error : `Databricks is unavailable (${response.status}).`);
+    throw new Error(typeof body?.detail === 'string' ? body.detail : typeof body?.error === 'string' ? body.error : `The replay data service is unavailable (${response.status}).`);
   }
   return body;
 }
@@ -113,7 +156,7 @@ function dbChart(rows, metric, cursor) {
     ${lines}${paths}<text x="44" y="174">${new Date(start).toISOString().slice(11, 19)}</text><text x="510" y="174" text-anchor="end">${new Date(end).toISOString().slice(11, 19)} UTC</text></svg>`;
 }
 
-function mountDatabricksView(root) {
+function mountDatabricksView(root, onDeliveryChange = () => {}) {
   const find = id => root.querySelector(`#${id}`);
   const escDb = escapeHtml;
   const runSelect = find('db-run');
@@ -124,6 +167,16 @@ function mountDatabricksView(root) {
   const form = find('db-form');
   let runs = [], snapshot = null, selection = null, metric = 'temp_c', history = null;
   let active = false, busy = false, runRequest = null, snapshotRequest = null, historyRequest = null;
+  let delivery = null;
+
+  function setDelivery(next) {
+    delivery = next;
+    find('db-delivery').hidden = !next;
+    find('db-delivery-title').textContent = next?.label ?? '';
+    find('db-delivery-description').textContent = next?.description ?? '';
+    find('db-fleet-source').textContent = `${next?.label ?? 'Databricks evidence'} · synthetic`;
+    onDeliveryChange(next);
+  }
 
   function message(text, error = false) {
     status.textContent = text;
@@ -154,15 +207,20 @@ function mountDatabricksView(root) {
 
   async function loadRuns() {
     runRequest?.abort();
+    snapshotRequest?.abort(); historyRequest?.abort();
     const controller = runRequest = new AbortController();
+    snapshot = null; history = null; runs = [];
+    content.hidden = true;
+    setDelivery(null);
     setBusy(true);
-    message('Connecting to Databricks… the SQL warehouse may take a moment to start.');
+    message('Loading the available Databricks replays…');
     try {
       const body = await requestDatabricks('runs', {}, controller.signal);
       if (controller.signal.aborted || !active) return;
       runs = parseReplayRuns(body);
+      setDelivery(databricksPresentation(body));
       runSelect.replaceChildren(...runs.map((run, index) => new Option(`Replay ${index + 1} · ${run.run_id.slice(0, 8)}`, run.run_id)));
-      if (!runs.length) { message('No replay data is available in the configured Databricks tables.', true); return; }
+      if (!runs.length) { message('No replay data is available from this source.', true); return; }
       chooseRun();
       setBusy(false);
       await loadSnapshot();
@@ -187,11 +245,11 @@ function mountDatabricksView(root) {
     snapshot = null; history = null;
     content.hidden = true;
     setBusy(true);
-    message('Reading Databricks evidence and running the team’s deterministic detector…');
+    message(delivery.loading);
     try {
       const body = await requestDatabricks('snapshot', { run_id: run.run_id, as_of_ts: cursor }, controller.signal);
       if (controller.signal.aborted || !active || snapshotRequest !== controller) return;
-      snapshot = parseDatabricksSnapshot(body, run.run_id, cursor);
+      snapshot = parseDatabricksSnapshot(body, run.run_id, cursor, delivery);
       content.hidden = false;
       renderSnapshot();
       message(`Loaded ${snapshot.as_of_ts} · ${snapshot.overview.observed_gpu_count} of ${snapshot.overview.total_gpu_count} GPUs observed. Findings cover the selected analysis window.`);
@@ -231,9 +289,9 @@ function mountDatabricksView(root) {
       <details><summary>Supporting observations (${incident.findings?.length ?? 0})</summary><ul>${(incident.findings ?? []).map(finding => `<li><strong>${escDb(finding.entity)} · ${escDb(finding.metric)}</strong><p>${escDb(finding.text)}</p><small>${escDb(finding.method)} · ${escDb(finding.start)}–${escDb(finding.end)}</small></li>`).join('')}</ul></details>
     </article>`).join('') : `<p class="db-empty">No findings met the detector’s escalation rules in this analysis window. This does not establish that every device is healthy.</p>`;
     find('db-evidence-window').textContent = `${snapshot.window?.start ?? 'Unknown'} → ${snapshot.window?.end ?? snapshot.as_of_ts}`;
-    const persisted = snapshot.persistence?.status === 'saved';
-    find('db-persistence').hidden = !persisted;
-    find('db-persistence').textContent = persisted ? 'Assessment saved in Databricks' : '';
+    find('db-persistence').hidden = false;
+    find('db-persistence').textContent = databricksPersistenceText(snapshot);
+    find('db-persistence').dataset.delivery = delivery.mode;
     find('db-limitations').replaceChildren(...(snapshot.limitations ?? []).map(text => { const item = document.createElement('li'); item.textContent = text; return item; }));
     find('db-coverage-note').textContent = 'These are detector observations, not confirmed causes. Maintenance and intervention records are not supplied by this dataset, so those explanations cannot be excluded.';
     const gpus = snapshot.racks.flatMap(rack => rack.gpus);
@@ -272,6 +330,7 @@ function mountDatabricksView(root) {
       if (controller.signal.aborted || !active || historyRequest !== controller || selection !== id || snapshot?.as_of_ts !== cursor) return;
       if (body?.source !== 'databricks' || !Array.isArray(body.data) || body.run_id !== runId || Date.parse(body.as_of_ts) !== Date.parse(cursor)
           || body.data.some(row => row.gpu_id !== id || Date.parse(row.event_ts) > Date.parse(cursor))) throw new Error('The data service returned history for an unexpected selection.');
+      assertDatabricksDelivery(body, delivery);
       history = body.data;
       renderSelection();
     } catch (problem) {
@@ -300,10 +359,11 @@ function mountDatabricksView(root) {
   });
 
   return {
+    presentation() { return delivery; },
     enter() { active = true; if (!runs.length) void loadRuns(); else if (!snapshot) void loadSnapshot(); else if (selection && !history) void loadHistory(); },
     leave() { active = false; runRequest?.abort(); snapshotRequest?.abort(); historyRequest?.abort(); snapshotRequest = null; setBusy(false); },
   };
 }
 
 // Kept on one line for the standalone build's module inliner.
-export { mountDatabricksView, parseReplayRuns, parseDatabricksSnapshot, historySegments, dbNumber, requestDatabricks };
+export { mountDatabricksView, parseReplayRuns, parseDatabricksSnapshot, historySegments, dbNumber, requestDatabricks, databricksPresentation, assertDatabricksDelivery, databricksPersistenceText };

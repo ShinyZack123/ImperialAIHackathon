@@ -338,6 +338,9 @@ dialog p { font-size: 13px; line-height: 1.5; color: var(--muted); margin-top: 8
 }
 
 /* Databricks source workspace: source IDs and topology are rendered as supplied. */
+.db-delivery { margin-bottom: 14px; padding: 15px 17px; border-left: 4px solid var(--moss); }
+.db-delivery h2 { margin: 0 0 5px; font-size: 14px; }
+.db-delivery p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
 .db-controls { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; padding: 16px; }
 .db-controls label { display: grid; gap: 7px; flex: 1 1 240px; }
 .db-controls label > .mono { color: var(--quiet); text-transform: uppercase; font-size: 10px; letter-spacing: .04em; }
@@ -385,6 +388,7 @@ dialog p { font-size: 13px; line-height: 1.5; color: var(--muted); margin-top: 8
 .db-analysis { margin-top: 17px; }
 .db-analysis-window { padding: 0 17px 12px; color: var(--quiet); font-size: 10px; overflow-wrap: anywhere; }
 .db-persistence { padding: 0 17px 12px; color: var(--moss); font-size: 11px; }
+.db-persistence[data-delivery="saved_replay"] { color: var(--muted); }
 .db-coverage-note { margin: 0 17px 14px; padding: 10px 12px; border: 1px solid #d9ddc6; border-radius: 4px; color: #61653d; background: #f7f7ea; font-size: 11px; line-height: 1.6; }
 .db-incidents { padding: 0 17px 17px; display: grid; gap: 10px; }
 .db-incident { border: 1px solid var(--line); border-left: 3px solid #c58a45; border-radius: 4px; padding: 12px; }

@@ -6,9 +6,13 @@ The fixture contains synthetic data for 24 GPUs (8 each labelled NVIDIA, AMD and
 
 **Connected path:** the website's **Databricks** tab requests a replay UUID and UTC cursor. `OfficialDetector` reads at most 15 minutes of evidence, translates source fields through `backend/flagging_adapter.py`, invokes `flagging.flagger.flag_window`, and saves the result in `official_detector_results` before returning it. Native IDs such as `gpu-001` and `rack-a` are preserved. The original 32-GPU twin and its scenario mode remain separate.
 
-`flagging/flagger.py` is the sole official detector for this path. Notebook 02's six baseline rules are for comparison only and never replace a failed detector or populate official website alerts. Diagnostic LLM inference, continuous monitoring and hardware actions remain unconnected. Start with [CONNECT.md](CONNECT.md) to run the website and Python backend together.
+**Saved replay path (default after cloning):** `npm run dev` from the repository root reads the included Databricks export and runs the current detector locally. No Databricks account, credentials, Python virtual environment or pip install is needed. The website shows **Saved Databricks replay**, the export timestamp, and **Assessment computed locally · not written to Databricks**. Node.js 22.18+ and Python 3.9+ on PATH are required.
+
+`flagging/flagger.py` is the sole official detector for both paths. Notebook 02's six baseline rules are for comparison only and never replace a failed detector or populate official website alerts. Diagnostic LLM inference, continuous monitoring and hardware actions remain unconnected. [CONNECT.md](CONNECT.md) explains the default teammate quickstart and the optional authenticated backend. A configured connected backend does not fall back to saved evidence on errors.
 
 ## Start in Databricks
+
+This setup is only required to query or update the workspace directly. Teammates using the default saved replay can skip it.
 
 Use a Databricks workspace and SQL warehouse that your account can access. Configure the host, catalog, schema and warehouse ID in a local `.env` copied from `.env.example`.
 
@@ -37,7 +41,7 @@ If an older imported version reports `[UNSUPPORTED_OPERATION] errorifexists is n
 - **Figma / frontend:** the implemented Databricks tab in `../public/databricks.js` uses the official snapshot and GPU history endpoints. `contracts/data-contract.md` describes those responses. `examples/dashboard.json` is an older static query fixture, not an official detector result or live response.
 - **Deterministic detector:** `backend/flagging_adapter.py` supplies the existing `flagging.flagger.flag_window` with validated inventory, metrics and workload context. Changes to the detector must preserve units, evidence cutoffs and missing-data semantics.
 - **Fine-tuning / diagnostic model:** `examples/model_adapter.py` exposes cursor-bound evidence methods. `.health_assessments()` runs the official service and saves its output; `.comparison_baseline()` is explicitly for testing only. Calling the adapter does not run a diagnostic LLM.
-- **You:** keep the shared tables, warehouse access and backend working. Each backend operator needs their own server-side login plus permission to read evidence and create/modify the official result table. Never send an API token to the browser or put one in Git.
+- **You:** keep the shared tables, warehouse access and connected backend working. Each connected backend operator needs their own server-side login plus permission to read evidence and create/modify the official result table. Teammates using the saved replay need none of those credentials. Never send an API token to the browser or put one in Git.
 
 The investigating model should receive retrieved observations, never the scenario name or correct answer. Ground-truth labels stay in the evaluation workflow.
 
@@ -71,11 +75,13 @@ Use one `run_id` and a fixed `as_of_ts` throughout an investigation. All queries
 
 The notebook demonstrates `spark.sql(query, args=parameters)`. The included `backend/databricks_data.py` runs the packaged queries through the Databricks SQL Statement Execution API with typed parameters. It polls pending statements, rejects incomplete results and preserves NULL values. Its polling deadline and cancellation are best effort; SDK network requests/retries can take longer than that deadline.
 
-Follow [CONNECT.md](CONNECT.md) to sign in, check a real SQL query, run the local HTTP API and use the website/model evidence examples. No API credentials are included in source files. The notebooks default to `workspace.gpu_ops_hackathon`; change their configuration and `.env` together if your workspace uses another catalog/schema.
+Follow [CONNECT.md](CONNECT.md) to sign in, check a real SQL query, run the connected HTTP API and use the model evidence examples. Set `DATABRICKS_API_URL` explicitly when starting the website to select that backend; without it, the website uses the saved replay. No API credentials are included in source files. The notebooks default to `workspace.gpu_ops_hackathon`; change their configuration and `.env` together if your workspace uses another catalog/schema.
 
 ## Official assessments and comparison baselines
 
-`backend/official_detection.py` is shared by the website and model evidence adapter. For each requested cursor it reads up to 15 minutes of source evidence, calls the actual teammate detector and persists the snapshot using a parameterised Delta MERGE. `official_detector_results` stores the run, cursor, detector/configuration/adapter fingerprint, evidence hash, incident count, result JSON and generation time. Repeating the same evidence and detector version updates the same record. Source evidence tables are unchanged.
+In connected mode, `backend/official_detection.py` is shared by the website and model evidence adapter. For each requested cursor it reads up to 15 minutes of source evidence, calls the actual teammate detector and persists the snapshot using a parameterised Delta MERGE. `official_detector_results` stores the run, cursor, detector/configuration/adapter fingerprint, evidence hash, incident count, result JSON and generation time. Repeating the same evidence and detector version updates the same record. Source evidence tables are unchanged.
+
+The default saved replay uses the same connector and detector on exported evidence. It recomputes findings for the requested cursor rather than loading prewritten alert answers, but it does not query the workspace or persist a new official result. Responses carry `delivery: "saved_replay"`, `exported_at`, and snapshot `persistence: {status: "not_saved", reason: "saved_replay"}`. These labels stay visible in the website.
 
 The UI reports findings within that analysis window. A flag can refer to an earlier event even when the latest reading has recovered. Missing or stale latest GPU telemetry remains unknown; no finding means only that this detector found none in the window. Maintenance, operator interventions, workload phases and calibrated baselines are not supplied by the fixture and cannot be ruled out as explanations.
 

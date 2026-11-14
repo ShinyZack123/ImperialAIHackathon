@@ -1,6 +1,6 @@
 # Shared data contract — version 1.0
 
-This contract covers the connected Databricks evidence, official deterministic assessment and website. Keep column names and units stable; version any breaking change. The diagnostic-model output later in this document remains a proposal. All readings are synthetic, not a hardware compatibility claim.
+This contract covers connected and exported Databricks evidence, the official deterministic detector and website. Keep column names and units stable; version any breaking change. The diagnostic-model output later in this document remains a proposal. All readings are synthetic, not a hardware compatibility claim.
 
 ## Identity and time
 
@@ -70,7 +70,9 @@ Unique key: `(run_id, event_ts, cooling_zone_id)`. Columns: `run_id STRING`, `ev
 
 ## Official snapshot API
 
-The website calls `GET /api/databricks/snapshot?run_id=<uuid>&as_of_ts=<UTC timestamp>` through the same-origin Node proxy. `OfficialDetector` reads the four evidence streams, validates and translates them through `backend/flagging_adapter.py`, invokes `flagging.flagger.flag_window`, and saves the result before returning success. The evidence tables are not modified. A read, detector or write failure returns an error, never a baseline substitute.
+The website calls `GET /api/databricks/snapshot?run_id=<uuid>&as_of_ts=<UTC timestamp>` through the same-origin Node server. With `DATABRICKS_API_URL` configured, `OfficialDetector` reads the four evidence streams, validates and translates them through `backend/flagging_adapter.py`, invokes `flagging.flagger.flag_window`, and saves the result before returning success. The evidence tables are not modified. A read, detector or write failure returns an error, never a baseline substitute or an automatic switch to saved replay.
+
+Without that setting, `backend/replay_bridge.py` reads `demo/evidence.json.gz`, checks its size and manifest hashes, and runs the current adapter and detector locally. This mode needs no Databricks login or SDK. Every response has `delivery: "saved_replay"` and `exported_at`; snapshots repeat these fields and use `persistence: {status: "not_saved", reason: "saved_replay"}`. No cloud query or write occurs. The connected proxy adds `delivery: "connected"`; older direct Python responses without this field are also connected. `source: "databricks"` identifies evidence origin, while `delivery` identifies how it was retrieved. Display both accurately and reject delivery changes within an investigation.
 
 The HTTP envelope has `schema_version: "1.0"`, `source: "databricks"`, `synthetic: true`, `run_id`, `as_of_ts` and `data`. The snapshot inside `data` has the following fields:
 
@@ -86,7 +88,7 @@ The HTTP envelope has `schema_version: "1.0"`, `source: "databricks"`, `syntheti
 | incidents | Official detector observations, described below |
 | suppressed | Detector findings it suppressed, with entity, metric, detector and reason |
 | coverage, limitations | Available evidence and explicit limits on interpretation |
-| persistence | Added after a confirmed write: `status: "saved"`, table, detector version, evidence hash and generation time |
+| persistence | Connected: confirmed `status: "saved"`, table, detector version, evidence hash and generation time. Saved replay: `status: "not_saved"`, `reason: "saved_replay"`. |
 
 Each `racks[].gpus[]` has source `id`, `vendor`, `model`, `rack_id`, `server_id`, `cooling_zone_id`, `state`, `state_scope`, `telemetry_is_observed`, `telemetry_ts` and `telemetry_age_seconds`. It also contains:
 
