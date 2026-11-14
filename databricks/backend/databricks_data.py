@@ -6,6 +6,7 @@ Databricks SDK profile/environment; credentials never enter query results.
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
+import json
 import math
 import os
 from pathlib import Path
@@ -18,7 +19,7 @@ SQL_DIR = Path(__file__).resolve().parents[1] / "sql"
 MAX_ROWS = 1000
 _IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]{0,254}\Z")
 _WAREHOUSE_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]{0,127}\Z")
-_QUERIES = {"runs", "overview", "rack_context", "gpu_history", "workload_history", "health_alerts"}
+_QUERIES = {"runs", "overview", "rack_context", "gpu_history", "workload_history", "health_alerts", "fleet_evidence", "official_results"}
 
 
 class DataQueryError(RuntimeError):
@@ -63,6 +64,10 @@ class DataSettings:
 
 def _enum_value(value):
     return getattr(value, "value", value)
+
+
+def _reject_json_constant(value):
+    raise ValueError("Non-finite JSON value")
 
 
 def _timestamp(value: str | datetime) -> str:
@@ -131,17 +136,48 @@ class DatabricksData:
         if self._workspace_client is None:
             try:
                 from databricks.sdk import WorkspaceClient
+                from databricks.sdk.core import Config
 
-                kwargs = {"profile": self.settings.profile}
+                kwargs = {"profile": self.settings.profile, "http_timeout_seconds": 30, "retry_timeout_seconds": 30}
                 if self.settings.host:
                     kwargs["host"] = self.settings.host
-                self._workspace_client = WorkspaceClient(**kwargs)
+                self._workspace_client = WorkspaceClient(config=Config(**kwargs))
             except Exception:
                 raise DataQueryError("Databricks authentication/configuration failed. Check the server's OAuth profile and workspace host.") from None
         return self._workspace_client
 
     def list_runs(self) -> list[dict]:
         return self._query("runs", {})
+
+    def official_results(self, run_id: str, as_of_ts: str | datetime) -> list[dict]:
+        """Read previously persisted official results for audit or model handoff."""
+        return self._query("official_results", {"run_id": (run_id, "STRING"), "as_of_ts": (_timestamp(as_of_ts), "TIMESTAMP")})
+
+    def fleet_evidence(self, run_id: str, as_of_ts: str | datetime, window_start_ts: str | datetime) -> dict[str, list[dict]]:
+        """One bounded SQL request for the detector, preserving each source's IDs/units."""
+        start, end = _timestamp(window_start_ts), _timestamp(as_of_ts)
+        duration = (datetime.fromisoformat(end) - datetime.fromisoformat(start)).total_seconds()
+        if not 0 <= duration <= 900:
+            raise ValueError("Fleet evidence requires an ordered window of at most 15 minutes.")
+        rows = self._query("fleet_evidence", {"run_id": (run_id, "STRING"), "as_of_ts": (end, "TIMESTAMP"), "window_start_ts": (start, "TIMESTAMP")})
+        limits = {"inventory": 24, "telemetry": 4344, "workloads": 4344, "cooling": 4344}
+        result = {}
+        for row in rows:
+            name, count, payload = row.get("dataset"), row.get("row_count"), row.get("payload")
+            if name not in limits or name in result or not isinstance(count, int) or isinstance(count, bool) or not 0 <= count <= limits[name]:
+                raise DataQueryError("Databricks fleet evidence is incomplete or exceeds the bounded demo limits.")
+            if not isinstance(payload, str) or len(payload.encode("utf-8")) > 8 * 1024 * 1024:
+                raise DataQueryError("Databricks fleet evidence exceeds the bounded payload limit.")
+            try:
+                values = json.loads(payload, parse_constant=_reject_json_constant)
+            except (ValueError, TypeError):
+                raise DataQueryError("Databricks returned invalid fleet evidence JSON.") from None
+            if not isinstance(values, list) or len(values) != count or any(not isinstance(value, dict) for value in values):
+                raise DataQueryError("Databricks returned incomplete fleet evidence records.")
+            result[name] = values
+        if set(result) != set(limits) or not result["inventory"]:
+            raise DataQueryError("Databricks returned no inventory or an incomplete set of evidence streams.")
+        return result
 
     def overview(self, run_id: str, as_of_ts: str | datetime) -> list[dict]:
         return self._query("overview", {"run_id": (run_id, "STRING"), "as_of_ts": (_timestamp(as_of_ts), "TIMESTAMP")})

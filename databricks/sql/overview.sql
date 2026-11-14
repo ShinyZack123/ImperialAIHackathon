@@ -9,7 +9,7 @@ WITH ranked AS (
 ), snapshot AS (
   SELECT i.gpu_id, t.power_w, t.gpu_util_pct, t.temp_c,
          CASE WHEN t.heartbeat_ok = TRUE
-                   AND unix_timestamp(:as_of_ts) - unix_timestamp(t.event_ts) <= 15
+                   AND unix_micros(:as_of_ts) - unix_micros(t.event_ts) <= 15000000
               THEN TRUE ELSE FALSE END AS is_observed
   FROM inventory AS i
   LEFT JOIN ranked AS t ON i.gpu_id = t.gpu_id AND t.sample_rank = 1

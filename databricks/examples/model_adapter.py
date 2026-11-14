@@ -29,12 +29,18 @@ class InvestigationEvidence:
         return self.data.rack_context(self.run_id, rack_id, self.as_of_ts)
 
     def health_assessments(self):
+        """Official teammate detector output; saved in Databricks before returning."""
+        from backend.official_detection import OfficialDetector
+        return OfficialDetector(self.data).snapshot(self.run_id, self.as_of_ts)
+
+    def comparison_baseline(self):
+        """Testing/comparison only. Never use these rows as official escalations."""
         return self.data.health_alerts(self.run_id, self.as_of_ts)
 
 
 # The orchestrator selects the cursor, then gives bound methods above to the model.
 # evidence = InvestigationEvidence(data, run_id, datetime.fromisoformat("2026-11-14T09:07:30+00:00"))
-# candidates = [row for row in evidence.health_assessments() if row["status"] == "active"]
-# The deterministic teammate can replace the baseline rules. The diagnostic model
+# candidates = evidence.health_assessments()["incidents"]
+# These candidates come only from flagging/flagger.py. The diagnostic model
 # should gather histories/context and emit the proposed incident contract.
 # An inference result and any mitigation still need separate implementation.

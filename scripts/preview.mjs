@@ -2,6 +2,7 @@ import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { FlaggingError, flaggingRequest } from './flagging-api.mjs';
+import { DatabricksProxyError, databricksRequest } from './databricks-api.mjs';
 
 export function startPreview(port = 4397) {
   if (!Number.isInteger(port) || port < 1024 || port > 65535) {
@@ -23,6 +24,7 @@ const paths = new Map([
   ['/styles.css', ['styles.css', 'text/css']],
   ['/ui.js', ['ui.js', 'text/javascript']],
   ['/flagging.js', ['flagging.js', 'text/javascript']],
+  ['/databricks.js', ['databricks.js', 'text/javascript']],
   ['/twin.js', ['twin.js', 'text/javascript']],
   ['/tool-catalog.js', ['tool-catalog.js', 'text/javascript']],
   ['/ai-infrastructure-optimisation-platform.html', ['ai-infrastructure-optimisation-platform.html', 'text/html']],
@@ -37,6 +39,10 @@ async function serve(request, response) {
   }
   const url = new URL(request.url, `http://${host}`);
   const { pathname } = url;
+  if (pathname.startsWith('/api/databricks/')) {
+    await serveDatabricks(request, response, url);
+    return;
+  }
   if (pathname.startsWith('/api/flagging/')) {
     await serveFlagging(request, response, url);
     return;
@@ -69,6 +75,20 @@ async function serveFlagging(request, response, url) {
     status = problem instanceof FlaggingError ? problem.status : 500;
     body = { error: problem instanceof FlaggingError ? problem.message : 'Internal error' };
     if (!(problem instanceof FlaggingError)) console.error('flagging bridge', problem);
+  }
+  const content = Buffer.from(JSON.stringify(body));
+  response.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': content.length })
+    .end(request.method === 'HEAD' ? undefined : content);
+}
+
+async function serveDatabricks(request, response, url) {
+  let status = 200;
+  let body;
+  try {
+    body = await databricksRequest(url.pathname, url.searchParams);
+  } catch (problem) {
+    status = problem instanceof DatabricksProxyError ? problem.status : 500;
+    body = { error: problem instanceof DatabricksProxyError ? problem.message : 'Databricks request failed' };
   }
   const content = Buffer.from(JSON.stringify(body));
   response.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': content.length })

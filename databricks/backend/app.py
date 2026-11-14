@@ -1,4 +1,4 @@
-"""Local, read-only HTTP bridge from the demo UI/models to Databricks.
+"""Local HTTP bridge for evidence reads and persisted official assessments.
 
 Run from the project directory with:
   .venv/bin/python -m uvicorn backend.app:app --host 127.0.0.1 --port 8010
@@ -62,6 +62,7 @@ def healthz():
 
 
 @app.get("/api/runs")
+@app.get("/api/databricks/runs")
 def runs(data: DataDependency):
     return envelope(data.list_runs())
 
@@ -80,11 +81,13 @@ def rack_context(rack_id: RackId, run_id: UUID, as_of_ts: AwareDatetime, data: D
 
 
 @app.get("/api/gpus/{gpu_id}/history")
+@app.get("/api/databricks/gpus/{gpu_id}/history")
 def gpu_history(gpu_id: GpuId, run_id: UUID, as_of_ts: AwareDatetime, data: DataDependency, window_minutes: WindowMinutes = 5):
     return envelope(data.gpu_history(str(run_id), gpu_id, as_of_ts - timedelta(minutes=window_minutes), as_of_ts), run_id, as_of_ts)
 
 
 @app.get("/api/gpus/{gpu_id}/workload-history")
+@app.get("/api/databricks/gpus/{gpu_id}/workload-history")
 def workload_history(gpu_id: GpuId, run_id: UUID, as_of_ts: AwareDatetime, data: DataDependency, window_minutes: WindowMinutes = 5):
     return envelope(data.workload_history(str(run_id), gpu_id, as_of_ts - timedelta(minutes=window_minutes), as_of_ts), run_id, as_of_ts)
 
@@ -95,5 +98,19 @@ def health_assessments(run_id: UUID, as_of_ts: AwareDatetime, data: DataDependen
     response = envelope(rows, run_id, as_of_ts)
     response["assessment_available"] = bool(rows)
     response["rule_version"] = "baseline-v1"
+    response["assessment_kind"] = "comparison_baseline"
+    response["official"] = False
     response["counts"] = {status: sum(row["status"] == status for row in rows) for status in ("active", "clear", "unknown")}
     return response
+
+
+@lru_cache(maxsize=4)
+def official_detector(data):
+    from backend.official_detection import OfficialDetector
+    return OfficialDetector(data)
+
+
+@app.get("/api/databricks/snapshot")
+def detector_snapshot(run_id: UUID, as_of_ts: AwareDatetime, data: DataDependency):
+    snapshot = official_detector(data).snapshot(str(run_id), as_of_ts)
+    return envelope(snapshot, run_id, as_of_ts)

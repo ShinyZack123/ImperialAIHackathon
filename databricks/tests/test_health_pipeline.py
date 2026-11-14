@@ -5,7 +5,7 @@ a separate Databricks integration check. Evaluator labels stay in this test only
 """
 
 import csv
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import json
 from pathlib import Path
 import sqlite3
@@ -17,6 +17,13 @@ from health_rules import evaluate_features, RULE_VERSION
 from build_health_notebook import build_notebook
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def epoch_micros(value):
+    if value is None:
+        return None
+    delta = datetime.fromisoformat(value.replace("Z", "+00:00")) - datetime(1970, 1, 1, tzinfo=timezone.utc)
+    return (delta.days * 86400 + delta.seconds) * 1000000 + delta.microseconds
 
 
 class HealthPipelineTests(unittest.TestCase):
@@ -31,6 +38,7 @@ class HealthPipelineTests(unittest.TestCase):
         cls.addClassCleanup(cls.db.close)
         cls.db.row_factory = sqlite3.Row
         cls.db.create_function("unix_timestamp", 1, lambda s: None if s is None else int(datetime.fromisoformat(s.replace("Z", "+00:00")).timestamp()))
+        cls.db.create_function("unix_micros", 1, epoch_micros)
         text_fields = {"gpu_id", "vendor", "model", "rack_id", "server_id", "cooling_zone_id", "run_id", "event_ts", "job_id", "job_state", "priority"}
         integer_fields = {"throttled", "heartbeat_ok", "ecc_uncorrected_total", "progress_units"}
         for table, fields in SCHEMAS.items():
@@ -122,6 +130,15 @@ class HealthPipelineTests(unittest.TestCase):
         self.assertEqual({a["rule_id"] for a in self.active(rows)}, {"telemetry_missing"})
         initial = self.snapshot("healthy_load", "2026-11-14T09:00:10Z")
         self.assertTrue(all(r["ecc_delta_60s"] is None for r in initial))
+
+    def test_fractional_freshness_matches_the_official_adapter(self):
+        boundary = self.snapshot("healthy_load", "2026-11-14T09:15:10Z")
+        beyond = self.snapshot("healthy_load", "2026-11-14T09:15:10.500000Z")
+        self.assertTrue(all(r["telemetry_is_observed"] and r["workload_is_fresh"] and r["cooling_is_fresh"] for r in boundary))
+        self.assertTrue(all(not r["telemetry_is_observed"] and not r["workload_is_fresh"] and not r["cooling_is_fresh"] for r in beyond))
+        self.assertTrue(all(r["power_w"] is None and r["flow_pct"] is None and r["progress_delta_60s"] is None for r in beyond))
+        # The persisted comparison-feature schema retains its original BIGINT age.
+        self.assertTrue(all(r["telemetry_age_seconds"] == 15 for r in beyond))
 
     def test_repeat_has_stable_keys_and_structured_evidence(self):
         row = self.snapshot("cooling_fault")[8]

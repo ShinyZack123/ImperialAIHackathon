@@ -6,6 +6,8 @@
     "_persist": "a deviation must last at least persist_s seconds AND persist_min_samples samples before it flags",
     "persist_s": 300,
     "persist_min_samples": 3,
+    "_max_sample_gap_multiple": "consecutive-run and progress persistence break after gaps over this multiple of declared samplingIntervalSeconds, otherwise the observed median cadence; uniformly sparse data needs a declared cadence",
+    "max_sample_gap_multiple": 3,
     "_baseline_frac": "fallback only: if no stored baseline exists, the first 25% of the window is used as the baseline",
     "baseline_frac": 0.25,
     "_robust_z": "robust z-score cut-off (how many robust standard deviations from the baseline median)",
@@ -46,6 +48,7 @@
     "inference.queue_depth": ["up", 3.00, 0.10],
     "inference.error_rate": ["up", 5.00, 0.10],
     "cdu.flow_lpm": ["down", 0.15, 0.01],
+    "cdu.flow_percent": ["down", 0.15, 0.01],
     "cdu.return_temp_c": ["up", 0.10, 0.01],
     "cdu.differential_pressure_kpa": ["down", 0.15, 0.01],
     "storage.metadata_latency_ms": ["up", 5.00, 0.05]
