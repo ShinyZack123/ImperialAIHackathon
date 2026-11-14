@@ -42,7 +42,39 @@ Benign cases that pass with no gate at all, because the statistics alone handle 
 
 ## Correlation (one message per root cause, not 30 alerts)
 
-Findings are merged when they share an entity, an affected workload, a redundancy group or a parent server. Workloads are found by walking the topology graph (GPU → server → NIC → leaf switch → spine, cooled_by → CDU, powered_by → PDU → UPS). The root cause is chosen by layer: facility (cooling/power), then network/storage, then device, then workload symptom.
+Findings are merged by what they are on and when they began. Sharing a workload alone is not enough: two faults at different times on one job are two incidents.
+
+1. Findings on the same component, parent server or redundancy group merge when their time spans touch.
+2. Those clusters merge when one depends on the other in the topology graph (GPU → server → NIC → leaf switch → spine, cooled_by → CDU, powered_by → PDU → UPS), their spans touch and the downstream one did not begin first. They also merge when they hit the same workload and began together (one cause, many devices).
+3. A workload symptom (slow steps, stalled progress) joins the cluster on that workload that began most recently before it.
+
+"Began together" and "touch" mean within `correlate_onset_gap_s` (15 min), or three sampling periods for sparse data.
+
+The root cause is what went wrong first. Findings that began more than `root_onset_tolerance_s` (5 min) after the first hardware/facility evidence are treated as effects. Among the ones that began together, the layer decides: facility (cooling/power), then network/storage, then device, then workload symptom.
+
+## Incident identity and status
+
+`flag_window` is pure and recomputes from scratch, so each incident carries what a caller needs to avoid re-escalating it:
+
+- `id`: hash of root entity and onset. Same input, same ID.
+- `onset`, `last_seen`: earliest and latest supporting evidence.
+- `status`: `active` or `recovered`. Recovered needs positive evidence: every flagged condition was observed clear for `recovered_after_s` (5 min). Discrete events (XID, uncorrectable-error increment, job failed) latch, and a series that went silent is unknown, so both stay active.
+
+`IncidentTracker().update(incidents)` keeps the ID stable across successive calls on a growing or sliding window (it matches by root and overlapping entities) and sets `change` to `new`, `escalated`, `rerooted`, `recovered`, `recurred` or `unchanged`. Only incidents with `escalate` true need to go to the agent again. On S01 that is 2 messages over 24 cut-offs instead of 17.
+
+## Optimisation opportunities (healthy capacity doing no work)
+
+`find_opportunities(context, telemetry, now=None, incidents=())` is a separate output from flags. It never changes flag / no-flag: B10 is still "no flag", and it also yields one opportunity.
+
+A GPU is listed when valid utilisation stays under `idle_util_percent` (5%) for `persist_s`, right up to the evaluation time, and it is:
+
+| kind | meaning | proposal |
+|---|---|---|
+| `reclaimable_gpus` | still allocated to a job that has finished | release the allocation |
+| `reserved_idle_gpus` | held for a job that has not started | start it, or lend the GPUs until it does |
+| `unallocated_idle_gpus` | allocated to nothing | available for placement |
+
+Each opportunity has the GPUs, the workload, idle GPU-hours, and idle power and energy when every GPU reports power. Idle GPUs of a running job are not listed (that is a possible fault, detector 7). Unknown is never idle: stale or missing samples, entities in maintenance, and anything that depends on an entity in an active incident are left out. The proposal is text for the optimiser or agent, not a command.
 
 Example output (F03):
 ```
@@ -60,5 +92,7 @@ Affected workloads: training-job-104 (training, priority 70, status running).
 
 - **The test set is easier than production.** I wrote both the scenarios and the detectors, so 23/23 shows the logic works, not that it generalises. Test it on real DCGM/UFM data before claiming accuracy.
 - **Baselines are stored, but synthetic.** They are measured from fault-free runs made by `generate.py` (one synthetic day), conditioned on workload state, hour of day and traffic. The first 25% of the window is now only a fallback when no stored baseline exists. Production needs baselines measured from real telemetry.
+- The 15-minute correlation gap and 5-minute root tolerance are hand-set too. Two unrelated faults that begin within 15 minutes on the same job are still merged into one incident, and if they begin within 5 minutes the layer order picks the root.
+- Opportunities cover idle GPUs only. Placement overhead and power headroom are not detected: the fixtures have no declared targets to compare against.
 - Thresholds (z > 6, 5-min persistence, p < 1e-6) are hand-set. They are all in `config.json`. Hardware limits are not there: they come from the metric catalog in `topology.enriched.json`.
 - The fresh scenarios share `gen.py`'s noise model, so they show the rules are not over-fitted to the 23 files, not that they hold on real data.

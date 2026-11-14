@@ -280,7 +280,9 @@ def generate_snapshot(evidence: dict, run_id: str, as_of_ts: str | datetime, win
         for gpu in affected:
             if SEVERITY.get(incident.severity, 0) > SEVERITY.get(states.get(gpu), 0):
                 states[gpu] = incident.severity
-        incidents.append({"severity": incident.severity, "rootEntity": incident.root_entity,
+        incidents.append({"incidentId": incident.id, "status": incident.status,
+                          "onset": _iso(incident.onset), "lastSeen": _iso(incident.last_seen),
+                          "severity": incident.severity, "rootEntity": incident.root_entity,
                           "entities": incident.entities, "workloads": incident.workloads,
                           "detectors": incident.detectors, "message": incident.message,
                           "findings": findings, "affectedGpuIds": sorted(affected), "scope": "analysis_window"})

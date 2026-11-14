@@ -34,7 +34,7 @@ export type OfficialSnapshot = {
     id: string; state: "clear" | "warning" | "critical" | "unknown";
     telemetry_is_observed: boolean; metrics: Record<string, number | boolean | null>;
   }[]}[];
-  incidents: {severity: string; rootEntity: string; affectedGpuIds: string[]; message: string; findings: Record<string, unknown>[]}[];
+  incidents: {incidentId: string; status: 'active' | 'recovered'; onset: string; lastSeen: string; severity: string; rootEntity: string; affectedGpuIds: string[]; message: string; findings: Record<string, unknown>[]}[];
   engine: {module: "flagging.flagger.flag_window"; version: string; deterministic: true};
   persistence: {status: "saved"; table: string; evidence_sha256: string}
     | {status: "not_saved"; reason: "saved_replay"};

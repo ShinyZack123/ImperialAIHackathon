@@ -6,6 +6,7 @@ Run from this folder (Python 3, standard library only):
 
     python3 build_context.py      # builds topology.enriched.json (limits, measured baselines, interventions)
     python3 test_scenarios.py     # one test per labelled scenario (23/23)
+    python3 test_incidents.py     # grouping by time, root choice, incident IDs/status, idle-capacity opportunities
     python3 generalise.py         # fresh generated scenarios
     python3 demo.py               # stuck checkpoint vs normal checkpoint, side by side
     python3 generate.py --list    # seeded telemetry generator
@@ -18,7 +19,8 @@ See `FLAGGER_METHODS.md` for how the detectors and gates work, and `WORKLOG.md` 
 
 - The replay slider steps through 24 cut-offs. At each one the flagger only sees records up to that instant, as `demo.py` does. Flagged GPUs turn red (critical) or amber (warning). GPUs whose workload is affected get a dashed outline (blast radius). Stale or missing telemetry shows as unknown, never as healthy. Power, cooling and fabric paths go red when the root cause is in that layer.
 - Click a GPU, server or connection: the console runs `bridge.py entity` for it. It shows that entity's telemetry chart with its catalogue limits and flagged spans, the flagger's findings, and the raw log (filter it to flagged records only).
-- The Incident tab shows each escalation, its evidence, the methods that fired, the exact message sent to the low-level agent, and an answer-key check against the scenario label.
+- The Incident tab shows each escalation, its evidence, the methods that fired, the exact message sent to the low-level agent, and an answer-key check against the scenario label. Each incident keeps one ID through the replay and shows `active`/`recovered` and what changed; the message is marked as not re-sent when nothing changed since the previous cut-off.
+- Under the incidents, **Optimisation opportunities** lists healthy GPUs doing no work (finished job still holding them, queued job not started, unallocated). These are not faults and never colour the map.
 
 Console IDs map to flagging IDs only in `bridge.py` (`TwinMap`): console rack A01, A02, B01, B02 = servers 12-01, 12-02, 13-01, 13-02, and console slot *n* = GPU *n-1*.
 
@@ -52,5 +54,7 @@ The connector retains source units: job progress remains synthetic work units, c
 Flags describe observations within the selected analysis window, not confirmed current hardware failures. A recovered latest reading can coexist with an earlier finding. The existing 300-second persistence rule is retained; short windows may have no flags despite unusual readings. Missing/stale latest telemetry remains unknown, and no finding does not certify healthy hardware.
 
 Consecutive-condition and stalled-progress windows break across gaps longer than three sampling periods. The connector declares this fixture's five-second cadence; other sources should supply `samplingIntervalSeconds` in their metric definitions/catalog. Without that metadata the detector estimates cadence from the observed median interval, which cannot distinguish uniformly missing samples from a genuinely slower source.
+
+Databricks incidents also carry `incidentId`, `status`, `onset` and `lastSeen`. Because each review is a single explicit cursor, the stateful `IncidentTracker` is not used there, and opportunities are not part of the saved snapshot.
 
 Each website review uses an explicit cursor; it does not start continuous monitoring, diagnostic LLM inference or hardware control. Official results include a detector/configuration/adapter fingerprint and evidence hash in `official_detector_results`. Repeating the same input/version updates the same record. See the [connection guide](../databricks/CONNECT.md) for Python API + same-origin Node proxy startup, shared warehouse permissions and live validation, and the [data contract](../databricks/contracts/data-contract.md) for API details.

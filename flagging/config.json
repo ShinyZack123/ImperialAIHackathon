@@ -35,6 +35,13 @@
     "liveness_step_multiple": 10,
     "_checkpoint_overrun_multiple": "time budget for the checkpoint gate: a checkpoint may take this many times its expected duration",
     "checkpoint_overrun_multiple": 3,
+    "_correlate": "findings join one incident only if they share a component/workload AND are close in time: onsets within correlate_onset_gap_s, or one entity depends on the other and their spans touch. root_onset_tolerance_s: findings that began this long after the first physical evidence are treated as effects, not candidates for the root",
+    "correlate_onset_gap_s": 900,
+    "root_onset_tolerance_s": 300,
+    "_recovered_after_s": "an incident is 'recovered' only when every flagged condition has been observed clear for this long; silence or a latched event never counts as recovery",
+    "recovered_after_s": 300,
+    "_idle_util_percent": "opportunities: a GPU is idle when valid utilisation stays under this for persist_s",
+    "idle_util_percent": 5.0,
     "_hampel": "spike filter: a sample further than hampel_sigma robust standard deviations from the median of its 2*hampel_k neighbours is replaced",
     "hampel_k": 3,
     "hampel_sigma": 4.0

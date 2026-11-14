@@ -22,7 +22,7 @@ from datetime import datetime, timezone
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from flagger import Graph, flag_window, merge_context, ts   # noqa: E402
+from flagger import Graph, IncidentTracker, find_opportunities, flag_window, merge_context, ts   # noqa: E402
 
 SCHEMA_VERSION = "1.0.0"
 STEPS = 24                       # replay cut-offs; matches the console's 24-position replay slider
@@ -297,12 +297,22 @@ def _incident(inc, tm):
         for tid in tm.twin_for(w): mark(tid, "impacted")
     lines = inc.message.split("\n")
     root = tm.G.ent.get(tm.owner(inc.root_entity), {})
-    return {"severity": inc.severity, "rootEntity": inc.root_entity, "rootName": tm.G.name(inc.root_entity),
+    return {"id": inc.id, "status": inc.status, "change": inc.change, "escalate": inc.escalate,
+            "onset": _iso(inc.onset), "lastSeen": _iso(inc.last_seen),
+            "severity": inc.severity, "rootEntity": inc.root_entity, "rootName": tm.G.name(inc.root_entity),
             "rootDisplay": root.get("name") or inc.root_entity, "rootTwin": next(iter(tm.twin_for(inc.root_entity)), None),
             "rootLayer": tm.kind(inc.root_entity), "headline": lines[0], "message": inc.message,
             "detectors": inc.detectors, "methods": list(dict.fromkeys(f.method for f in inc.findings)),
             "entities": inc.entities, "workloads": inc.workloads,
             "findings": [_finding(f, tm) for f in inc.findings], "twinStates": states}
+
+
+def _opportunity(o, tm):
+    """Idle-but-healthy capacity for the optimiser. Not a flag: it never changes a GPU's health state."""
+    return {"id": o.id, "kind": o.kind, "entities": o.entities, "workloads": o.workloads,
+            "start": _iso(o.start), "end": _iso(o.end), "text": o.text, "method": o.method,
+            "estimate": o.estimate, "proposal": o.proposal,
+            "twin": sorted({tid for e in o.entities for tid in tm.twin_for(e)})}
 
 
 def _expected_match(expected, final_incidents):
@@ -329,12 +339,15 @@ def analyse(sid):
         times = [ts(r["timestamp"]) for r in recs]
         t0, t1 = ts(sc["window"]["start"]), ts(sc["window"]["end"])
         steps, first_flag, runs = [], None, 0
+        tracker = IncidentTracker()                    # same fault keeps one ID across cut-offs; only changes re-escalate
         for i in range(STEPS):
             cutoff = t0 + (t1 - t0) * (i + 1) / STEPS
             n = 0
             while n < len(times) and times[n] <= cutoff: n += 1
             incidents, suppressed = flag_window(ctx, recs[:n])
             runs += 1
+            tracker.update(incidents)
+            opportunities = [_opportunity(o, tm) for o in find_opportunities(ctx, recs[:n], now=cutoff, incidents=incidents)]
             incs = [_incident(x, tm) for x in incidents]
             states = {}
             for x in incs:
@@ -343,7 +356,9 @@ def analyse(sid):
             gates = sorted({w for _, w in suppressed})
             if incs and first_flag is None: first_flag = i
             steps.append({"index": i, "cutoff": _iso(cutoff), "minute": round((cutoff - t0) / 60, 2), "records": n,
-                          "incidents": incs, "states": states, "gates": gates[:12], "gateCount": len(suppressed),
+                          "incidents": incs, "escalations": sum(1 for x in incs if x["escalate"]),
+                          "opportunities": opportunities,
+                          "states": states, "gates": gates[:12], "gateCount": len(suppressed),
                           "detectorsFired": sorted({d for x in incs for d in x["detectors"]})})
         expected = sc.get("expected", {})
         return {"schemaVersion": SCHEMA_VERSION, "origin": "synthetic", "scenarioId": sid,

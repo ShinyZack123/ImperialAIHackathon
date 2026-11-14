@@ -134,7 +134,7 @@ function renderFlagMetrics() {
       detail: `${number(analysis.records)} in the ${flagMinutes(analysis.window.end ? (isoSeconds(analysis.window.end) - isoSeconds(analysis.window.start)) / 60 : 0)} window` },
     { label: 'Escalated to agent', value: number(step.incidents.length), short: step.incidents.length === 1 ? 'incident' : 'incidents',
       series: 'flag-incidents', attention: Boolean(top),
-      detail: top ? `${top.severity} · root ${top.rootEntity}` : 'Nothing worth escalating' },
+      detail: top ? `${top.severity} · root ${top.rootEntity}${step.escalations === undefined ? '' : ` · ${number(step.escalations)} new or changed at this cut-off`}` : 'Nothing worth escalating' },
     { label: 'Explained by context gates', value: number(step.gateCount), short: 'deviations', series: 'flag-gates',
       detail: step.gates[0] ?? 'No gate needed' },
     { label: 'Detectors firing', value: number(step.detectorsFired.length), short: 'methods', series: 'flag-detectors',
@@ -602,6 +602,18 @@ function flagVerdict() {
     </ul>`;
 }
 
+const flagOpportunityKinds = { reclaimable_gpus: 'Reclaimable', reserved_idle_gpus: 'Reserved, idle', unallocated_idle_gpus: 'Unallocated, idle' };
+
+// Healthy capacity doing no work: input for the optimiser, deliberately separate from fault escalations.
+function flagOpportunities(step) {
+  const found = step.opportunities ?? [];
+  if (!found.length) return '';
+  return `<h3 class="evidence-heading">Optimisation opportunities · not faults</h3><ul class="evidence-list">${found.map(item =>
+    inspectorRow(esc(flagOpportunityKinds[item.kind] ?? item.kind),
+      `${number(item.estimate.gpuCount)} GPUs · ${number(item.estimate.idleGpuHours, 2)} GPU-h`,
+      `${esc(item.text)} Proposal: ${esc(item.proposal)}`)).join('')}</ul>`;
+}
+
 function flagIncidentInspector() {
   if (!analysis) return flagPending('Telemetry flagger');
   const step = flagStep();
@@ -612,9 +624,10 @@ function flagIncidentInspector() {
       <div class="flag-incident-head"><span class="badge ${incident.severity}">${esc(incident.severity)}</span>
         <button type="button" class="mono flag-root"${incident.rootTwin ? ` data-entity="${esc(incident.rootTwin)}"` : ''}>${esc(incident.rootEntity)}</button></div>
       <p class="flag-headline">${esc(incident.headline.replace(/^\[[A-Z]+\]\s*/, ''))}</p>
+      ${incident.id ? `<p class="placement-note mono">${esc(incident.id)} · ${esc(incident.status)} · ${esc(incident.change)}</p>` : ''}
       <ul class="evidence-list">${flagFindingRows(incident.findings)}</ul>
       <div class="method-chips">${incident.methods.map(method => `<span>${esc(method)}</span>`).join('')}</div>
-      <details class="agent-message"><summary>Message sent to the low-level agent</summary><pre>${esc(incident.message)}</pre></details>
+      <details class="agent-message"><summary>${incident.escalate === false ? 'Agent message · unchanged since the previous cut-off, not re-sent' : 'Message sent to the low-level agent'}</summary><pre>${esc(incident.message)}</pre></details>
     </section>`).join('');
   const quiet = step.gates.length
     ? `<h3 class="evidence-heading">Deviations a context gate explained</h3><ul class="evidence-list">${step.gates.map(gate => inspectorRow('Suppressed', 'gate', esc(gate))).join('')}</ul>`
@@ -625,6 +638,7 @@ function flagIncidentInspector() {
     <p class="inspector-copy">${esc(analysis.title)}</p>
     ${incidents.length ? cards : quiet}
     ${incidents.length > 3 ? `<p class="placement-note">${number(incidents.length - 3)} more incidents at this cut-off.</p>` : ''}
+    ${flagOpportunities(step)}
     ${flagVerdict()}
     <p class="placement-note mono">flag_window × ${number(analysis.engine.runs)} cut-offs · ${number(analysis.records)} records · ${number(analysis.engine.elapsedMs)} ms in Python${firstFlag ? ` · first escalated T+${flagMinutes(firstFlag.minute)}` : ''} · deterministic</p>
   </div>`;

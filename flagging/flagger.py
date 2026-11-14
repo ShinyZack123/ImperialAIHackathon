@@ -3,6 +3,8 @@
 
     flag(telemetry, context) -> list[str]            one plain-English string per flag
     flag_window(context, telemetry) -> (incidents, suppressed)   structured version
+    find_opportunities(context, telemetry) -> list[Opportunity]  capacity that is healthy but wasted
+    IncidentTracker().update(incidents)              keeps incident IDs stable across successive calls
 
 `context` is topology.enriched.json (built by build_context.py), optionally merged with a
 scenario's own maintenance / intervention records via merge_context(). From it the flagger reads:
@@ -17,7 +19,7 @@ Pipeline:
   validate -> Hampel de-spike -> detectors -> context gates -> graph correlation -> message
 """
 from __future__ import annotations
-import bisect, json, math, os, statistics
+import bisect, hashlib, json, math, os, statistics
 from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -40,6 +42,16 @@ def pct(v, base):
     r = (v - base) / base if base else float("inf")
     return f"{v / base:.0f}x" if base and abs(r) >= 10 else f"{r * 100:+.0f}%"
 def is_num(v): return isinstance(v, (int, float)) and not isinstance(v, bool)
+
+def sample_ok(r):
+    """A sample the detectors may use: valid, not stale, confident enough."""
+    q = r.get("quality") or {}
+    return q.get("valid", True) and not q.get("stale") and q.get("confidence", 1.0) >= CFG["min_confidence"]
+
+def iso(t): return datetime.fromtimestamp(t, timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+def short_id(prefix, *parts):
+    return f"{prefix}-{hashlib.sha256('|'.join(str(x) for x in parts).encode()).hexdigest()[:10]}"
 
 def mad_scale(xs):
     m = statistics.median(xs)
@@ -110,6 +122,8 @@ class Finding:
     workloads: set = field(default_factory=set)
     change: float = None    # typical relative change vs baseline (signed fraction), when known
     note: str = ""          # extra context added by a gate that looked but did not suppress
+    period: float = 0.0     # sampling period of the series behind this finding (seconds), 0 if unknown
+    cleared: bool = False   # True only when later samples show the condition ended (never inferred from silence)
 
 @dataclass
 class Incident:
@@ -120,6 +134,26 @@ class Incident:
     detectors: list
     findings: list
     message: str
+    id: str = ""            # deterministic from root entity + onset; IncidentTracker keeps it stable across calls
+    onset: float = 0.0      # earliest supporting evidence
+    last_seen: float = 0.0  # latest supporting evidence
+    status: str = "active"  # active | recovered (recovered = every finding was observed to clear)
+    change: str = "new"     # set by IncidentTracker: new | escalated | rerooted | recovered | recurred | unchanged
+    escalate: bool = True   # set by IncidentTracker: False when nothing changed since the previous call
+
+@dataclass
+class Opportunity:
+    """Healthy capacity that is doing no useful work. Never a fault, never a flag: a proposal for the optimiser."""
+    id: str
+    kind: str               # reclaimable_gpus | reserved_idle_gpus | unallocated_idle_gpus
+    entities: list
+    workloads: list
+    start: float
+    end: float
+    text: str
+    method: str
+    estimate: dict
+    proposal: str
 
 class Graph:
     def __init__(self, topo):
@@ -263,10 +297,8 @@ def flag_window(topo, telemetry, now=None):
     for r in telemetry: raw[(r["entityId"], r["metric"])].append(r)
     for v in raw.values(): v.sort(key=lambda r: r["timestamp"])
     G.live_status = {eid: rs[-1]["value"] for (eid, metric), rs in raw.items() if metric == "workload.status"}
-
-    def good(r):
-        q = r["quality"]
-        return q.get("valid", True) and not q.get("stale") and q.get("confidence", 1.0) >= CFG["min_confidence"]
+    if now is None and raw: now = max(ts(rs[-1]["timestamp"]) for rs in raw.values())
+    good = sample_ok
 
     def plausible(metric, v):
         pr = G.catalog.get(metric, {}).get("plausibleRange")
@@ -433,7 +465,7 @@ def flag_window(topo, telemetry, now=None):
         if metric not in RATE or len(pts) < 4: continue
         lam_rate = G.counter_rate_per_min(eid, metric)     # measured normal rate, floored by config
         win = max(CFG["rate_window_s"], interval(pts))
-        best = None
+        best, first_sig, last_sig = None, None, None
         for i in range(len(pts)):
             j = i
             while j + 1 < len(pts) and pts[j + 1][0] - pts[i][0] <= win: j += 1
@@ -443,9 +475,14 @@ def flag_window(topo, telemetry, now=None):
             lam = lam_rate * (pts[j][0] - pts[i][0]) / 60
             p = poisson_sf_bound(n, lam)
             if best is None or p < best[0]: best = (p, n, lam, pts[i][0], pts[j][0])
+            if p < CFG["poisson_p"]:
+                if first_sig is None:     # onset = first sample in this window that shows the counter climbing
+                    first_sig = next(pts[k][0] for k in range(i + 1, j + 1) if pts[k][1] > pts[k - 1][1])
+                last_sig = pts[j][0] if last_sig is None else max(last_sig, pts[j][0])
         if best and best[0] < CFG["poisson_p"]:
             p, n, lam, t0, t1 = best
-            F.append(Finding("poisson_rate", "warning", eid, metric, t0, t1,
+            # text describes the most extreme window; the span (onset .. last evidence) covers every abnormal one
+            F.append(Finding("poisson_rate", "warning", eid, metric, first_sig, last_sig,
                              f"{metric} increased by {n:g} in {mins(t1 - t0)} vs ~{lam:.2g} expected at the normal rate "
                              f"(Poisson p<{max(p, 1e-300):.0e})",
                              "Poisson rate test on error counter vs measured normal rate", wl_of(eid)))
@@ -620,6 +657,16 @@ def flag_window(topo, telemetry, now=None):
         (suppressed if why else kept).append((f, why))
     F = [f for f, _ in kept]
 
+    # Recovery needs positive evidence: the same series kept reporting after the condition ended.
+    # Discrete events latch, and a series that simply went quiet is unknown, not recovered.
+    for f in F:
+        rs = raw.get((f.entity, f.metric)) or []
+        times = [ts(r["timestamp"]) for r in rs if sample_ok(r)]
+        f.period = sample_period([(t, 0) for t in times], G.sampling_interval(f.entity, f.metric)) if times else 0.0
+        latched = f.detector in ("event", "hard_counter") or (f.detector == "state" and f.start == f.end)
+        quiet_for = max(CFG["recovered_after_s"], CFG["max_sample_gap_multiple"] * f.period)
+        f.cleared = bool(times) and not latched and f.detector != "cusum" and times[-1] - f.end >= quiet_for
+
     return correlate(G, F, now), [(f, w) for f, w in suppressed]
 
 
@@ -640,22 +687,71 @@ def flag(telemetry, context):
 
 # ============================================================ correlation + message
 def correlate(G, F, now):
+    """Group findings into incidents and pick each incident's likely root.
+
+    Sharing a workload is not enough to merge: two faults at different times on one job are two incidents.
+      1. Findings on hardware/facility entities join when they are on the same component, server or
+         redundancy group and their spans touch.
+      2. Such clusters join when one depends on the other (cooling, power, network path), their spans
+         touch and the downstream one did not begin first; or when they hit the same workload and
+         began together (one common cause).
+      3. A workload-level symptom (slow steps, stalled progress) goes to the cluster on that workload
+         that began most recently before it. With no such cluster, symptoms group among themselves.
+    "Together"/"touch" = within correlate_onset_gap_s (or a few sampling periods for sparse data).
+    """
     if not F: return []
-    keys = []
-    for f in F:
-        k = {f.entity, G.port_owner.get(f.entity, f.entity)} | f.workloads
+    if now is None: now = max(f.end for f in F)
+    owner = lambda f: G.port_owner.get(f.entity, f.entity)
+    def gap(a, b): return max(CFG["correlate_onset_gap_s"], CFG["max_sample_gap_multiple"] * max(a.period, b.period))
+    def touch(a, b): return max(a.start, b.start) - min(a.end, b.end) <= gap(a, b)
+    def structural(f):
+        k = {f.entity, owner(f)}
         rg = G.ent.get(f.entity, {}).get("redundancyGroupId")
         if rg: k.add(rg)
         par = G.ent.get(f.entity, {}).get("parentId")
         if par and G.ent.get(par, {}).get("type") == "server": k.add(par)
-        keys.append(k)
+        return k
+    def upstream_of(a, b):       # b depends on a
+        return owner(a) in G.closure(owner(b)) or owner(a) in G.closure(b.entity)
+    keys = [structural(f) for f in F]
     parent = list(range(len(F)))
     def find(i):
         while parent[i] != i: parent[i] = parent[parent[i]]; i = parent[i]
         return i
-    for i in range(len(F)):
-        for j in range(i + 1, len(F)):
-            if keys[i] & keys[j]: parent[find(i)] = find(j)
+    def clusters(idx):
+        out = defaultdict(list)
+        for i in idx: out[find(i)].append(i)
+        return list(out.values())
+    phys = [i for i, f in enumerate(F) if f.entity not in G.workloads]
+    symptoms = [i for i, f in enumerate(F) if f.entity in G.workloads]
+    for n, i in enumerate(phys):                                   # 1. same component, spans touch
+        for j in phys[n + 1:]:
+            if keys[i] & keys[j] and touch(F[i], F[j]): parent[find(i)] = find(j)
+    def summary(c):              # (earliest finding, last evidence, workloads hit, representative index, members)
+        first = min(c, key=lambda i: F[i].start)
+        return (F[first], max(F[i].end for i in c), set().union(*[F[i].workloads for i in c]), c[0], c)
+    stage1 = [summary(c) for c in clusters(phys)]
+    for n, (fa, la, wa, ia, ca) in enumerate(stage1):              # 2. dependency, or one cause hitting one workload
+        for fb, lb, wb, ib, cb in stage1[n + 1:]:
+            g = gap(fa, fb)
+            together = abs(fa.start - fb.start) <= g
+            overlap = max(fa.start, fb.start) - min(la, lb) <= g
+            a_up = any(upstream_of(F[i], F[j]) for i in ca for j in cb)
+            b_up = any(upstream_of(F[j], F[i]) for i in ca for j in cb)
+            caused = overlap and ((a_up and fb.start >= fa.start - g) or (b_up and fa.start >= fb.start - g))
+            if caused or (wa & wb and together): parent[find(ia)] = find(ib)
+    causes = [summary(c) for c in clusters(phys)]
+    loose = []
+    for i in symptoms:                                             # 3. symptom -> most recent cause before it
+        f = F[i]
+        cands = [c for c in causes if f.workloads & c[2] and c[0].start <= f.start + gap(f, c[0]) and f.start <= c[1] + gap(f, c[0])]
+        if cands: parent[find(i)] = find(max(cands, key=lambda c: c[0].start)[3])
+        else: loose.append(i)
+    for n, i in enumerate(loose):                                  # symptoms with no cause in sight
+        for j in loose[n + 1:]:
+            a_, b_ = F[i], F[j]
+            if ({a_.entity} | a_.workloads) & ({b_.entity} | b_.workloads) and (abs(a_.start - b_.start) <= gap(a_, b_) or touch(a_, b_)):
+                parent[find(i)] = find(j)
     groups = defaultdict(list)
     for i, f in enumerate(F): groups[find(i)].append(f)
 
@@ -668,7 +764,13 @@ def correlate(G, F, now):
             if f.detector == "availability": return {"server": 0, "nic": 1, "port": 2}.get(typ, 1)
             if f.entity in G.port_owner: return 1
             return LAYER.get(typ, 3)
-        fs.sort(key=lambda f: (layer(f), -sev_rank[f.severity], f.start))
+        # Root = what went wrong first. Findings that began clearly after the first physical evidence
+        # are effects or later developments; among the early ones, prefer the layer closest to the facility.
+        physical = [f for f in fs if f.entity not in G.workloads]
+        first = min(f.start for f in (physical or fs))
+        def late(f):
+            return f.start - first > max(CFG["root_onset_tolerance_s"], CFG["max_sample_gap_multiple"] * f.period)
+        fs.sort(key=lambda f: (late(f), layer(f), -sev_rank[f.severity], f.start))
         root = fs[0]
         sev = max(fs, key=lambda f: sev_rank[f.severity]).severity
         wls = sorted(set().union(*[f.workloads for f in fs]))
@@ -701,9 +803,145 @@ def correlate(G, F, now):
             lines.append("Blast radius: " + "; ".join(imp) + ".")
         t0, t1 = min(f.start for f in fs), max(f.end for f in fs)
         fmt = (lambda t: datetime.fromtimestamp(t, timezone.utc).strftime("%Y-%m-%d %H:%M"))
-        lines.append(f"Window: {fmt(t0)} to {fmt(t1)} UTC. Likely root entity: {root.entity}.")
-        out.append(Incident(sev, root.entity, ents, wls, sorted({f.detector for f in fs}), fs, "\n".join(lines)))
-    out.sort(key=lambda i: -sev_rank[i.severity])
+        status = "recovered" if all(f.cleared for f in fs) else "active"
+        lines.append(f"Window: {fmt(t0)} to {fmt(t1)} UTC. Likely root entity: {root.entity}. Status: "
+                     + ("recovered (every flagged condition was observed to clear)." if status == "recovered"
+                        else "active (no evidence that it has cleared)."))
+        out.append(Incident(sev, root.entity, ents, wls, sorted({f.detector for f in fs}), fs, "\n".join(lines),
+                            id=short_id("inc", root.entity, iso(t0)), onset=t0, last_seen=t1, status=status))
+    out.sort(key=lambda i: (-sev_rank[i.severity], i.onset, i.root_entity))
+    return out
+
+
+# ============================================================ incident identity across calls
+class IncidentTracker:
+    """Gives incidents a stable identity across successive flag_window calls on a growing or sliding window.
+
+    flag_window is pure and recomputes from scratch, so the same fault would otherwise look new on
+    every call. The tracker matches each incident to the one it continues (same root, or overlapping
+    entities), carries the first ID forward, and says whether anything changed. Only changed incidents
+    need to be sent to the agent again:
+        new | escalated (severity rose) | rerooted (likely root changed) | recovered | recurred | unchanged
+    State lives here, not in the detector: same sequence of calls -> same IDs.
+    """
+    RANK = {"info": 0, "warning": 1, "critical": 2}
+
+    def __init__(self):
+        self.open = {}      # id -> {"root", "entities", "severity", "status", "onset"}
+        self.closed = []    # ids that dropped out of the window on the last update
+
+    def update(self, incidents):
+        prev, cur, used = self.open, {}, set()
+        for inc in incidents:
+            ents = set(inc.entities) | {inc.root_entity}
+            best = None
+            for tid, t in prev.items():
+                if tid in used: continue
+                overlap = len(ents & t["entities"])
+                if not overlap: continue
+                score = (t["root"] == inc.root_entity, overlap, -abs(t["onset"] - inc.onset))
+                if best is None or score > best[0]: best = (score, tid)
+            if best is None:
+                tid = inc.id
+                while tid in cur or tid in prev: tid += "x"      # never reuse a live ID
+                inc.id, inc.change = tid, "new"
+            else:
+                tid = best[1]; t = prev[tid]; used.add(tid)
+                inc.id = tid
+                if t["status"] != inc.status: inc.change = "recovered" if inc.status == "recovered" else "recurred"
+                elif self.RANK[inc.severity] > self.RANK[t["severity"]]: inc.change = "escalated"
+                elif t["root"] != inc.root_entity: inc.change = "rerooted"
+                else: inc.change = "unchanged"
+            inc.escalate = inc.change != "unchanged"
+            cur[tid] = {"root": inc.root_entity, "entities": ents, "severity": inc.severity,
+                        "status": inc.status, "onset": inc.onset}
+        self.closed = sorted(set(prev) - used)
+        self.open = cur
+        return incidents
+
+
+# ============================================================ optimisation opportunities
+FINISHED = {"completed", "succeeded", "failed", "cancelled", "canceled"}
+WAITING = {"queued", "pending", "suspended", "paused"}
+
+def find_opportunities(topo, telemetry, now=None, incidents=()):
+    """Healthy GPUs doing no useful work at `now`: the optimiser's input, kept apart from fault flags.
+
+    A GPU qualifies when fresh, valid utilisation samples stay under idle_util_percent for at least
+    persist_s, right up to `now`, and it is one of:
+      reclaimable_gpus      still allocated to a job that has finished
+      reserved_idle_gpus    held for a job that has not started
+      unallocated_idle_gpus allocated to nothing
+    Idle GPUs of a *running* job are not listed: that is a possible fault and belongs to flag_window.
+    Unknown is never idle: stale or missing telemetry, maintenance, and anything an open incident
+    touches (pass `incidents`) are excluded.
+    """
+    G = Graph(topo)
+    util, power, status_at, last = defaultdict(list), defaultdict(list), {}, None
+    for r in telemetry:
+        t = ts(r["timestamp"])
+        last = t if last is None else max(last, t)
+        m = r["metric"]
+        if m == "workload.status":
+            if r["entityId"] not in status_at or t >= status_at[r["entityId"]][0]: status_at[r["entityId"]] = (t, r["value"])
+        elif m in ("gpu.utilization_percent", "gpu.power_w") and sample_ok(r) and is_num(r["value"]):
+            pr = G.catalog.get(m, {}).get("plausibleRange")
+            if pr and not pr["min"] <= r["value"] <= pr["max"]: continue
+            (util if m == "gpu.utilization_percent" else power)[r["entityId"]].append((t, r["value"]))
+    if last is None: return []
+    if now is None: now = last
+    blocked = set()
+    for inc in incidents:
+        if inc.status == "active": blocked |= set(inc.entities) | {inc.root_entity}
+    holder = {}                                   # gpu -> workload that holds it (a live job wins over a finished one)
+    for w in G.workloads.values():
+        st = status_at.get(w["id"], (0, w.get("status")))[1]
+        for g in (w.get("allocation") or {}).get("gpuIds", []) or []:
+            if g not in holder or holder[g][1] in FINISHED: holder[g] = (w, st)
+    found = defaultdict(list)                     # (kind, workload id) -> [(gpu, start, end, mean idle watts)]
+    for g, e in sorted(G.ent.items()):
+        if e.get("type") != "gpu" or not util.get(g): continue
+        w, st = holder.get(g, (None, None))
+        kind = ("unallocated_idle_gpus" if w is None else "reclaimable_gpus" if st in FINISHED
+                else "reserved_idle_gpus" if st in WAITING else None)
+        if kind is None: continue
+        if (blocked & ({g} | G.closure(g))) or G.in_maintenance(g, now): continue
+        pts = sorted(util[g])
+        declared = G.sampling_interval(g, "gpu.utilization_percent")
+        runs = all_runs(pts, lambda v: v < CFG["idle_util_percent"], declared)
+        run = runs[-1] if runs else None
+        if not persistent(run) or run[1] != pts[-1][0] or now - run[1] > gap_limit(pts, declared): continue
+        watts = [v for t, v in power.get(g, ()) if run[0] <= t <= run[1]]
+        found[(kind, w["id"] if w else "")].append((g, run[0], run[1], statistics.mean(watts) if watts else None))
+    out = []
+    for (kind, wid), rows in sorted(found.items()):
+        gpus = [g for g, *_ in rows]
+        start, end = max(r[1] for r in rows), max(r[2] for r in rows)       # since when the whole group has been idle
+        gpu_hours = sum(r[2] - r[1] for r in rows) / 3600
+        known = [r for r in rows if r[3] is not None]
+        est = {"gpuCount": len(gpus), "idleSeconds": round(end - start), "idleGpuHours": round(gpu_hours, 2),
+               "idlePowerW": round(sum(r[3] for r in known)) if len(known) == len(rows) else None,
+               "idleEnergyKwh": round(sum(r[3] * (r[2] - r[1]) for r in known) / 3.6e6, 3) if len(known) == len(rows) else None}
+        w = G.workloads.get(wid, {})
+        req = w.get("requirements") or {}
+        st = status_at.get(wid, (0, w.get("status")))[1]
+        cost = f"{est['idleGpuHours']:g} GPU-hours" + (f" and {est['idleEnergyKwh']:g} kWh" if est["idleEnergyKwh"] is not None else "") + " so far"
+        if kind == "reclaimable_gpus":
+            text = f"{len(gpus)} GPU(s) still allocated to {G.name(wid)} (status {st}) have been idle for {mins(end - start)}: {cost}."
+            proposal = f"Release the allocation of {wid} so the scheduler can place other work on these GPUs."
+        elif kind == "reserved_idle_gpus":
+            extra = ", ".join(x for x in (f"priority {w['priority']}" if "priority" in w else "",
+                                          "preemptible" if req.get("preemptible") else "") if x)
+            text = (f"{len(gpus)} GPU(s) held for {G.name(wid)} (status {st}{', ' + extra if extra else ''}) "
+                    f"have been idle for {mins(end - start)}: {cost}.")
+            proposal = f"Start {wid}, or lend these GPUs to other work until it starts."
+        else:
+            text = f"{len(gpus)} unallocated GPU(s) have been idle for {mins(end - start)}: {cost}."
+            proposal = "Available capacity: place queued or latency-sensitive work here."
+        out.append(Opportunity(short_id("opp", kind, wid, *gpus), kind, gpus, [wid] if wid else [], start, end, text,
+                               f"idle run: valid utilisation under {CFG['idle_util_percent']:g}% for at least "
+                               f"{CFG['persist_s'] // 60} min up to the evaluation time, allocation and job status from context",
+                               est, proposal))
     return out
 
 def context_notes(G, root, fs):

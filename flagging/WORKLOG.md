@@ -83,3 +83,13 @@ Step 3 (seeded generator `generate.py`), then steps 4–8 from the brief.
 - Baselines are measured from one synthetic day. They pool all GPUs of a model, so a real per-GPU offset would need per-entity baselines.
 - Grey-zone magnitudes the answer key does not define (e.g. a checkpoint between 1.5x and 3x expected) were not used as test cases.
 - `datacentre-scenarios.zip` and the loose copies at the top level were not updated.
+
+## Session 3: incident grouping, identity and opportunities
+
+- **Grouping by time.** `correlate()` used to merge any findings that shared a workload. A GPU overheating at minute 6 and an uplink failing at minute 40 on the same job came out as one incident rooted at the uplink. Now: same component/dependency with touching spans, or same workload with onsets together; workload symptoms join the most recent cause before them. See FLAGGER_METHODS.md.
+- **Root = first evidence.** The layer order now only decides between findings that began within 5 minutes of the first hardware evidence. Same two faults 8 minutes apart: root is the GPU (was the uplink).
+- **Poisson finding span.** Its start/end now cover every abnormal window (onset = first sample showing the counter climb), not just the most extreme 5 minutes. The text still quotes the most extreme window.
+- **Identity and status.** `Incident.id/onset/last_seen/status`, plus `IncidentTracker` for stable IDs and `change`/`escalate` across calls. The message ends with `Status: active|recovered`.
+- **Opportunities.** `find_opportunities()` for idle-but-healthy GPUs, separate from flags.
+- **Wiring.** `bridge.py analyse` adds `id`, `status`, `change`, `escalate`, `onset`, `lastSeen` per incident and `escalations`, `opportunities` per step; the console shows them. The Databricks adapter adds `incidentId`, `status`, `onset`, `lastSeen` per incident. All additive; schema versions unchanged.
+- **Checked against the previous code:** identical severity, root and finding count at all 840 replay cut-offs of the 35 scenarios, and identical Databricks incidents and GPU states at 112 cursors of the four saved replays. `test_incidents.py` (17 tests) covers the new behaviour.

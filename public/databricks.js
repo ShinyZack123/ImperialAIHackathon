@@ -284,7 +284,7 @@ function mountDatabricksView(root, onDeliveryChange = () => {}) {
       </button>`).join('')}</div></article>`;
     }).join('');
     find('db-incidents').innerHTML = snapshot.incidents.length ? snapshot.incidents.map(incident => `<article class="db-incident" data-severity="${escDb(incident.severity)}">
-      <div class="db-incident-heading"><span class="db-badge">${escDb(incident.severity)}</span><h3>${escDb(incident.rootEntity)}</h3></div>
+      <div class="db-incident-heading"><span class="db-badge">${escDb(incident.severity)}</span><h3>${escDb(incident.rootEntity)}</h3>${incident.incidentId ? `<span class="mono db-quiet">${escDb(incident.incidentId)} · ${escDb(incident.status)}</span>` : ''}</div>
       <p>${escDb(incident.message)}</p><p class="mono db-quiet">Methods: ${escDb((incident.detectors ?? []).join(' · '))}</p>
       <details><summary>Supporting observations (${incident.findings?.length ?? 0})</summary><ul>${(incident.findings ?? []).map(finding => `<li><strong>${escDb(finding.entity)} · ${escDb(finding.metric)}</strong><p>${escDb(finding.text)}</p><small>${escDb(finding.method)} · ${escDb(finding.start)}–${escDb(finding.end)}</small></li>`).join('')}</ul></details>
     </article>`).join('') : `<p class="db-empty">No findings met the detector’s escalation rules in this analysis window. This does not establish that every device is healthy.</p>`;
