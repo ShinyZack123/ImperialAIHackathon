@@ -1,7 +1,9 @@
 import { scenarioOptions, getSnapshot, inspectEntity, runComparison, traceIncident, duration, defaultSeed, schemaVersion } from './twin.js';
 import { invokeMcpTool, mcpToolCatalog } from './tool-catalog.js';
+import { escapeHtml, fetchFlagCatalog, fetchFlagAnalysis, fetchFlagEntity, worstState, flagStateNames, seriesKey, sortSeries, isoSeconds, shortMetric, compactValue, drawFlagChart } from './flagging.js';
 
 const byId = id => document.getElementById(id);
+const esc = escapeHtml;
 const scenarios = scenarioOptions();
 const statusNames = {
   nominal: 'Nominal', degraded: 'Degraded', derated: 'Derated', unknown: 'Unknown',
@@ -26,7 +28,21 @@ const state = {
   view: 'overview', scenario: 'network', layer: 'fabric', tick: 0, policy: 'baseline',
   inspector: 'incident', selection: null, chartMetric: 'samplesPerSecond',
   compared: new Set(), moves: new Map(), timer: null,
+  flagging: null, flagMetric: null, logFilter: 'all',
 };
+// Flagger replay state. The analysis is computed by flagging/bridge.py; the console only renders it.
+let analysis = null;
+let flagError = null;
+let flagCatalog = [];
+let analysisController = null;
+let flagGpus = new Map();
+let flagRacks = new Map();
+const entityData = new Map();
+const entityErrors = new Map();
+const flagMode = () => Boolean(state.flagging);
+const flagStep = () => analysis?.steps[state.tick] ?? null;
+const flagStateOf = id => flagStep()?.states[id] ?? null;
+const flagged = value => value === 'critical' || value === 'warning';
 let snapshot, benchmark, incident;
 let activeSources = new Map();
 let rackLinks = [];
@@ -84,11 +100,49 @@ function scheduleCanvas() {
     if (state.view === 'overview') {
       drawMap();
       drawSparklines();
+      drawFlagEntityChart();
     } else drawChart();
   });
 }
 
+function flagMinutes(minutes) {
+  return minutes >= 120 ? `${number(minutes / 60, minutes % 60 ? 1 : 0)} h` : `${number(minutes)} min`;
+}
+
+const flagSeries = {
+  'flag-records': step => step.records,
+  'flag-incidents': step => step.incidents.length,
+  'flag-gates': step => step.gateCount,
+  'flag-detectors': step => step.detectorsFired.length,
+};
+
+function renderFlagMetrics() {
+  const step = flagStep();
+  const pending = flagError ? 'Flagger unavailable' : 'Running flagger…';
+  const top = step?.incidents[0];
+  const cells = step ? [
+    { label: 'Telemetry records analysed', value: number(step.records), short: 'records', series: 'flag-records',
+      detail: `${number(analysis.records)} in the ${flagMinutes(analysis.window.end ? (isoSeconds(analysis.window.end) - isoSeconds(analysis.window.start)) / 60 : 0)} window` },
+    { label: 'Escalated to agent', value: number(step.incidents.length), short: step.incidents.length === 1 ? 'incident' : 'incidents',
+      series: 'flag-incidents', attention: Boolean(top),
+      detail: top ? `${top.severity} · root ${top.rootEntity}` : 'Nothing worth escalating' },
+    { label: 'Explained by context gates', value: number(step.gateCount), short: 'deviations', series: 'flag-gates',
+      detail: step.gates[0] ?? 'No gate needed' },
+    { label: 'Detectors firing', value: number(step.detectorsFired.length), short: 'methods', series: 'flag-detectors',
+      attention: step.detectorsFired.length > 0, detail: step.detectorsFired.join(' · ') || 'All statistical detectors quiet' },
+  ] : ['Telemetry records analysed', 'Escalated to agent', 'Explained by context gates', 'Detectors firing']
+    .map(label => ({ label, value: '—', short: '', detail: flagError ?? pending, attention: Boolean(flagError) }));
+  byId('metrics').innerHTML = cells.map(({ label, value, short, detail, attention, series }) => `
+    <div class="metric-cell">
+      <h3>${label}</h3>
+      <div class="metric-value">${value}<small>${short}</small></div>
+      ${series ? `<canvas class="sparkline" data-series="${series}" data-attention="${Boolean(attention)}" aria-hidden="true"></canvas>` : '<span></span>'}
+      <p class="metric-detail clamp${attention ? ' attention' : ''}" title="${esc(detail)}">${esc(detail)}</p>
+    </div>`).join('');
+}
+
 function renderMetrics() {
+  if (flagMode()) return renderFlagMetrics();
   const m = snapshot.metrics;
   const percent = m.draw.value / m.siteBudget.value * 100;
   const metrics = [
@@ -107,14 +161,14 @@ function renderMetrics() {
 }
 
 function drawSparklines() {
-  const timeline = benchmark[state.policy]?.timeline;
+  const timeline = flagMode() ? analysis?.steps : benchmark[state.policy]?.timeline;
   if (!timeline) return;
   for (const canvas of document.querySelectorAll('.sparkline')) {
     const rect = canvasFrame(canvas);
     if (!rect) continue;
     const { context, width, height } = rect;
-    const values = timeline.map(row => canvas.dataset.series === 'efficiency'
-      ? row.samplesPerSecond * 3600 / row.powerKw : row[canvas.dataset.series]);
+    const values = timeline.map(row => flagMode() ? flagSeries[canvas.dataset.series]?.(row) ?? 0
+      : canvas.dataset.series === 'efficiency' ? row.samplesPerSecond * 3600 / row.powerKw : row[canvas.dataset.series]);
     if (values.some(value => value === null)) continue;
     const min = Math.min(...values);
     const spread = Math.max(...values) - min;
@@ -141,18 +195,57 @@ function makeRacks() {
     el.className = 'rack';
     el.dataset.rack = rack.id;
     el.innerHTML = `<button type="button" draggable="false" class="rack-header" data-entity="${rack.id}">
-        <span><i class="rack-status-dot" aria-hidden="true"></i>Rack ${rack.label}</span><span class="rack-grip" aria-hidden="true">⠿</span>
+        <span><i class="rack-status-dot" aria-hidden="true"></i><span class="rack-name">Rack ${rack.label}</span></span><span class="rack-grip" aria-hidden="true">⠿</span>
       </button>
       <div class="slots">${rack.gpus.map(gpu => `<button type="button" class="gpu-slot" data-entity="${gpu.id}">${String(gpu.slot).padStart(2, '0')}</button>`).join('')}</div>
       <div class="rack-meta"></div>`;
     byId('racks').append(el);
-    racks.set(rack.id, { el, header: el.firstElementChild, slots: [...el.querySelectorAll('.gpu-slot')], meta: el.lastElementChild });
+    racks.set(rack.id, { el, header: el.firstElementChild, name: el.querySelector('.rack-name'),
+      slots: [...el.querySelectorAll('.gpu-slot')], meta: el.lastElementChild });
+  }
+}
+
+function flagGpuState(gpu) {
+  if (!analysis) return 'loading';
+  return flagStateOf(gpu.twinId) ?? (gpu.hasTelemetry ? 'nominal' : 'nodata');
+}
+
+function renderFlagRacks() {
+  for (const rack of snapshot.racks) {
+    const { el, header, name, slots, meta } = racks.get(rack.id);
+    const layout = flagRacks.get(rack.id);
+    const gpus = layout?.gpus ?? [];
+    const states = gpus.map(flagGpuState);
+    const rackState = worstState([flagStateOf(rack.id), ...states.filter(value => flagged(value) || value === 'stale')]);
+    el.dataset.status = flagged(rackState) ? 'flagged' : rackState === 'stale' ? 'unknown' : 'nominal';
+    name.textContent = layout?.label ?? `Rack ${rack.label}`;
+    header.setAttribute('aria-label', `${name.textContent}, ${flagStateNames[rackState] ?? 'no flags'}`);
+    header.title = `Inspect ${name.textContent} or drag to move`;
+    const hot = states.filter(flagged).length;
+    const impacted = states.filter(value => value === 'impacted').length;
+    const missing = states.filter(value => value === 'nodata' || value === 'stale').length;
+    meta.textContent = !analysis ? (flagError ? 'Flagger unavailable' : 'Running flagger…')
+      : [hot && `${hot} flagged`, impacted && `${impacted} in blast radius`, missing && `${missing} unknown`]
+        .filter(Boolean).join(' · ') || 'No flags';
+    gpus.forEach((gpu, i) => {
+      const button = slots[i];
+      const value = states[i];
+      const base = value === 'nodata' || value === 'stale' || value === 'loading' ? 'unknown' : gpu.role;
+      button.className = `gpu-slot ${base}${['critical', 'warning', 'impacted', 'stale'].includes(value) ? ` flag-${value}` : ''}`;
+      button.textContent = gpu.label;
+      const status = value === 'loading' ? 'Analysing' : flagStateNames[value] ?? value;
+      button.setAttribute('aria-label', `GPU ${gpu.label}, ${layout.label}, ${status}`);
+      button.dataset.tooltipStatus = status;
+      button.dataset.tooltipMetrics = `${gpu.sourceId} · ${gpu.workloadId ?? 'unallocated'}`;
+    });
   }
 }
 
 function renderRacks() {
+  if (flagMode()) return renderFlagRacks();
   for (const rack of snapshot.racks) {
-    const { el, header, slots, meta } = racks.get(rack.id);
+    const { el, header, name, slots, meta } = racks.get(rack.id);
+    name.textContent = `Rack ${rack.label}`;
     el.dataset.status = rack.status;
     header.setAttribute('aria-label', `Rack ${rack.label}, ${statusNames[rack.status]}`);
     header.title = `Inspect Rack ${rack.label} or drag to move`;
@@ -160,6 +253,7 @@ function renderRacks() {
     rack.gpus.forEach((gpu, i) => {
       const button = slots[i];
       button.className = `gpu-slot ${gpu.status}`;
+      button.textContent = String(gpu.slot).padStart(2, '0');
       button.setAttribute('aria-label', `${gpu.label}, rack ${rack.label}, ${statusNames[gpu.status]}`);
       button.dataset.tooltipStatus = statusNames[gpu.status];
       button.dataset.tooltipMetrics = `${metricText(gpu.utilization)} util · ${metricText(gpu.temperature)}`;
@@ -183,15 +277,19 @@ function buildLayer() {
   byId('sources').replaceChildren();
   byId('links').replaceChildren();
 
+  // In flagger mode the same map shows the flagging topology's names for each source.
+  const names = flagMode()
+    ? { 'pdu-a': 'PDUs 12A/B', 'pdu-b': 'PDUs 13A/B', 'cdu-a': 'CDU 02 · rack 12', 'cdu-b': 'CDU 02 · rack 13', 'grid-01': 'Feeds A/B · UPS' }
+    : { 'pdu-a': 'PDU A', 'pdu-b': 'PDU B', 'cdu-a': 'Cooling loop A', 'cdu-b': 'Cooling loop B', 'grid-01': 'Site feed' };
   if (state.layer === 'fabric') {
     source('sw-spine', 'Spine 01');
   } else if (state.layer === 'power') {
-    source('grid-01', 'Site feed');
-    source('pdu-a', 'PDU A');
-    source('pdu-b', 'PDU B');
+    source('grid-01', names['grid-01']);
+    source('pdu-a', names['pdu-a']);
+    source('pdu-b', names['pdu-b']);
   } else {
-    source('cdu-a', 'Cooling loop A');
-    source('cdu-b', 'Cooling loop B');
+    source('cdu-a', names['cdu-a']);
+    source('cdu-b', names['cdu-b']);
   }
 
   snapshot.racks.forEach((rack, i) => {
@@ -212,7 +310,25 @@ function buildLayer() {
   }
 }
 
+function renderFlagLayer() {
+  const step = flagStep();
+  const top = step?.incidents[0];
+  mapReadout.textContent = !analysis
+    ? flagError ? `Flagger unavailable · ${flagError}` : 'Running the Python flagger over the telemetry window…'
+    : top ? top.headline
+      : `No escalation · ${number(step.records)} records checked${step.gateCount ? ` · ${number(step.gateCount)} deviations explained by context gates` : ''}`;
+  snapshot.racks.forEach((rack, i) => {
+    const button = rackLinks[i];
+    const value = flagStateOf(button.dataset.entity);
+    button.classList.toggle('fault', flagged(value));
+    button.classList.toggle('unknown', value === 'stale');
+    button.textContent = !analysis ? '…' : value === 'critical' ? 'Critical' : value === 'warning' ? 'Warning' : value === 'stale' ? 'Stale' : 'No flags';
+    button.setAttribute('aria-label', `${flagRacks.get(rack.id)?.label ?? rack.label} ${state.layer} path, ${button.textContent}`);
+  });
+}
+
 function renderLayer() {
+  if (flagMode()) return renderFlagLayer();
   const { layer } = state;
   let readout;
   if (layer === 'fabric') {
@@ -432,6 +548,176 @@ function selectionInspector() {
   </div>`;
 }
 
+function flagLabel(id) {
+  const gpu = flagGpus.get(id);
+  if (gpu) return `GPU ${gpu.label} · ${gpu.server}`;
+  const rack = flagRacks.get(id);
+  if (rack) return rack.label;
+  const path = id.match(/^(link|power|cooling)-(?:rack-)?([ab]0[12])$/);
+  if (path) return `${flagRacks.get(`rack-${path[2]}`)?.label ?? path[2]} · ${{ link: 'network uplinks', power: 'power path', cooling: 'cooling path' }[path[1]]}`;
+  return { 'sw-spine': 'Spine 01', 'grid-01': 'Feeds A/B and UPS', 'pdu-a': 'PDUs 12A/12B', 'pdu-b': 'PDUs 13A/13B',
+    'cdu-a': 'CDU 02 and coolant loop', 'cdu-b': 'CDU 02 and coolant loop' }[id] ?? id;
+}
+
+// The first console entity a finding lands on directly, so its evidence row can open that entity.
+const findingTarget = finding => Object.entries(finding.twin ?? {}).find(([, how]) => how === 'direct')?.[0] ?? null;
+
+function flagPending(title) {
+  return `<div class="inspector-content">
+    <span class="badge ${flagError ? 'unknown' : 'nominal'}">${flagError ? 'Unavailable' : 'Analysing'}</span>
+    <h2 class="inspector-title" id="inspector-title">${esc(title)}</h2>
+    <p class="inspector-copy">${flagError ? `${esc(flagError)}. Start the console with <code class="mono">npm run dev</code> so the Python flagger can run; until then these devices are unknown, not healthy.`
+      : 'flagging/bridge.py is replaying the telemetry window through flag_window at 24 cut-offs.'}</p>
+  </div>`;
+}
+
+function flagFindingRows(findings, limit = 6) {
+  return findings.slice(0, limit).map(finding => {
+    const target = findingTarget(finding);
+    const tag = target ? 'button' : 'div';
+    return `<li><${tag} class="evidence-item flag-evidence ${finding.severity}"${target ? ` type="button" data-entity="${esc(target)}"` : ''}>
+      <strong>${esc(finding.entity)} · ${esc(shortMetric(finding.metric))}</strong><span class="mono">${esc(finding.detector)}</span>
+      <small>${esc(finding.text)}</small>
+    </${tag}></li>`;
+  }).join('') + (findings.length > limit ? `<li class="placement-note">${number(findings.length - limit)} more findings in the agent message.</li>` : '');
+}
+
+function flagVerdict() {
+  const v = analysis.verdict;
+  const mark = ok => `<span class="${ok ? '' : 'fail'}" aria-label="${ok ? 'Matches' : 'Does not match'}">${ok ? '✓' : '×'}</span>`;
+  return `<h3 class="evidence-heading">Answer key · end of window</h3>
+    <ul class="constraint-list flag-verdict">
+      <li>${mark(v.match)}Expected ${v.expectedFlag ? `a ${esc(v.expectedSeverity ?? '')} flag` : 'no flag'} · flagger ${v.flagged ? 'flagged' : 'stayed quiet'}</li>
+      ${v.expectedFlag ? `<li>${mark(v.rootMatch)}Root cause ${esc(v.expectedRoot)} named in the escalation</li>` : ''}
+      <li class="flag-reason">${esc(v.reason ?? '')}</li>
+    </ul>`;
+}
+
+function flagIncidentInspector() {
+  if (!analysis) return flagPending('Telemetry flagger');
+  const step = flagStep();
+  const { incidents } = step;
+  const top = incidents[0];
+  const firstFlag = analysis.firstFlagStep === null ? null : analysis.steps[analysis.firstFlagStep];
+  const cards = incidents.slice(0, 3).map(incident => `<section class="flag-incident ${incident.severity}">
+      <div class="flag-incident-head"><span class="badge ${incident.severity}">${esc(incident.severity)}</span>
+        <button type="button" class="mono flag-root"${incident.rootTwin ? ` data-entity="${esc(incident.rootTwin)}"` : ''}>${esc(incident.rootEntity)}</button></div>
+      <p class="flag-headline">${esc(incident.headline.replace(/^\[[A-Z]+\]\s*/, ''))}</p>
+      <ul class="evidence-list">${flagFindingRows(incident.findings)}</ul>
+      <div class="method-chips">${incident.methods.map(method => `<span>${esc(method)}</span>`).join('')}</div>
+      <details class="agent-message"><summary>Message sent to the low-level agent</summary><pre>${esc(incident.message)}</pre></details>
+    </section>`).join('');
+  const quiet = step.gates.length
+    ? `<h3 class="evidence-heading">Deviations a context gate explained</h3><ul class="evidence-list">${step.gates.map(gate => inspectorRow('Suppressed', 'gate', esc(gate))).join('')}</ul>`
+    : '<div class="response-box"><strong>No detector fired</strong><span>The statistics alone show normal behaviour up to this cut-off.</span></div>';
+  return `<div class="inspector-content">
+    <span class="badge ${top ? top.severity : 'nominal'}">${top ? `${incidents.length} escalation${incidents.length === 1 ? '' : 's'}` : 'No escalation'}</span>
+    <h2 class="inspector-title" id="inspector-title">${top ? esc(flagGpus.has(top.rootTwin) ? flagLabel(top.rootTwin) : top.rootDisplay) : 'Nothing to escalate'}</h2>
+    <p class="inspector-copy">${esc(analysis.title)}</p>
+    ${incidents.length ? cards : quiet}
+    ${incidents.length > 3 ? `<p class="placement-note">${number(incidents.length - 3)} more incidents at this cut-off.</p>` : ''}
+    ${flagVerdict()}
+    <p class="placement-note mono">flag_window × ${number(analysis.engine.runs)} cut-offs · ${number(analysis.records)} records · ${number(analysis.engine.elapsedMs)} ms in Python${firstFlag ? ` · first escalated T+${flagMinutes(firstFlag.minute)}` : ''} · deterministic</p>
+  </div>`;
+}
+
+function ensureFlagEntity(id) {
+  const key = `${state.flagging}/${id}`;
+  if (entityData.has(key) || entityErrors.get(key) === 'pending') return;
+  entityErrors.set(key, 'pending');
+  const scenario = state.flagging;
+  fetchFlagEntity(scenario, id).then(body => {
+    entityData.set(key, body);
+    entityErrors.delete(key);
+  }).catch(problem => {
+    entityErrors.set(key, problem.message);
+  }).finally(() => {
+    if (state.flagging === scenario && state.selection === id && state.inspector === 'selection') {
+      renderInspector(false);
+      scheduleCanvas();
+    }
+  });
+}
+
+function entityFindings(id) {
+  return (flagStep()?.incidents ?? []).flatMap(incident => incident.findings
+    .filter(finding => finding.twin?.[id]).map(finding => ({ ...finding, how: finding.twin[id] })));
+}
+
+function selectedSeries(data) {
+  const series = sortSeries(data.series);
+  return { series, selected: series.find(item => seriesKey(item) === state.flagMetric) ?? series[0] ?? null };
+}
+
+function flagSelectionInspector() {
+  if (!state.selection) return `<div class="inspector-content"><h2 class="inspector-title" id="inspector-title">Inspect the map</h2>
+    <p class="inspector-copy">Select a GPU, server or connection. The console asks the Python bridge for its telemetry log and shows what the flagger concluded about it.</p></div>`;
+  const id = state.selection;
+  if (!analysis) return flagPending(flagLabel(id));
+  const key = `${state.flagging}/${id}`;
+  const data = entityData.get(key);
+  const problem = entityErrors.get(key);
+  const gpu = flagGpus.get(id);
+  const findings = entityFindings(id);
+  const value = flagStateOf(id) ?? (gpu && !gpu.hasTelemetry ? 'nodata' : 'nominal');
+  const badge = flagged(value) ? value : value === 'stale' || value === 'nodata' ? 'unknown' : value === 'impacted' ? 'warning' : 'nominal';
+  const header = `<span class="badge ${badge}">${esc(flagStateNames[value] ?? value)}</span>
+    <h2 class="inspector-title" id="inspector-title">${esc(flagLabel(id))}</h2>
+    <p class="inspector-copy mono flag-sources">${esc(data ? data.sources.map(item => item.id).join(' · ') : gpu ? `${gpu.sourceId} · ${gpu.workloadId ?? 'unallocated'}` : id)}</p>`;
+  if (!data) {
+    return `<div class="inspector-content">${header}
+      <p class="inspector-copy">${problem && problem !== 'pending' ? `Bridge request failed: ${esc(problem)}. Readings are unknown.`
+        : `Running <code class="mono">bridge.py entity ${esc(state.flagging)} ${esc(id)}</code>…`}</p></div>`;
+  }
+  const cursor = isoSeconds(flagStep().cutoff);
+  const { series, selected } = selectedSeries(data);
+  const latest = selected?.points.filter(([t]) => isoSeconds(t) <= cursor).at(-1);
+  const spans = findings.filter(finding => finding.how === 'direct');
+  const covered = row => spans.some(finding => finding.entity === row.entity && finding.metric === row.metric &&
+    isoSeconds(row.t) >= isoSeconds(finding.start) - 1 && isoSeconds(row.t) <= isoSeconds(finding.end) + 1);
+  const rows = data.log.filter(row => isoSeconds(row.t) <= cursor);
+  const visible = (state.logFilter === 'flagged' ? rows.filter(covered) : rows).slice(-80).reverse();
+  const options = series.map(item => `<option value="${esc(seriesKey(item))}"${item === selected ? ' selected' : ''}>${esc(shortMetric(item.metric))}${data.sources.length > 1 ? ` · ${esc(item.entity)}` : ''}</option>`).join('');
+  return `<div class="inspector-content">${header}
+    ${selected ? `<div class="flag-chart-head">
+        <span class="select-wrap flag-metric"><select id="flag-metric" aria-label="Telemetry series">${options}</select><i aria-hidden="true"></i></span>
+        <span class="mono flag-latest">${latest ? `${esc(compactValue(latest[1]))} ${esc(selected.unit ?? '')}${latest[2] !== 'ok' ? ` · ${esc(latest[2])}` : ''}` : 'No sample yet'}</span>
+      </div>
+      <canvas class="flag-chart" id="flag-chart" role="img" aria-label="${esc(shortMetric(selected.metric))} for ${esc(selected.entity)} up to the replay cursor"></canvas>`
+      : '<p class="placement-note">No numeric series for this entity; see the log below.</p>'}
+    <h3 class="evidence-heading">Flagger findings here</h3>
+    ${findings.length ? `<ul class="evidence-list">${flagFindingRows(findings, 5)}</ul>`
+      : `<p class="placement-note">${value === 'nodata' ? 'No telemetry in this window, so the state is unknown.' : 'No detector has flagged this entity up to this cut-off.'}</p>`}
+    <div class="flag-log-head"><h3 class="evidence-heading">Telemetry log</h3>
+      <div class="segment-control" role="group" aria-label="Log filter">
+        <button type="button" data-log-filter="all" aria-pressed="${state.logFilter === 'all'}">All</button>
+        <button type="button" data-log-filter="flagged" aria-pressed="${state.logFilter === 'flagged'}">Flagged</button>
+      </div></div>
+    <ol class="flag-log mono" aria-label="Telemetry records, newest first">${visible.map(row => `<li class="${covered(row) ? 'hit' : ''} ${row.quality !== 'ok' ? 'bad' : ''}">
+        <time>${esc(row.t.slice(11, 19))}</time><span>${esc(data.sources.length > 1 ? `${row.entity} ${shortMetric(row.metric)}` : shortMetric(row.metric))}</span>
+        <b>${esc(compactValue(row.value))}${row.unit && row.unit !== 'bool' ? ` ${esc(row.unit)}` : ''}</b>${row.quality !== 'ok' ? `<em>${esc(row.quality)}</em>` : ''}</li>`).join('')
+      || '<li class="empty">No records up to this cut-off.</li>'}</ol>
+    <p class="placement-note mono">bridge.py entity · ${number(data.elapsedMs)} ms in Python · ${number(data.bridgeMs ?? 0)} ms round trip · ${number(rows.length)} of ${number(data.log.length)} records so far${data.truncated ? ' · truncated' : ''}</p>
+    <button type="button" class="secondary-button" data-show-incident>Back to incident <span aria-hidden="true">↗</span></button>
+  </div>`;
+}
+
+function drawFlagEntityChart() {
+  const canvas = byId('flag-chart');
+  if (!canvas || !flagMode() || !analysis) return;
+  const data = entityData.get(`${state.flagging}/${state.selection}`);
+  if (!data) return;
+  const { selected } = selectedSeries(data);
+  const rect = selected && canvasFrame(canvas);
+  if (!rect) return;
+  const spans = entityFindings(state.selection)
+    .filter(finding => finding.entity === selected.entity && finding.metric === selected.metric);
+  drawFlagChart(rect.context, rect.width, rect.height, {
+    series: selected, limits: data.limits[seriesKey(selected)] ?? [], spans,
+    window: analysis.window, cursor: isoSeconds(flagStep().cutoff), stroke,
+  });
+}
+
 function renderInspector(restoreFocus = true) {
   const root = byId('inspector');
   const active = document.activeElement;
@@ -441,12 +727,31 @@ function renderInspector(restoreFocus = true) {
     if (active.hasAttribute('data-compare')) selector = '[data-compare]';
     if (active.hasAttribute('data-show-incident')) selector = '[data-show-incident]';
   }
-  root.innerHTML = state.inspector === 'incident' ? incidentInspector() : selectionInspector();
+  root.innerHTML = state.inspector === 'incident'
+    ? flagMode() ? flagIncidentInspector() : incidentInspector()
+    : flagMode() ? flagSelectionInspector() : selectionInspector();
   if (selector) root.querySelector(selector)?.focus({ preventScroll: true });
   renderSelectionState();
 }
 
+function flagClock(iso) {
+  const long = analysis && isoSeconds(analysis.window.end) - isoSeconds(analysis.window.start) > 86_400;
+  return `${long ? `${iso.slice(8, 10)} Nov ` : ''}${clock(iso)} UTC`;
+}
+
 function renderReplay() {
+  if (flagMode()) {
+    const step = flagStep();
+    range.value = state.tick;
+    const text = step ? `${flagClock(step.cutoff)} · T+${flagMinutes(step.minute)}` : '—';
+    range.setAttribute('aria-valuetext', `${text}, cut-off ${state.tick + 1} of ${duration}`);
+    byId('replay-timestamp').textContent = `${text} · ${state.tick + 1}/${duration}`;
+    byId('policy').hidden = true;
+    byId('topology-summary').textContent = '4 servers · 32 GPUs · Python flagger replay';
+    byId('play').setAttribute('aria-label', state.timer ? 'Pause telemetry replay' : 'Play telemetry replay');
+    byId('play').firstElementChild.classList.toggle('playing', Boolean(state.timer));
+    return;
+  }
   range.value = state.tick;
   range.setAttribute('aria-valuetext', `${clock(snapshot.timestamp)} UTC, minute ${state.tick + 1} of ${duration}`);
   byId('replay-timestamp').textContent = `${clock(snapshot.timestamp)} UTC · ${state.tick + 1}/${duration}`;
@@ -459,7 +764,22 @@ function renderReplay() {
   byId('play').firstElementChild.classList.toggle('playing', Boolean(state.timer));
 }
 
+const legends = {
+  twin: [['training', 'Training'], ['inference', 'Inference'], ['waiting', 'Waiting on fabric'], ['idle', 'Idle'], ['unknown', 'Unknown']],
+  flag: [['training', 'Training'], ['inference', 'Inference'], ['idle', 'Idle'], ['flag-critical', 'Flagged critical'],
+    ['flag-warning', 'Flagged warning'], ['flag-impacted', 'Blast radius'], ['unknown', 'Unknown / no data']],
+};
+
+function renderLegend() {
+  const legend = byId('legend');
+  const mode = flagMode() ? 'flag' : 'twin';
+  if (legend.dataset.mode === mode) return;
+  legend.dataset.mode = mode;
+  legend.innerHTML = legends[mode].map(([css, label]) => `<span><i class="${css}"></i> ${label}</span>`).join('');
+}
+
 function renderOverview() {
+  renderLegend();
   renderMetrics();
   renderRacks();
   renderLayer();
@@ -617,7 +937,8 @@ function changeView() {
   const title = byId('page-title');
   title.textContent = view === 'overview' ? 'Infrastructure overview' : 'Policy experiments';
   byId('page-summary').textContent = view === 'overview'
-    ? 'Trace workload performance across the compute, network and facility layers.'
+    ? flagMode() ? 'Replay GPU and facility telemetry through the deterministic flagger. Click any GPU to read its log.'
+      : 'Trace workload performance across the compute, network and facility layers.'
     : 'Replay an incident under two scheduling policies and compare useful work, latency and energy.';
   for (const nav of document.querySelectorAll('[data-view]')) {
     if (nav.dataset.view === view) nav.setAttribute('aria-current', 'page');
@@ -639,6 +960,7 @@ function openView(view) {
 function selectEntity(id) {
   state.inspector = 'selection';
   state.selection = id;
+  if (flagMode() && analysis) ensureFlagEntity(id);
   renderInspector(false);
   scheduleCanvas();
 }
@@ -662,6 +984,11 @@ function navigateInspector(event) {
     document.querySelector('[data-inspector="incident"]').focus({ preventScroll: true });
   }
   if (button.hasAttribute('data-compare')) openView('experiments');
+  if (button.dataset.logFilter) {
+    state.logFilter = button.dataset.logFilter;
+    renderInspector(false);
+    scheduleCanvas();
+  }
 }
 
 function startDrag(event) {
@@ -695,7 +1022,7 @@ function showGpuTooltip(event) {
   const position = button.getBoundingClientRect();
   gpuTooltip.replaceChildren();
   const title = document.createElement('strong');
-  title.textContent = `GPU ${button.textContent} · ${button.dataset.tooltipStatus}`;
+  title.textContent = `GPU ${button.textContent.trim()} · ${button.dataset.tooltipStatus}`;
   const readings = document.createElement('small');
   readings.textContent = button.dataset.tooltipMetrics;
   gpuTooltip.append(title, readings);
@@ -708,7 +1035,82 @@ function hideGpuTooltip(event) {
   if (event.target.closest('.gpu-slot')) gpuTooltip.classList.remove('is-visible');
 }
 
-scenarioSelect.replaceChildren(...scenarios.map(scenario => new Option(scenario.title, scenario.id)));
+function optionGroup(label, options) {
+  const group = document.createElement('optgroup');
+  group.label = label;
+  group.append(...options);
+  return group;
+}
+
+function renderScenarioOptions() {
+  const twin = optionGroup('Twin simulation · policy experiments', scenarios.map(scenario => new Option(scenario.title, scenario.id)));
+  const groups = [twin];
+  const named = { showcase: 'Telemetry flagger · full-hall showcase', fault: 'Telemetry flagger · labelled faults', benign: 'Telemetry flagger · benign near-misses' };
+  for (const [group, label] of Object.entries(named)) {
+    const items = flagCatalog.filter(item => item.group === group)
+      .map(item => new Option(`${item.id.split('-')[0]} · ${item.title}`, `flag:${item.id}`));
+    if (items.length) groups.push(optionGroup(label, items));
+  }
+  if (!flagCatalog.length) {
+    const offline = new Option('Flagger offline · run npm run dev', '', false, false);
+    offline.disabled = true;
+    groups.push(optionGroup('Telemetry flagger', [offline]));
+  }
+  scenarioSelect.replaceChildren(...groups);
+  scenarioSelect.value = state.flagging ? `flag:${state.flagging}` : state.scenario;
+}
+
+function indexAnalysis(body) {
+  flagRacks = new Map(body.layout.racks.map(rack => [rack.twinId, rack]));
+  flagGpus = new Map(body.layout.racks.flatMap(rack => rack.gpus.map(gpu => [gpu.twinId, { ...gpu, server: rack.label }])));
+}
+
+function enterFlagging(id) {
+  stopReplay();
+  analysisController?.abort();
+  analysisController = new AbortController();
+  state.flagging = id;
+  state.tick = 0;
+  state.inspector = 'incident';
+  state.selection = null;
+  state.flagMetric = null;
+  state.logFilter = 'all';
+  analysis = null;
+  flagError = null;
+  refreshModel();
+  buildLayer();
+  if (location.hash === '#experiments') location.hash = 'overview';
+  else changeView();
+  const { signal } = analysisController;
+  fetchFlagAnalysis(id, signal).then(body => {
+    if (state.flagging !== id) return;
+    if (!Array.isArray(body.steps) || body.steps.length !== duration) throw new Error('Unexpected flagger response');
+    analysis = body;
+    indexAnalysis(body);
+    // Open the layer where the final root cause lives, so the red path is visible.
+    const layer = body.steps.at(-1).incidents.map(incident => incident.rootLayer).find(value => ['fabric', 'power', 'cooling'].includes(value));
+    state.layer = layer ?? 'fabric';
+    buildLayer();
+    renderOverview();
+  }).catch(problem => {
+    if (signal.aborted || state.flagging !== id) return;
+    flagError = problem.message;
+    renderOverview();
+  });
+}
+
+function leaveFlagging() {
+  analysisController?.abort();
+  state.flagging = null;
+  analysis = null;
+  flagError = null;
+}
+
+renderScenarioOptions();
+fetchFlagCatalog().then(body => {
+  flagCatalog = body.scenarios.filter(item => typeof item.id === 'string' && typeof item.title === 'string');
+  renderScenarioOptions();
+}).catch(() => renderScenarioOptions());
 range.max = String(duration - 1);
 byId('footer-meta').textContent = `Twin schema ${schemaVersion} · Seed ${defaultSeed}`;
 refreshModel();
@@ -717,9 +1119,15 @@ buildLayer();
 changeView();
 
 scenarioSelect.addEventListener('change', () => {
+  if (scenarioSelect.value.startsWith('flag:')) {
+    const id = scenarioSelect.value.slice(5);
+    if (flagCatalog.some(item => item.id === id)) enterFlagging(id);
+    return;
+  }
   const selected = scenarios.find(scenario => scenario.id === scenarioSelect.value);
   if (!selected) return;
   stopReplay();
+  leaveFlagging();
   state.scenario = selected.id;
   state.layer = selected.layer;
   state.policy = 'baseline';
@@ -759,11 +1167,19 @@ map.addEventListener('pointerout', hideGpuTooltip);
 map.addEventListener('focusin', showGpuTooltip);
 map.addEventListener('focusout', hideGpuTooltip);
 byId('inspector').addEventListener('click', navigateInspector);
+byId('inspector').addEventListener('change', event => {
+  if (event.target.id !== 'flag-metric') return;
+  state.flagMetric = event.target.value;
+  renderInspector(false);
+  byId('flag-metric')?.focus({ preventScroll: true });
+  scheduleCanvas();
+});
 document.querySelector('.inspector-tabs').addEventListener('click', event => {
   const button = event.target.closest('[data-inspector]');
   if (button?.dataset.inspector === 'incident') selectIncident();
   if (button?.dataset.inspector === 'selection') {
     state.inspector = 'selection';
+    if (flagMode() && analysis && state.selection) ensureFlagEntity(state.selection);
     renderInspector(false);
     scheduleCanvas();
   }

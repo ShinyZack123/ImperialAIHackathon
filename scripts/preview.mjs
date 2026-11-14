@@ -1,5 +1,7 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import { FlaggingError, flaggingRequest } from './flagging-api.mjs';
 
 export function startPreview(port = 4397) {
   if (!Number.isInteger(port) || port < 1024 || port > 65535) {
@@ -20,6 +22,7 @@ const paths = new Map([
   ['/index.html', ['index.html', 'text/html']],
   ['/styles.css', ['styles.css', 'text/css']],
   ['/ui.js', ['ui.js', 'text/javascript']],
+  ['/flagging.js', ['flagging.js', 'text/javascript']],
   ['/twin.js', ['twin.js', 'text/javascript']],
   ['/tool-catalog.js', ['tool-catalog.js', 'text/javascript']],
   ['/Crosslayer.html', ['Crosslayer.html', 'text/html']],
@@ -31,7 +34,12 @@ async function serve(request, response) {
     response.writeHead(405, { Allow: 'GET, HEAD' }).end();
     return;
   }
-  const pathname = request.url.split('?', 1)[0];
+  const url = new URL(request.url, `http://${host}`);
+  const { pathname } = url;
+  if (pathname.startsWith('/api/flagging/')) {
+    await serveFlagging(request, response, url);
+    return;
+  }
   if (pathname === '/favicon.ico') {
     response.writeHead(204).end();
     return;
@@ -51,7 +59,24 @@ async function serve(request, response) {
   }
 }
 
-if (import.meta.main) {
+async function serveFlagging(request, response, url) {
+  let status = 200;
+  let body;
+  try {
+    body = await flaggingRequest(url.pathname, url.searchParams);
+  } catch (problem) {
+    status = problem instanceof FlaggingError ? problem.status : 500;
+    body = { error: problem instanceof FlaggingError ? problem.message : 'Internal error' };
+    if (!(problem instanceof FlaggingError)) console.error('flagging bridge', problem);
+  }
+  const content = Buffer.from(JSON.stringify(body));
+  response.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': content.length })
+    .end(request.method === 'HEAD' ? undefined : content);
+}
+
+// import.meta.main needs Node 22.18+; fall back to comparing the entry script on older runtimes.
+const isEntry = import.meta.main ?? process.argv[1] === fileURLToPath(import.meta.url);
+if (isEntry) {
   const port = Number(process.env.CROSSLAYER_PORT ?? 4397);
   try {
     await startPreview(port);
