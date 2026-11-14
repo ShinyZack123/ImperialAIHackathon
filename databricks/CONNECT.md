@@ -1,10 +1,28 @@
 # Connect Databricks to the website and models
 
+## Teammate quickstart: no Databricks login
+
+After cloning or pulling the repository, install Node.js 22.18+ and have Python 3.9+ on PATH. From the repository root, run:
+
+```sh
+npm run dev
+```
+
+Open http://127.0.0.1:4397/#databricks. With `DATABRICKS_API_URL` unset, the local server uses the four saved synthetic replays exported from Databricks. It runs the current teammate detector locally for each selected cursor. No Databricks account, credentials, separate API process, Python virtual environment or pip install is required for this mode.
+
+The banner, header and footer say **Saved Databricks replay**. The banner gives the export timestamp, and the findings panel says **Assessment computed locally · not written to Databricks**. The readings come from that export; there is no new warehouse query or saved cloud assessment. This is an explicit startup mode, never a fallback after a connected request fails.
+
+Select **Databricks replay**, set **Replay time · UTC**, and click **Load snapshot**. Click a GPU to inspect its readings and **Five-minute history**. Both modes use the same native IDs, unknown-data rules and deterministic detector. Returning to **Overview** opens the separate 32-GPU simulator.
+
+If `DATABRICKS_API_URL` was set in an old terminal, unset it to select the default saved mode (`unset DATABRICKS_API_URL` in macOS/Linux shells). If default startup fails, check the terminal for the Python executable or export error; a Databricks login will not fix that local setup. The server must remain running: a downloaded HTML file, generic static preview or GitHub Pages has no replay API.
+
+The remaining setup instructions are for the optional **Connected Databricks** mode, which queries the workspace and saves new assessments. Teammates can use the default mode without completing them.
+
 ## What Databricks does in this project
 
 Notebook 01 creates a controlled synthetic dataset in four Delta tables: `inventory`, `telemetry`, `workloads` and `cooling`. These tables persist after the notebook closes and give the team a shared source of GPU inventory, readings, job progress and cooling evidence.
 
-The SQL warehouse is the compute service that queries those tables; it is not a folder or another copy of the data. The connected website now asks the warehouse for evidence and sends it through the team's actual deterministic detector. The result is saved back to Databricks before it appears in the website.
+The SQL warehouse is the compute service that queries those tables; it is not a folder or another copy of the data. In **Connected Databricks** mode, the website asks the warehouse for evidence and sends it through the team's actual deterministic detector. The result is saved back to Databricks before it appears in the website. In the default **Saved Databricks replay** mode, the website instead reads the committed export locally and does not write to the workspace.
 
 ```text
 Databricks: inventory + telemetry + workloads + cooling
@@ -38,7 +56,7 @@ databricks auth login --host https://your-workspace.cloud.databricks.com --profi
 
 Find the Warehouse ID under **SQL Warehouses → your warehouse → Connection details**. It is the final component of `/sql/1.0/warehouses/<warehouse-id>`. Keep the host and warehouse configuration in your local `.env`; do not commit credentials or send an API token to the browser.
 
-Complete the browser sign-in. The backend needs this separate local CLI session even if you are already signed into the Databricks website. Each teammate needs their own login and access to the same workspace, SQL warehouse, catalog and schema. The backend needs permission to use the warehouse, `SELECT` on the evidence, `CREATE TABLE` in the selected schema for first setup, and `MODIFY` on `official_detector_results`; audit readback also needs `SELECT` on that table. Use the team's shared grants rather than passing around one person's credentials.
+Complete the browser sign-in. The connected backend needs this separate local CLI session even if you are already signed into the Databricks website. Each person running a connected backend needs their own login and access to the same workspace, SQL warehouse, catalog and schema. The backend needs permission to use the warehouse, `SELECT` on the evidence, `CREATE TABLE` in the selected schema for first setup, and `MODIFY` on `official_detector_results`; audit readback also needs `SELECT` on that table. Teammates using saved replay do not need these permissions. Use the team's shared grants rather than passing around one person's credentials.
 
 `DATABRICKS_CLI_PATH=databricks` uses the executable on PATH; set its absolute path locally if necessary. The CLI binary, virtual environment and credentials are excluded from Git. `requirements-backend.lock` records the versions used during validation. On Windows, use `.venv\Scripts\python.exe` instead of `.venv/bin/python`.
 
@@ -57,16 +75,16 @@ For the default fixture, expect `"status": "connected"`, four runs and 24 GPUs. 
 Keep the Python API running in the first terminal, from `databricks/`:
 
 ```sh
-.venv/bin/python -m uvicorn backend.app:app --host 127.0.0.1 --port 8010
+.venv/bin/python -m uvicorn backend.app:app --host 127.0.0.1 --port 8011
 ```
 
 In a second terminal, from the repository root:
 
 ```sh
-DATABRICKS_API_URL=http://127.0.0.1:8010 npm run dev
+DATABRICKS_API_URL=http://127.0.0.1:8011 npm run dev
 ```
 
-Open http://127.0.0.1:4397/#databricks. `DATABRICKS_API_URL` is a server-side setting used by the Node preview; it defaults to `http://127.0.0.1:8010`. If Python uses a different port, change that value before starting the preview. The browser calls `/api/databricks/...` on the website's own origin, and Node forwards only the allowed routes to Python. No Databricks token is exposed to frontend code.
+Open http://127.0.0.1:4397/#databricks and confirm **Connected Databricks** is displayed. `DATABRICKS_API_URL` is a server-side setting used by the Node preview. Set it explicitly to choose the connected backend; leaving it unset selects saved replay. If Python uses a different port, change the URL before starting the preview. The browser calls `/api/databricks/...` on the website's own origin, and Node forwards only the allowed routes to Python. No Databricks token is exposed to frontend code.
 
 1. Select a replay UUID from the **Databricks replay** menu. Runs are independent and must not be pooled.
 2. Select a UTC replay time and choose **Load snapshot**. The default is 10 minutes 45 seconds after the run starts, capped at its final sample.
@@ -78,11 +96,11 @@ The Databricks tab has 24 GPUs across three racks. The original twin has 32 GPUs
 
 Use the recorded clock rather than today's clock: readings become stale/unknown if a cursor is too far beyond them. Missing/stale latest telemetry is unknown, not zero or healthy. The detector's states summarise findings anywhere in the selected analysis window, so a historical flag can remain visible after a latest reading recovers. Its 300-second persistence requirement can also produce no flags during a short anomaly. No finding is not a hardware-health certificate.
 
-If loading fails, the website shows an explicit error rather than another data source. Check the backend terminal, CLI login, warehouse access and table permissions. A failed or ambiguous write is not reported as saved. The query and write pollers have bounded deadlines and best-effort cancellation; underlying SDK network calls/retries can extend wall time.
+If connected loading fails, the website shows an explicit error and stays in connected mode. It never silently substitutes saved replay. Check the backend terminal, CLI login, warehouse access and table permissions. A failed or ambiguous write is not reported as saved. The query and write pollers have bounded deadlines and best-effort cancellation; underlying SDK network calls/retries can extend wall time.
 
 ## 4. Use the API and model adapter
 
-The local API documentation is at http://127.0.0.1:8010/docs. The addresses below refer to the machine running the backend, not a shared hosted service.
+The connected Python API documentation is at http://127.0.0.1:8011/docs. The addresses below refer to the machine running that backend, not a shared hosted service. Saved replay supplies the four `/api/databricks/...` routes through the Node server; it does not launch this Python HTTP API or the model evidence tools.
 
 | Interface | Purpose |
 |---|---|
@@ -93,7 +111,7 @@ The local API documentation is at http://127.0.0.1:8010/docs. The addresses belo
 | `GET /api/overview`, `/api/racks/{rack_id}` | Additional bounded evidence queries for model tools |
 | `GET /api/health-assessments` | Saved six-rule **comparison baseline**, explicitly `official: false`; not the official snapshot endpoint |
 
-Although the official snapshot uses GET for the local demo, it computes an assessment and writes its audit result to Databricks. The source tables are unchanged. Do not describe the whole backend as read-only.
+In connected mode, the official snapshot GET computes an assessment and writes its audit result to Databricks. The source tables are unchanged. In saved mode, the same route computes locally without a Databricks write. Saved responses retain `source: "databricks"` and `synthetic: true`, and add `delivery: "saved_replay"` with `exported_at`. The snapshot also carries those fields and `persistence: {status: "not_saved", reason: "saved_replay"}`. A connected response currently omits `delivery` and is treated as connected. The website checks these fields consistently across catalogue, snapshot and history responses.
 
 `examples/model_adapter.py` gives the diagnostic-model teammate an `InvestigationEvidence` object bound to one run/cursor. `.health_assessments()` calls the same `OfficialDetector` service as the website, including persistence, and returns the full snapshot dictionary. Read candidate observations from `result["incidents"]`. `.gpu_history()`, `.workload_history()` and `.rack_context()` retrieve supporting evidence. `.comparison_baseline()` is for tests/comparison only and must not generate official escalations.
 
@@ -103,7 +121,7 @@ Maintenance, interventions, workload phase, calibrated baselines and throttle re
 
 ## 5. Inspect saved official results
 
-`official_detector_results` contains one result per `(run_id, as_of_ts, detector_version, evidence_sha256)`. It stores the full snapshot JSON, incident count and generation time. The version fingerprints the flagger, its configuration and the connector adapter. The evidence hash binds the result to the exact bounded source records. Repeating the same inputs updates that record; a changed detector or evidence creates a distinct audit record.
+Connected assessments are stored in `official_detector_results`, with one result per `(run_id, as_of_ts, detector_version, evidence_sha256)`. It stores the full snapshot JSON, incident count and generation time. The version fingerprints the flagger, its configuration and the connector adapter. The evidence hash binds the result to the exact bounded source records. Repeating the same inputs updates that record; a changed detector or evidence creates a distinct audit record. Default saved-replay assessments do not create or update rows in this table.
 
 Use `DatabricksData.official_results(run_id, as_of_ts)` or `sql/official_results.sql` to read saved results at an exact cursor. The write is confirmed before API success. It does not overwrite source readings or claim that a physical repair happened.
 
@@ -129,6 +147,8 @@ The baseline can disagree with the official detector because the algorithms and 
 
 `../public/databricks.js` consumes the API envelope and renders native source inventory. `backend/flagging_adapter.py` translates metric names and units at the connector boundary, preserving `gpu_id`, `rack_id`, `server_id`, `cooling_zone_id`, replay UUID and UTC cutoff. It does not load the detector's separate scenario fixtures or answer keys. `backend/official_detection.py` owns the read → detect → persist sequence, and `backend/result_store.py` owns the validated result write.
 
+The default `backend/replay_bridge.py` reads the exported evidence in `demo/` and invokes the same connector/detector without network authentication or writes. The local Node server chooses this path only when no connected backend URL is configured. It returns delivery provenance to keep saved export and connected data explicit in the UI.
+
 The existing simulated twin in `../src/twin.js` and `../flagging/bridge.py` still uses its own `scenario`, `tick`, `seed`, `policy` and console-entity mapping. Neither that scenario data nor the baseline six-rule table is substituted for Databricks evidence. The diagnostic evidence adapter shares the official path; diagnostic inference and an incident ownership/acknowledgement lifecycle remain future work.
 
 This local development server has no application-user authentication. Before shared cloud hosting, add server-side authorization, deployment credentials, rate limits/caching and deployment configuration, and grant the deployed principal access to the shared warehouse and evidence/result tables. Local personal OAuth sessions do not authorize other teammates or a hosted service. CORS origins for direct development clients are configured through `FRONTEND_ORIGINS`; the existing website uses the same-origin proxy.
@@ -145,7 +165,7 @@ On 2026-11-14 the authenticated integration read all four runs from Databricks. 
 
 The other three cloud replays also saved official results: the healthy fixture had zero incidents, the telemetry-gap fixture had one incident and one unknown GPU, and the isolated-error fixture had one incident. Headless browser checks confirmed the four-replay selector, 24 GPUs/three racks, saved `zone-b` finding, GPU selection and power chart, and return to Overview. There were no JavaScript errors or horizontal overflow at desktop (1440px) and mobile (390px) widths.
 
-The integration validation passed the Python suite in `databricks/tests` and 24 Node tests. Run them from their respective directories:
+The connected integration validation passed the Python suite in `databricks/tests` and the Node suite. Run them from their respective directories:
 
 ```sh
 # From databricks/

@@ -10,12 +10,16 @@ export class DatabricksProxyError extends Error {
   }
 }
 
-export async function databricksRequest(pathname, searchParams, { fetchImpl = fetch, backendUrl = process.env.DATABRICKS_API_URL || 'http://127.0.0.1:8010' } = {}) {
+export function validateDatabricksRequest(pathname, searchParams) {
   if (!allowedPath.test(pathname)) throw new DatabricksProxyError(404, 'Unknown Databricks API route');
   const allowed = pathname.endsWith('/runs') ? [] : pathname.endsWith('/snapshot') ? ['run_id', 'as_of_ts'] : ['run_id', 'as_of_ts', 'window_minutes'];
   for (const key of searchParams.keys()) {
     if (!allowed.includes(key) || searchParams.getAll(key).length !== 1) throw new DatabricksProxyError(400, 'Unexpected or repeated query parameter');
   }
+}
+
+export async function databricksRequest(pathname, searchParams, { fetchImpl = fetch, backendUrl = process.env.DATABRICKS_API_URL || 'http://127.0.0.1:8010' } = {}) {
+  validateDatabricksRequest(pathname, searchParams);
   let upstream;
   try {
     upstream = new URL(backendUrl);

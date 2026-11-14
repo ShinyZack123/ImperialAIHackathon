@@ -8,6 +8,8 @@ type Envelope<T> = {
   schema_version: string;
   source: "databricks";
   synthetic: true;
+  delivery?: "connected" | "saved_replay";
+  exported_at?: string;
   run_id?: string;
   as_of_ts?: string;
   data: T;
@@ -25,6 +27,7 @@ export type Overview = {
 };
 export type OfficialSnapshot = {
   source: "databricks"; synthetic: true; run_id: string; as_of_ts: string;
+  delivery?: "connected" | "saved_replay"; exported_at?: string;
   state_scope: "analysis_window"; window: {start: string; end: string};
   overview: Overview;
   racks: {id: string; gpus: {
@@ -33,7 +36,8 @@ export type OfficialSnapshot = {
   }[]}[];
   incidents: {severity: string; rootEntity: string; affectedGpuIds: string[]; message: string; findings: Record<string, unknown>[]}[];
   engine: {module: "flagging.flagger.flag_window"; version: string; deterministic: true};
-  persistence: {status: "saved"; table: string; evidence_sha256: string};
+  persistence: {status: "saved"; table: string; evidence_sha256: string}
+    | {status: "not_saved"; reason: "saved_replay"};
   limitations: string[];
 };
 
@@ -61,5 +65,6 @@ export const getWorkloadHistory = (runId: string, gpuId: string, replayTime: str
 // const wattsLabel = snapshot.data.overview.observed_gpu_power_kw?.toFixed(2) ?? "Unknown";
 // Display wattsLabel + " kW observed GPU power" with observed/total GPU counts.
 // Use snapshot.data.incidents as the sole official findings; unknown is separate.
+// Always display delivery/exported_at. Saved replay runs the detector locally and makes no cloud write.
 // Clear means no findings in the analysis window, not a guarantee of healthy hardware.
 // Await each replay refresh before starting the next. SQL cold starts can take time.

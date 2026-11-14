@@ -110,19 +110,23 @@
     </section>
 
     <section id="databricks" aria-labelledby="page-title" hidden>
+      <div id="db-delivery" class="panel db-delivery" aria-live="polite" hidden>
+        <h2 id="db-delivery-title"></h2>
+        <p id="db-delivery-description"></p>
+      </div>
       <form id="db-form" class="panel db-controls">
-        <label for="db-run"><span class="mono">Databricks replay</span><select id="db-run" required disabled><option>Connecting…</option></select></label>
+        <label for="db-run"><span class="mono">Databricks replay</span><select id="db-run" required disabled><option>Loading…</option></select></label>
         <label for="db-time"><span class="mono">Replay time · UTC</span><input id="db-time" type="datetime-local" step="5" required disabled></label>
         <button class="primary-button" id="db-load" type="submit" disabled>Load snapshot <span aria-hidden="true">→</span></button>
         <button class="secondary-button" id="db-retry" type="button">Refresh replays</button>
         <p id="db-run-window" class="mono db-quiet"></p>
       </form>
-      <p id="db-status" class="db-status" role="status" aria-live="polite">Connect to Databricks to inspect recorded GPU evidence.</p>
+      <p id="db-status" class="db-status" role="status" aria-live="polite">Load a Databricks replay to inspect recorded GPU evidence.</p>
       <div id="db-content" hidden>
         <div class="metrics-strip" id="db-metrics" aria-label="Databricks GPU metrics" role="group"></div>
         <div class="db-workspace-grid">
           <section class="panel" aria-labelledby="db-fleet-heading">
-            <div class="panel-head"><div><h2 id="db-fleet-heading">GPU fleet</h2><p id="db-fleet-summary"></p></div><span class="db-source-label">Databricks · synthetic</span></div>
+            <div class="panel-head"><div><h2 id="db-fleet-heading">GPU fleet</h2><p id="db-fleet-summary"></p></div><span class="db-source-label" id="db-fleet-source">Databricks evidence · synthetic</span></div>
             <div id="db-racks" class="db-racks"></div>
             <div class="legend-bar db-legend"><span><i class="db-critical"></i> Critical finding</span><span><i class="db-warning"></i> Warning finding</span><span><i class="db-clear"></i> No findings</span><span><i class="unknown"></i> Unknown telemetry</span></div>
           </section>

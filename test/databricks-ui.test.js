@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { parseReplayRuns, parseDatabricksSnapshot, historySegments, dbNumber, requestDatabricks } from '../public/databricks.js';
+import { parseReplayRuns, parseDatabricksSnapshot, historySegments, dbNumber, requestDatabricks, databricksPresentation, assertDatabricksDelivery, databricksPersistenceText } from '../public/databricks.js';
 
 const runId = '43cd1ebe-e8e5-5ccf-b2c4-8ab0e1a8523c';
 const cursor = '2026-11-14T09:10:45Z';
@@ -30,6 +30,40 @@ test('Databricks snapshot rejects stale request results, foreign sources and mal
   const duplicate = sample();
   duplicate.racks[0].gpus[1].id = 'gpu-001';
   assert.throws(() => parseDatabricksSnapshot(duplicate, runId, cursor));
+});
+
+test('saved exports have explicit local delivery and cannot claim a new Databricks write', () => {
+  const provenance = { delivery: 'saved_replay', exported_at: '2026-11-14T12:00:00Z' };
+  const snapshot = { ...sample(), ...provenance, persistence: { status: 'not_saved', reason: 'saved_replay' } };
+  const body = { ...provenance, data: snapshot };
+  const mode = databricksPresentation(body);
+  assert.equal(mode.label, 'Saved Databricks replay');
+  assert.match(mode.description, /exported 2026-11-14T12:00:00.000Z/);
+  assert.match(mode.loading, /detector locally/);
+  assert.match(mode.footer, /no Databricks writes/);
+  assert.equal(parseDatabricksSnapshot(body, runId, cursor, mode).racks[0].gpus[1].metrics.temp_c, null);
+  assert.equal(databricksPersistenceText(snapshot), 'Assessment computed locally · not written to Databricks');
+  for (const persistence of [undefined, { status: 'saved' }, { status: 'not_saved', reason: 'unknown' }]) {
+    assert.throws(() => parseDatabricksSnapshot({ ...body, data: { ...snapshot, persistence } }, runId, cursor, mode), /cannot claim/);
+  }
+});
+
+test('connected responses remain supported and only confirmed writes show the saved notice', () => {
+  const mode = databricksPresentation({});
+  assert.equal(mode.label, 'Connected Databricks');
+  assert.equal(mode.exportedAt, null);
+  assert.match(mode.loading, /saving the assessment/);
+  assert.equal(databricksPersistenceText(sample()), 'Databricks save not confirmed');
+  assert.equal(databricksPersistenceText({ ...sample(), persistence: { status: 'saved' } }), 'Assessment saved in Databricks');
+});
+
+test('delivery must stay consistent across catalogue, snapshot and history requests', () => {
+  const saved = databricksPresentation({ delivery: 'saved_replay', exported_at: '2026-11-14T12:00:00Z' });
+  assert.throws(() => parseDatabricksSnapshot({ data: sample() }, runId, cursor, saved), /changed delivery/);
+  assert.throws(() => assertDatabricksDelivery({ delivery: 'saved_replay', exported_at: '2026-11-14T12:01:00Z' }, saved), /changed delivery/);
+  assert.throws(() => databricksPresentation({ delivery: 'saved_replay' }), /export timestamp/);
+  assert.throws(() => databricksPresentation({ delivery: 'saved_replay', exported_at: 'invalid' }), /export timestamp/);
+  assert.throws(() => databricksPresentation({ delivery: 'unexpected' }), /unsupported delivery/);
 });
 
 test('replay catalogue rejects malformed intervals and identifiers', () => {

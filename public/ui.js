@@ -4,7 +4,14 @@ import { escapeHtml, fetchFlagCatalog, fetchFlagAnalysis, fetchFlagEntity, worst
 import { mountDatabricksView } from './databricks.js';
 
 const byId = id => document.getElementById(id);
-const databricksView = mountDatabricksView(byId('databricks'));
+const databricksView = mountDatabricksView(byId('databricks'), renderDatabricksSource);
+
+function renderDatabricksSource(presentation = databricksView.presentation()) {
+  if (byId('databricks').hidden) return;
+  byId('source-location').textContent = 'Databricks evidence';
+  byId('source-badge').innerHTML = `<i aria-hidden="true"></i> ${escapeHtml(presentation?.label ?? 'Checking source')}`;
+  byId('footer-meta').textContent = presentation?.footer ?? 'Databricks evidence · identifying source';
+}
 const esc = escapeHtml;
 const scenarios = scenarioOptions();
 const statusNames = {
@@ -939,9 +946,12 @@ function changeView() {
   byId('databricks').hidden = view !== 'databricks';
   document.querySelector('.scenario-control').hidden = view === 'databricks';
   byId('open-tools').hidden = view === 'databricks';
-  byId('source-location').textContent = view === 'databricks' ? 'Databricks replay' : 'London 01';
-  byId('source-badge').innerHTML = `<i aria-hidden="true"></i> ${view === 'databricks' ? 'Synthetic replay' : 'Simulation'}`;
-  byId('footer-meta').textContent = view === 'databricks' ? 'Databricks evidence · deterministic detector · observation only' : `Twin schema ${schemaVersion} · Seed ${defaultSeed}`;
+  if (view === 'databricks') renderDatabricksSource();
+  else {
+    byId('source-location').textContent = 'London 01';
+    byId('source-badge').innerHTML = '<i aria-hidden="true"></i> Simulation';
+    byId('footer-meta').textContent = `Twin schema ${schemaVersion} · Seed ${defaultSeed}`;
+  }
   const title = byId('page-title');
   title.textContent = view === 'databricks' ? 'GPU evidence workspace' : view === 'overview' ? 'Infrastructure overview' : 'Policy experiments';
   byId('page-summary').textContent = view === 'databricks' ? 'Explore stored GPU readings and investigate findings from the team’s deterministic detector.' : view === 'overview'

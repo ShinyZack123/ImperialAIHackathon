@@ -2,7 +2,8 @@ import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { FlaggingError, flaggingRequest } from './flagging-api.mjs';
-import { DatabricksProxyError, databricksRequest } from './databricks-api.mjs';
+import { DatabricksProxyError } from './databricks-api.mjs';
+import { databricksSourceRequest } from './databricks-source.mjs';
 
 export function startPreview(port = 4397) {
   if (!Number.isInteger(port) || port < 1024 || port > 65535) {
@@ -85,7 +86,7 @@ async function serveDatabricks(request, response, url) {
   let status = 200;
   let body;
   try {
-    body = await databricksRequest(url.pathname, url.searchParams);
+    body = await databricksSourceRequest(url.pathname, url.searchParams);
   } catch (problem) {
     status = problem instanceof DatabricksProxyError ? problem.status : 500;
     body = { error: problem instanceof DatabricksProxyError ? problem.message : 'Databricks request failed' };
@@ -102,6 +103,9 @@ if (isEntry) {
   try {
     await startPreview(port);
     console.log(`AI infrastructure optimisation platform  http://${host}:${port}`);
+    console.log(process.env.DATABRICKS_API_URL === undefined
+      ? 'Databricks: saved synthetic export; detector runs locally; no Databricks login needed.'
+      : 'Databricks: connected backend; authentication stays on that backend.');
   } catch (problem) {
     console.error(`Local preview failed: ${problem.code ?? problem.message}`);
     process.exitCode = 1;

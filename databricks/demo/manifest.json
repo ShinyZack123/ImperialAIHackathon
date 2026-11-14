@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "source": "databricks",
+  "synthetic": true,
+  "delivery": "saved_replay",
+  "exported_at": "2026-11-14T17:11:22.028577Z",
+  "payload_sha256": "b249b1b745b1be67ed1689f879b3d5bb806ad463f89e67dc011b5dc023469787",
+  "archive_sha256": "8eb499e447f27b8adb475b922583d1b339ac1c7b1e52df909c1f96cc065c24b5",
+  "runs": [
+    {
+      "run_id": "43cd1ebe-e8e5-5ccf-b2c4-8ab0e1a8523c",
+      "start_ts": "2026-11-14T09:00:00.000Z",
+      "end_ts": "2026-11-14T09:14:55.000Z",
+      "sample_count": 4320
+    },
+    {
+      "run_id": "522f5945-1c4b-5bbd-afe4-807ae90cdd84",
+      "start_ts": "2026-11-14T09:00:00.000Z",
+      "end_ts": "2026-11-14T09:14:55.000Z",
+      "sample_count": 4320
+    },
+    {
+      "run_id": "e0771ed9-b94c-5c15-a89b-a8180547fcd6",
+      "start_ts": "2026-11-14T09:00:00.000Z",
+      "end_ts": "2026-11-14T09:14:55.000Z",
+      "sample_count": 4320
+    },
+    {
+      "run_id": "e95bbdd2-ae34-51c4-a412-b6409dd6e97f",
+      "start_ts": "2026-11-14T09:00:00.000Z",
+      "end_ts": "2026-11-14T09:14:55.000Z",
+      "sample_count": 4320
+    }
+  ],
+  "row_counts": {
+    "inventory": 24,
+    "telemetry": 17280,
+    "workloads": 17280,
+    "cooling": 2160
+  }
+}
