@@ -1,5 +1,6 @@
 import { copyFile, cp, mkdir, readFile, writeFile } from 'node:fs/promises';
 
+
 const file = path => new URL(path, import.meta.url);
 await mkdir(file('../dist'), { recursive: true });
 await cp(file('../public'), file('../dist'), { recursive: true });
