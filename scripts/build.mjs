@@ -26,4 +26,7 @@ const combined = [twin, catalog, flagging, ui].map(inlineModule).join('\n');
 const standalone = html
   .replace('<link rel="stylesheet" href="./styles.css">', () => '<style>\n' + css + '</style>')
   .replace('<script type="module" src="./ui.js"></script>', () => '<script type="module">\n' + combined.replaceAll('</script', '<\\/script') + '</script>');
-await writeFile(file('../dist/Crosslayer.html'), standalone);
+const standaloneFile = file('../dist/ai-infrastructure-optimisation-platform.html');
+await writeFile(standaloneFile, standalone);
+// Refresh the previous standalone filename for existing local bookmarks.
+await copyFile(standaloneFile, file('../dist/Crosslayer.html'));

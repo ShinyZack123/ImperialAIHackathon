@@ -9,7 +9,7 @@ const rpc = (id, method, params) => ({ jsonrpc: '2.0', id, method, params });
 const init = rpc(1, 'initialize', {
   protocolVersion: '2025-11-25',
   capabilities: {},
-  clientInfo: { name: 'crosslayer-test', version: '1.0.0' },
+  clientInfo: { name: 'mcp-test', version: '1.0.0' },
 });
 const message = (...requests) => requests.map(request =>
   typeof request === 'string' ? request : JSON.stringify(request)).join('\n') + '\n';
@@ -36,6 +36,7 @@ test('MCP subprocess discovers, validates and runs the four shared tools over st
   assert.equal(results.size, 11);
   assert.equal(results.get(0).error.code, -32000);
   assert.equal(results.get(1).result.protocolVersion, '2025-11-25');
+  assert.equal(results.get(1).result.serverInfo.name, 'ai-infrastructure-optimisation-platform');
   const catalog = results.get(2).result.tools;
   assert.deepEqual(catalog.map(item => item.name), ['get_snapshot', 'inspect_entity', 'trace_incident', 'compare_policies']);
   assert.ok(catalog.every(item => item.annotations.readOnlyHint));
