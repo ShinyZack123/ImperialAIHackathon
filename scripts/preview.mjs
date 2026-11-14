@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 
 export function startPreview(port = 4397) {
   if (!Number.isInteger(port) || port < 1024 || port > 65535) {
-    throw new RangeError('CROSSLAYER_PORT must be an integer from 1024 through 65535');
+    throw new RangeError('The preview port must be an integer from 1024 through 65535');
   }
   const server = createServer({ requestTimeout: 5000 }, serve);
   return new Promise((resolve, reject) => {
@@ -22,6 +22,7 @@ const paths = new Map([
   ['/ui.js', ['ui.js', 'text/javascript']],
   ['/twin.js', ['twin.js', 'text/javascript']],
   ['/tool-catalog.js', ['tool-catalog.js', 'text/javascript']],
+  ['/ai-infrastructure-optimisation-platform.html', ['ai-infrastructure-optimisation-platform.html', 'text/html']],
   ['/Crosslayer.html', ['Crosslayer.html', 'text/html']],
 ]);
 async function serve(request, response) {
@@ -52,12 +53,12 @@ async function serve(request, response) {
 }
 
 if (import.meta.main) {
-  const port = Number(process.env.CROSSLAYER_PORT ?? 4397);
+  const port = Number(process.env.AI_INFRASTRUCTURE_PORT ?? process.env.CROSSLAYER_PORT ?? 4397);
   try {
     await startPreview(port);
-    console.log(`Crosslayer local preview  http://${host}:${port}`);
+    console.log(`AI infrastructure optimisation platform  http://${host}:${port}`);
   } catch (problem) {
-    console.error(`Crosslayer preview failed: ${problem.code ?? problem.message}`);
+    console.error(`Local preview failed: ${problem.code ?? problem.message}`);
     process.exitCode = 1;
   }
 }
