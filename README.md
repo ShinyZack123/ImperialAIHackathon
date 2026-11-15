@@ -37,7 +37,7 @@ All figures come from synthetic data and simulation, not real hardware.
 
 - **Detector:** all 23 hand-labelled scenarios correct (12 faults flagged with the right root cause, 11 benign near-misses left quiet), and 340 of 340 runs correct on freshly generated scenarios over 10 noise seeds. See [FLAGGER_METHODS.md](flagging/FLAGGER_METHODS.md).
 - **Optimiser, mean of 11 seeded replays per scenario:** network degradation +86% training throughput at the same energy; inference demand surge from 0 to 24 of 24 minutes inside the 160 ms P95 target; power-budget cut +3% throughput with 2.5% less energy; thermal constraint 13 more minutes inside the latency target. The coordinated plan sees the whole 24-minute trace and is applied at minute 0 without a migration cost.
-- **Databricks:** the official detector's assessment at every 30-second point of the four replays is saved in Delta, and the scorecard grades it against the answer key. See [the lakehouse guide](databricks/lakehouse/README.md).
+- **Databricks:** the official detector assessed every 30-second point of the four Databricks replays: 122 assessments over about 2.5 million metric records, saved in Delta, raising 6 distinct incidents. Graded against the answer key, all 4 replays are correct. The isolated GPU error was named at onset, the telemetry gap after 30 seconds and the shared cooling zone after 330 seconds; the healthy load increase raised nothing. These are four scenarios written by the same team as the detector. See [the lakehouse guide](databricks/lakehouse/README.md).
 
 ## APIs, models and datasets
 
