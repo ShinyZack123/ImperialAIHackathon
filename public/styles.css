@@ -287,8 +287,8 @@ dialog p { font-size: 13px; line-height: 1.5; color: var(--muted); margin-top: 8
 @media (max-width: 650px) {
   .header-inner, .workspace { padding-inline: 15px; }
   .brand { font-size: 18px; gap: 7px; }
-  .header-inner nav { gap: 13px; }
-  .header-inner nav a { font-size: 12px; }
+  .header-inner nav { gap: 13px; min-width: 0; overflow-x: auto; }
+  .header-inner nav a { font-size: 12px; flex: 0 0 auto; }
   .header-status { gap: 0; }
   .simulation-label { display: none; }
   .header-button { font-size: 10px; padding-inline: 6px; }

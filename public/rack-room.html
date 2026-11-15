@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#152824">
+  <title>Rack explorer · AI Infrastructure</title>
+  <link rel="stylesheet" href="./rack-room.css">
+</head>
+<body>
+  <a class="skip" href="#workspace">Skip to rack explorer</a>
+  <header class="bar">
+    <div class="bar-inner">
+      <a class="brand" href="./"><span class="brand-icon" aria-hidden="true">▱</span> AI Infrastructure</a>
+      <nav aria-label="Demo views">
+        <a href="./" aria-current="page">Rack explorer</a>
+        <a href="./index.html#overview">Overview</a>
+        <a href="./index.html#experiments">Experiments</a>
+        <a href="./index.html#operations">Operations</a>
+        <a href="./index.html#databricks">Databricks</a>
+      </nav>
+      <span class="environment-tag"><i></i> Simulation</span>
+    </div>
+  </header>
+  <main id="workspace">
+    <header class="intro">
+      <div>
+        <p class="eyebrow">LONDON 01 <span>/</span> GPU HALL</p>
+        <h1>Rack explorer</h1>
+        <p class="subtitle">Open a GPU tray to inspect its readings and trace shared cooling issues.</p>
+      </div>
+      <label class="source" for="replay-case"><i aria-hidden="true"></i><div>
+        <strong>Saved replay</strong>
+        <select id="replay-case" disabled><option value="cooling">Rack overheating</option><option value="single">Single GPU fault</option></select>
+        <span>Databricks data · Synthetic</span>
+      </div></label>
+    </header>
+    <section id="fleet-metrics" class="fleet-metrics" aria-label="Fleet readings"></section>
+    <div class="work-grid">
+      <section class="stage" aria-labelledby="hall-heading">
+        <div class="stage-top">
+          <div><h2 id="hall-heading">GPU hall</h2><span id="stage-count">3 racks · 24 GPUs</span></div>
+          <div class="view-controls">
+            <button id="fit" type="button" title="Reset camera to fit all racks">Fit all</button>
+            <button id="focus-rack" type="button" disabled>Focus rack</button>
+          </div>
+        </div>
+        <div id="scene" class="scene" aria-label="3D view of three GPU racks">
+          <div id="rack-labels" aria-hidden="true"></div>
+          <ul class="fault-key" aria-label="GPU highlight legend">
+            <li><i class="fault"></i>GPU fault</li>
+            <li><i class="warning"></i>Shared issue</li>
+            <li><i class="unknown"></i>No reading</li>
+          </ul>
+          <div id="gpu-hover" class="gpu-hover" hidden></div>
+          <p id="stage-status" class="stage-status" role="status">Loading 3D racks…</p>
+          <p class="scene-help"><span>Drag to orbit</span><span>Scroll to zoom</span><span>Select a tray</span></p>
+        </div>
+        <div id="rack-switch" class="rack-switch" role="group" aria-label="Focus a rack"></div>
+        <div class="replay">
+          <button id="play-replay" class="play" type="button" aria-label="Play cooling replay" disabled>▶</button>
+          <div class="replay-track">
+            <label for="replay-time">Replay time <output id="replay-clock">—</output></label>
+            <input type="range" id="replay-time" min="0" max="0" value="0" disabled>
+          </div>
+          <button id="incident-jump" type="button" disabled>Cooling event</button>
+        </div>
+      </section>
+      <aside class="inspector" aria-labelledby="inspector-heading">
+        <div class="inspector-top"><h2 id="inspector-heading">Inspector</h2><span id="inspect-kind">RACK</span></div>
+        <div id="inspection" aria-live="polite"><p class="placeholder">Loading the saved replay…</p></div>
+        <div class="device-picker">
+          <label for="gpu-select">Select GPU</label>
+          <select id="gpu-select" disabled><option value="">Choose a GPU</option></select>
+        </div>
+      </aside>
+    </div>
+    <footer><span>Recorded telemetry and detector findings at sampled replay times.</span><span>Tray movement is illustrative.</span></footer>
+  </main>
+  <script type="module">
+    const consoleViews = ['#overview', '#experiments', '#operations', '#databricks'];
+    if (consoleViews.includes(location.hash)) {
+      location.replace('./index.html' + location.hash);
+    } else {
+      import('./rack-room.js');
+    }
+  </script>
+</body>
+</html>

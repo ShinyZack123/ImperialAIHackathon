@@ -7,9 +7,14 @@
     "build": "node scripts/build.mjs",
     "dev": "npm run build && node scripts/preview.mjs",
     "export:experiments": "node scripts/export-policy-experiments.mjs",
-    "test": "node --test"
+    "test": "node --test",
+    "rebuild:3d": "esbuild src/rack-scene.js --bundle --minify --format=esm --legal-comments=inline --outfile=public/rack-scene.js"
   },
   "engines": {
     "node": ">=22.18"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "three": "0.187.0"
   }
 }

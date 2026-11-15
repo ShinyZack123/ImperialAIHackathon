@@ -95,7 +95,7 @@ Each tool sees only its own layer. As a result, operators either drown in alerts
 | **Databricks lakehouse** | Stores the evidence in Delta tables and runs the detector as a scheduled serverless job. Also holds the detector's audit trail, incident timelines, a topology graph, agent tools (Unity Catalog functions that can only read data up to a given time), an evaluation scorecard and a ledger of scheduling decisions. | [`databricks/`](databricks/README.md) |
 | **Coordinated optimiser** | Searches rack placement, serving capacity and power caps together. Every candidate plan must pass six hard constraints at every simulated minute. | [`src/twin.js`](src/twin.js) |
 | **Operations: action gate** | Every proposed change must be simulated, validated, approved by an operator and verified, and it is rolled back if it fails. Also includes GPU health triage, straggler attribution and maintenance planning. See [Operations](#operations-action-gate-triage-and-maintenance). | [`src/operations.js`](src/operations.js) |
-| **Operator console** | The website: infrastructure map, incident inspector, policy experiments, operations view and the Databricks evidence workspace. | [`public/`](public/) |
+| **Operator console** | The website: interactive 3D rack explorer, infrastructure map, incident inspector, policy experiments, operations view and the Databricks evidence workspace. | [`public/`](public/) |
 | **MCP server** | Exposes the twin as tools any AI agent can call: four read-only tools, plus the operations tools listed below. | [`src/mcp.js`](src/mcp.js) |
 
 ---
@@ -184,9 +184,12 @@ npm run dev
 
 Then open **http://127.0.0.1:4397**:
 
+- **Rack explorer**: the 3D landing screen for three racks and 24 GPUs. Orbit and zoom the hall, click a tray to slide it out, or select a GPU from the inspector. Choose **Rack overheating** or **Single GPU fault** to see direct GPU faults outlined in red. Amber indicates shared findings and grey indicates unavailable telemetry. This view uses two saved synthetic Databricks replays.
 - **Overview**: the digital twin and its incident scenarios. The scenario menu can also replay the detector's full-hall, labelled-fault and benign scenarios.
 - **Experiments**: compares the baseline policy with the coordinated policy.
 - **Operations** (http://127.0.0.1:4397/#operations): the action gate, triage and maintenance tools. See [Operations](#operations-action-gate-triage-and-maintenance).
+
+To regenerate the rack explorer assets during development, run `npm ci`, `npm run rebuild:3d` and `python3 -B scripts/export-rack-replay.py`. The checked-in browser bundle and replay assets let `npm run dev` start directly after cloning.
 
 ### Viewing the Databricks evidence offline
 

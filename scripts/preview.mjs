@@ -20,7 +20,14 @@ export function startPreview(port = 4397) {
 }
 const host = '127.0.0.1';
 const paths = new Map([
-  ['/', ['index.html', 'text/html']],
+  ['/', ['rack-room.html', 'text/html']],
+  ['/rack-room.html', ['rack-room.html', 'text/html']],
+  ['/rack-room.css', ['rack-room.css', 'text/css']],
+  ['/rack-room.js', ['rack-room.js', 'text/javascript']],
+  ['/rack-scene.js', ['rack-scene.js', 'text/javascript']],
+  ['/assets/gpu-rack.glb', ['assets/gpu-rack.glb', 'model/gltf-binary']],
+  ['/assets/rack-replay.json', ['assets/rack-replay.json', 'application/json']],
+  ['/console.html', ['index.html', 'text/html']],
   ['/index.html', ['index.html', 'text/html']],
   ['/styles.css', ['styles.css', 'text/css']],
   ['/ui.js', ['ui.js', 'text/javascript']],
