@@ -1,11 +1,67 @@
-# Autonomous Agents track
-# Bounty: Databricks Integration
-
-# Overall Prizes
-# Adaption: Yes
-# Figma: Yes
-
 # AI infrastructure optimisation platform
+
+| Entered for | |
+|---|---|
+| **Track** | Autonomous Agents |
+| **Bounty** | Databricks Integration |
+| **Overall prizes** | Adaption: Yes · Figma: Yes |
+
+Built at Imperial AI Hack 2026. **All data is synthetic.**
+
+## In one minute (no technical background needed)
+
+When an AI model trains across many GPUs (the chips that do the work), **one slow chip or network link can hold up the whole job**. Today, the chips, the network, the power and the cooling are each watched by a different tool, so nobody sees the full picture.
+
+We built a dashboard and a set of AI helpers that:
+
+1. **Spot the problem.** A detector watches the readings and raises *one* clear alert per real problem, instead of hundreds of noisy ones.
+2. **Explain the cause.** It shows the likely cause, the evidence and which jobs are affected. For example: "this GPU overheated and slowed itself down to protect the chip".
+3. **Test a fix safely.** A simulated copy of the datacentre (a "digital twin") tries different ways of arranging the work and checks that none of them break power, heat or speed limits.
+4. **Leave the decision to a human.** The AI only *proposes*. An operator approves, and every change is checked afterwards and undone if it didn't help.
+
+**Headline result (simulated):** on a slow network link, the chosen layout raised training from **407 to 756 examples per second (+86%)** with the same energy use and the same response time.
+
+---
+
+## How we used each track
+
+### Autonomous Agents (track)
+
+The software works like a team of careful assistants. It **fetches readings, checks for problems, explains what likely caused them and tests new layouts in simulation**. The operator starts each analysis and decides what to do.
+
+- **Detect:** a deterministic detector (fixed rules and statistics, not AI) turns raw readings into one alert per root cause.
+- **Investigate:** an agent investigates using tools that can only read data *up to the current moment*, so it can't cheat by looking ahead.
+- **Propose:** the optimiser and the Operations view turn findings into proposals.
+- **Safety:** every proposal goes through an **action gate**. It is simulated, checked against hard limits, approved by a human, verified afterwards and rolled back if it fails. Agents can propose but **can never approve**.
+- **MCP server:** any outside AI agent can use the same tools.
+
+### Databricks (bounty)
+
+**In simple terms: Databricks answers "what happened?", and the digital twin answers "what could we change?"**
+
+- **Where the data lives.** Databricks stores a separate set of synthetic readings in Delta tables: GPU inventory, timestamped readings, job progress and cooling flow (24 GPUs, 3 racks, four 15-minute replays).
+- **How we read it.** You pick a replay and a time. The app asks Databricks only for the 15 minutes before that time. An adapter checks and translates the records for Python and keeps IDs, units and missing values intact.
+- **How we write back.** In connected mode, the detector's result is **saved back to Databricks**, tagged with the evidence used and the detector version. The website only shows the result once Databricks confirms it was saved.
+- **Running inside Databricks.** The official detector also runs as a **scheduled serverless Databricks job**. Unity Catalog functions give the agent safe, time-limited tools, and a scorecard and a policy ledger record how well it did.
+- **Example from the demo:** in Replay 1, coolant flow falls to about 20% of normal. Eight GPUs depend on that cooling loop, and their temperature readings have stopped updating. The dashboard points the operator to the cooling loop and explains why those temperature readings can't be trusted.
+- **Result:** the detector assessed every 15-second point of the four replays (240 assessments, about 4.9 million records) and got **all 4 replays right**. See [Results](#results-so-far).
+
+### Adaption (overall prize)
+
+We used Adaption to **fine-tune a small language model** that reads a GPU's telemetry and labels its health as `stable`, `warning` or `critical`.
+
+- **Result:** our fine-tuned model performed **75% better than a non-fine-tuned Qwen 2-billion-parameter model** on the same GPU health task.
+- **Where it fits:** the model's labels feed into **GPU health triage** in the Operations view. A `critical` label moves a GPU up to "drain at the next checkpoint"; `warning` moves it to "watch".
+- **Kept safe:** the model can't act on its own. Invalid labels are ignored, a label can never override stale data, and any drain still needs operator approval.
+- **Status:** the slot in the app is built and tested. The trained model is not yet connected to the running demo. See [Fine-tuned GPU health model](#fine-tuned-gpu-health-model-slot-ready-not-connected-yet).
+
+### Figma (overall prize)
+
+The operator console (the website: infrastructure map, incident panel, experiments and Databricks workspace) was **designed in Figma** before it was built.
+
+---
+
+## Project overview
 
 An autonomous operations layer for AI datacenters. It treats compute, network, power and cooling as **one connected system** instead of four separate ones.
 
@@ -14,8 +70,6 @@ In short:
 1. A **deterministic detector** (fixed rules and statistics, no AI) turns raw telemetry into **one alert per root cause**, not hundreds of alerts per symptom.
 2. An **investigating agent** digs into that alert using governed, time-limited tools in Databricks.
 3. A **coordinated optimiser** proposes new job placements. Each plan is simulated and checked against hard limits, then an operator reviews it.
-
-Built at Imperial AI Hack 2026. **All data is synthetic.**
 
 ---
 
@@ -82,7 +136,12 @@ Step by step:
 | Power-budget cut | +3% throughput with 2.5% less energy |
 | Thermal constraint | 13 more minutes within the latency target |
 
-*Caveat:* the coordinated plan sees the whole 24-minute trace in advance and is applied at minute 0, with no cost for migrating jobs.
+Default network experiment (seed 73): **407 → 756** average training samples/s (+86%), **116.5 ms** average minute-level P95 latency in both, and **13.26 kWh** modelled energy in both. **1,440 of 1,512** candidate layouts met every limit at every minute. (P95 is how quickly 95% of requests get a response.)
+
+*Caveat:* the coordinated plan sees the whole 24-minute trace in advance and is applied at minute 0, with no cost for migrating jobs. It picks and scores the best layout on the same test run, so gains on a real fleet still need testing.
+
+**Fine-tuned GPU health model (Adaption)**
+- 75% better than a non-fine-tuned Qwen 2B model on the GPU health task. See [Adaption](#adaption-overall-prize).
 
 **Databricks**
 - The official detector runs as a Databricks job on serverless compute.
@@ -100,6 +159,7 @@ Step by step:
 ## APIs, models and datasets
 
 - **Databricks Free Edition:** Unity Catalog, Delta tables, a SQL warehouse via the Statement Execution API, SQL table functions, serverless notebooks, a scheduled serverless job, the Databricks SDK for Python, and the Databricks CLI (OAuth sign-in).
+- **Adaption:** used to fine-tune the GPU health model (labels `stable` / `warning` / `critical`). Baseline for comparison: Qwen 2B without fine-tuning.
 - **Figma:** the operator console was designed in Figma.
 - **Datasets (all synthetic):**
   - [`databricks/generate.py`](databricks/generate.py): creates 24 GPUs and four 15-minute replays.
