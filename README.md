@@ -1,12 +1,19 @@
+# Autonomous Agents track
+# Bounty: Databricks Integration
+
+# Overall Prizes
+# Adaption: Yes 
+# Figma: Yes
+
 # AI infrastructure optimisation platform
 
 An autonomous operations layer for AI datacenters. It treats compute, network, power and cooling as one connected system. A deterministic detector turns raw telemetry into one escalation per root cause. An investigating agent gets governed, time-bounded tools in Databricks. A coordinated optimiser proposes placements that are simulated and checked against hard limits before an operator reviews them.
 
-Built at Imperial AI Hack 2026, Autonomous Agents track. All data is synthetic.
+Built at Imperial AI Hack 2026. All data is synthetic.
 
 ## The problem
 
-GPU clusters are run by separate tools for the scheduler, the GPUs, the network fabric, power and cooling. A slow training job can come from a degraded uplink, a failing cooling loop, a power cap or one straggling GPU, and each tool sees only its own layer. Operators either drown in alerts or fix one layer at the expense of another, and 100% GPU utilisation is not the same as useful work.
+GPU clusters are run by separate tools for the scheduler, the GPUs, the network fabric, power and cooling. A slow training job can come from a degraded uplink, a failing cooling loop, a power cap or one straggling GPU, and each tool sees only its own layer. Operators either drown in alerts or fix one layer at the expense of another.
 
 ## What we built
 
