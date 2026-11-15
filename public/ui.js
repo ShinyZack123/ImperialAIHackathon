@@ -1328,7 +1328,7 @@ byId('export-results').addEventListener('click', () => {
   const URLForExport = URL.createObjectURL(new Blob([JSON.stringify(benchmark, null, 2)], { type: 'application/json' }));
   const link = document.createElement('a');
   link.href = URLForExport;
-  link.download = `ai-infrastructure-optimisation-platform-${state.scenario}-seed-${defaultSeed}.json`;
+  link.download = `ithil-${state.scenario}-seed-${defaultSeed}.json`;
   document.body.append(link);
   link.click();
   link.remove();

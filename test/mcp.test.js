@@ -43,7 +43,7 @@ test('MCP subprocess discovers, validates and runs the shared tools over stdio',
   assert.equal(results.size, 16);
   assert.equal(results.get(0).error.code, -32000);
   assert.equal(results.get(1).result.protocolVersion, '2025-11-25');
-  assert.equal(results.get(1).result.serverInfo.name, 'ai-infrastructure-optimisation-platform');
+  assert.equal(results.get(1).result.serverInfo.name, 'Ithil');
   const catalog = results.get(2).result.tools;
   assert.deepEqual(catalog.map(item => item.name), ['get_snapshot', 'inspect_entity', 'trace_incident', 'compare_policies',
     'triage_gpu_health', 'attribute_straggler', 'plan_maintenance', 'submit_proposal', 'get_action_ledger']);

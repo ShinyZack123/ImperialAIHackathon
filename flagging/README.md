@@ -15,7 +15,7 @@ See `FLAGGER_METHODS.md` for how the detectors and gates work, and `WORKLOG.md` 
 
 ## In the operator console: simulated scenarios
 
-`bridge.py` connects the flagger to the Crosslayer console. Run `npm run dev` from the repo root, open http://127.0.0.1:4397 and pick a **Telemetry flagger** scenario from the scenario menu.
+`bridge.py` connects the flagger to the Ithil console. Run `npm run dev` from the repo root, open http://127.0.0.1:4397 and pick a **Telemetry flagger** scenario from the scenario menu.
 
 - The replay slider steps through 24 cut-offs. At each one the flagger only sees records up to that instant, as `demo.py` does. Flagged GPUs turn red (critical) or amber (warning). GPUs whose workload is affected get a dashed outline (blast radius). Stale or missing telemetry shows as unknown, never as healthy. Power, cooling and fabric paths go red when the root cause is in that layer.
 - Click a GPU, server or connection: the console runs `bridge.py entity` for it. It shows that entity's telemetry chart with its catalogue limits and flagged spans, the flagger's findings, and the raw log (filter it to flagged records only).

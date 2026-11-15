@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 const bridge = fileURLToPath(new URL('../flagging/bridge.py', import.meta.url));
 const cwd = fileURLToPath(new URL('../flagging/', import.meta.url));
-const python = process.env.CROSSLAYER_PYTHON || 'python3';
+const python = process.env.ITHIL_PYTHON || process.env.CROSSLAYER_PYTHON || 'python3';
 const idPattern = /^[A-Za-z0-9][A-Za-z0-9-]{0,80}$/;
 const timeoutMs = 90_000;          // a cold analysis of the 3-day drift scenario takes ~15 s
 const cache = new Map();           // key -> Promise<result>, deterministic so safe to reuse

@@ -1,4 +1,4 @@
-# AI infrastructure optimisation platform
+# Ithil
 
 | Entered for | |
 |---|---|
@@ -174,7 +174,7 @@ Default network experiment (seed 73): **407 → 756** average training samples/s
 
 ## Quick start (no Databricks account needed)
 
-**You need:** Node.js 22.18+ and Python 3.9+ on your PATH.
+**You need:** Node.js 22.18+ and Python 3.9+ on your PATH. Set `ITHIL_PORT` to use a different local port or `ITHIL_PYTHON` to select a Python executable.
 
 From the repository root:
 

@@ -1,7 +1,7 @@
 import { invokeMcpTool, mcpToolCatalog, plainObject } from './tool-catalog.js';
 
 const version = '2025-11-25';
-const info = { name: 'ai-infrastructure-optimisation-platform', version: '0.1.0' };
+const info = { name: 'Ithil', version: '0.1.0' };
 const error = (id, code, message) => ({ jsonrpc: '2.0', id, error: { code, message } });
 function createMcpSession() {
   let ready = false;

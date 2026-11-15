@@ -2,7 +2,7 @@
 
 ## Project
 
-This repository builds an AI-native platform for understanding and managing datacenters and AI infrastructure.
+Ithil is an AI-native platform for understanding and managing datacenters and AI infrastructure.
 
 The platform combines hardware inventory, topology, telemetry, workloads, networking, storage, power, cooling, and operational history into a shared digital twin. Analysis systems and AI agents use that shared view to detect issues, explain causes, recommend improvements, and eventually automate carefully bounded actions.
 

@@ -31,7 +31,9 @@ const combined = [twin, operations, catalog, flagging, databricks, operationsVie
 const standalone = html
   .replace('<link rel="stylesheet" href="./styles.css">', () => '<style>\n' + css + '</style>')
   .replace('<script type="module" src="./ui.js"></script>', () => '<script type="module">\n' + combined.replaceAll('</script', '<\\/script') + '</script>');
-const standaloneFile = file('../dist/ai-infrastructure-optimisation-platform.html');
+const standaloneFile = file('../dist/ithil.html');
 await writeFile(standaloneFile, standalone);
-// Refresh the previous standalone filename for existing local bookmarks.
-await copyFile(standaloneFile, file('../dist/Crosslayer.html'));
+// Keep older standalone bookmarks valid.
+for (const legacyName of ['ai-infrastructure-optimisation-platform.html', 'Crosslayer.html']) {
+  await copyFile(standaloneFile, file(`../dist/${legacyName}`));
+}

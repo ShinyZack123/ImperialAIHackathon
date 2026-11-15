@@ -1,6 +1,6 @@
 # GPU operations: Databricks integration
 
-This module connects the hackathon's Databricks evidence tables to the Crosslayer website and the team's deterministic detector. It contains the evidence notebook, bounded SQL queries, connector adapter, local HTTP API and persisted official results.
+This module connects the hackathon's Databricks evidence tables to the Ithil website and the team's deterministic detector. It contains the evidence notebook, bounded SQL queries, connector adapter, local HTTP API and persisted official results.
 
 The fixture contains synthetic data for 24 GPUs (8 each labelled NVIDIA, AMD and Intel), three racks and four independent replays. All hardware models and limits are illustrative. It does not connect to physical GPUs or establish cross-vendor hardware compatibility.
 

@@ -49,7 +49,7 @@ export async function recordWalkthrough({ scene, setStep, getView }) {
     const view = getView();
     box(0, 0, 1280, 720, palette.paper);
     box(0, 0, 1280, 60, palette.dark);
-    text('AI Infrastructure', 36, 37, 18, '#f3f8f1', true);
+    text('Ithil', 36, 37, 18, '#f3f8f1', true);
     text('Replay demo', 1133, 36, 12, '#cce3d4', false, true);
     text('Rack explorer', 36, 123, 49, palette.ink, true);
     text(view.replayLabel + ' · Synthetic', 962, 95, 13, palette.soft, false, true);

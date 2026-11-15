@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Connector between the deterministic flagger and the Crosslayer operator console.
+"""Connector between the deterministic flagger and the Ithil operator console.
 
     python3 bridge.py catalog                         # scenarios the console can replay
     python3 bridge.py analyse  <scenarioId>           # run the flagger at 24 replay cut-offs

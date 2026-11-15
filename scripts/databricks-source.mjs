@@ -25,7 +25,7 @@ function replayArguments(pathname, params) {
 }
 
 function runReplayBridge(args) {
-  const python = process.env.CROSSLAYER_PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
+  const python = process.env.ITHIL_PYTHON || process.env.CROSSLAYER_PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
   return new Promise((resolve, reject) => {
     execFile(python, ['-I', bridge, ...args], { cwd, timeout: 90_000, maxBuffer: 8 * 1024 * 1024, windowsHide: true }, (problem, stdout) => {
       let body;
@@ -35,7 +35,7 @@ function runReplayBridge(args) {
       }
       if (problem || !body) {
         const message = problem?.code === 'ENOENT'
-          ? 'Python 3 is required for the local detector. Install Python or set CROSSLAYER_PYTHON to its executable.'
+          ? 'Python 3 is required for the local detector. Install Python or set ITHIL_PYTHON to its executable.'
           : problem?.killed ? 'The local deterministic detector timed out'
           : 'The saved replay could not run. Check Python and pull the complete repository, including databricks/demo.';
         return reject(new DatabricksProxyError(502, message));

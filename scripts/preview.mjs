@@ -37,6 +37,7 @@ const paths = new Map([
   ['/operations.js', ['operations.js', 'text/javascript']],
   ['/operations-view.js', ['operations-view.js', 'text/javascript']],
   ['/tool-catalog.js', ['tool-catalog.js', 'text/javascript']],
+  ['/ithil.html', ['ithil.html', 'text/html']],
   ['/ai-infrastructure-optimisation-platform.html', ['ai-infrastructure-optimisation-platform.html', 'text/html']],
   ['/Crosslayer.html', ['Crosslayer.html', 'text/html']],
 ]);
@@ -108,10 +109,10 @@ async function serveDatabricks(request, response, url) {
 // import.meta.main needs Node 22.18+; fall back to comparing the entry script on older runtimes.
 const isEntry = import.meta.main ?? process.argv[1] === fileURLToPath(import.meta.url);
 if (isEntry) {
-  const port = Number(process.env.CROSSLAYER_PORT ?? 4397);
+  const port = Number(process.env.ITHIL_PORT ?? process.env.CROSSLAYER_PORT ?? 4397);
   try {
     await startPreview(port);
-    console.log(`AI infrastructure optimisation platform  http://${host}:${port}`);
+    console.log(`Ithil  http://${host}:${port}`);
     console.log(process.env.DATABRICKS_API_URL === undefined
       ? 'Databricks: saved synthetic export; detector runs locally; no Databricks login needed.'
       : 'Databricks: connected backend; authentication stays on that backend.');
