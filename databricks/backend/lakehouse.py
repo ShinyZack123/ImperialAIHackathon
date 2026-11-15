@@ -538,7 +538,8 @@ class Lakehouse:
             "escalation_funnel": rows(f"SELECT * FROM {self.evidence}.`escalation_funnel` ORDER BY run_id LIMIT 100"),
             "detection_scorecard": rows(
                 f"SELECT scenario, expected_cause, expected_root_entity, cursors_assessed, first_flag_cursor, "
-                f"seconds_from_onset_to_first_flag, distinct_incident_ids, to_json(flagged_root_entities) AS flagged_root_entities, verdict "
+                f"seconds_from_onset_to_first_flag, first_root_named_cursor, seconds_from_onset_to_root_named, "
+                f"distinct_incident_ids, flagged_root_entities, verdict "
                 f"FROM {self.evaluation}.`detection_scorecard` ORDER BY scenario LIMIT 100"),
             "policy_uplift": rows(f"SELECT * FROM {self.evidence}.`policy_uplift` ORDER BY scenario, policy LIMIT 100"),
         }

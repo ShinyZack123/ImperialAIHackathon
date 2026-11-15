@@ -13,7 +13,7 @@ from unittest.mock import MagicMock, patch
 from databricks.sdk.service.sql import StatementResponse
 
 from backend import lakehouse
-from backend.databricks_data import DataQueryTimeout, DataSettings, DatabricksData
+from backend.databricks_data import DataQueryError, DataQueryTimeout, DataSettings, DatabricksData
 from backend.lakehouse import (
     EXPERIMENTS_FILE, LAKEHOUSE_DIR, RUN_FIELDS, RUN_KEYS, Lakehouse, LakehouseError,
     eval_schema, governance_statements, ground_truth_rows, packaged_statements, plan_cursors,
@@ -249,6 +249,21 @@ class ExecuteTests(unittest.TestCase):
             "result": {"chunk_index": 0, "row_offset": 0, "row_count": 1, "data_array": [[RUN, "3"]]},
         })
         self.assertEqual(self.lakehouse.execute("SELECT 1", fetch=True), [{"run_id": RUN, "saved": 3}])
+
+    def test_fetch_decodes_array_columns_from_json_and_rejects_bad_json(self):
+        def result(value):
+            return StatementResponse.from_dict({
+                "statement_id": "statement-1", "status": {"state": "SUCCEEDED"},
+                "manifest": {"format": "JSON_ARRAY", "total_row_count": 1, "total_chunk_count": 1, "truncated": False,
+                             "schema": {"columns": [{"name": "affected_gpu_ids", "type_name": "ARRAY", "position": 0}]}},
+                "result": {"chunk_index": 0, "row_offset": 0, "row_count": 1, "data_array": [[value]]},
+            })
+        self.api.execute_statement.return_value = result('["gpu-009","gpu-010"]')
+        self.assertEqual(self.lakehouse.execute("SELECT 1", fetch=True), [{"affected_gpu_ids": ["gpu-009", "gpu-010"]}])
+        for bad in ("[NaN]", "[not json"):
+            self.api.execute_statement.return_value = result(bad)
+            with self.assertRaises(DataQueryError):
+                self.lakehouse.execute("SELECT 1", fetch=True)
 
 
 class FakeSource:

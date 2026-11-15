@@ -106,7 +106,12 @@ def _decode(value: Any, column_type: str):
             if not isinstance(value, str):
                 raise ValueError
             return value
-    except (ValueError, TypeError, OverflowError):
+        if column_type in {"ARRAY", "MAP", "STRUCT"}:
+            # Complex values arrive as JSON text, e.g. affected GPU lists from the agent tools.
+            if not isinstance(value, str):
+                raise ValueError
+            return json.loads(value, parse_constant=_reject_json_constant)
+    except (ValueError, TypeError, OverflowError, RecursionError):
         raise DataQueryError(f"Databricks returned an invalid {column_type} value.") from None
     raise DataQueryError(f"Databricks returned an unsupported column type: {column_type}.")
 
