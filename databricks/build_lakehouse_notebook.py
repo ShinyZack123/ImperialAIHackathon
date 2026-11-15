@@ -77,10 +77,12 @@ def build_notebook():
 
         Evidence rows stored per replay, metric records the detector analysed across all
         assessed replay times, and how many distinct incidents it raised. Only the last
-        column needs an agent's attention.
+        column needs an agent's attention. Below it, the latest runs of the scheduled
+        detector job (notebook 04), which runs the same detector on serverless compute.
         """),
         cell("code", "funnel", """
         display(spark.sql("SELECT * FROM escalation_funnel ORDER BY run_id"))
+        display(spark.sql("SELECT * FROM detector_job_runs ORDER BY started_at DESC LIMIT 5"))
         """),
         cell("markdown", "timeline-note", """
         ## 2. Incident timeline
@@ -135,8 +137,9 @@ def build_notebook():
         ## 4. Detection scorecard
 
         The official detector against the generator's answer key. Latency from onset includes
-        the detector's 300-second persistence requirement and the 30-second spacing of assessed
-        replay times. These are four synthetic scenarios, not a hardware benchmark.
+        the detector's 300-second persistence requirement and the spacing of assessed replay
+        times (15 seconds once the detector job has run). These are four synthetic scenarios,
+        not a hardware benchmark.
         """),
         cell("code", "scorecard", """
         display(spark.sql(f"SELECT * FROM {EVAL}.detection_scorecard ORDER BY scenario"))
