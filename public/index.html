@@ -19,6 +19,7 @@
       <nav aria-label="Workspace">
         <a href="#overview" data-view="overview" aria-current="page">Overview</a>
         <a href="#experiments" data-view="experiments">Experiments</a>
+        <a href="#operations" data-view="operations">Operations</a>
         <a href="#databricks" data-view="databricks">Databricks</a>
       </nav>
       <div class="header-status">
@@ -109,6 +110,8 @@
       <div id="experiment-results"></div>
     </section>
 
+    <section id="operations" aria-labelledby="page-title" hidden></section>
+
     <section id="databricks" aria-labelledby="page-title" hidden>
       <div id="db-delivery" class="panel db-delivery" aria-live="polite" hidden>
         <h2 id="db-delivery-title"></h2>
@@ -158,8 +161,13 @@
       <div><dt>inspect_entity</dt><dd>Inspect a GPU, rack, or link and its relationships.</dd></div>
       <div><dt>trace_incident</dt><dd>Read the signals behind a diagnosis.</dd></div>
       <div><dt>compare_policies</dt><dd>Run a reproducible 24-minute comparison.</dd></div>
+      <div><dt>triage_gpu_health</dt><dd>Decode XID and ECC events into drain and RMA steps.</dd></div>
+      <div><dt>attribute_straggler</dt><dd>Find the rank that sets Atlas’s pace.</dd></div>
+      <div><dt>plan_maintenance</dt><dd>Blast radius and evacuation for a component.</dd></div>
+      <div><dt>submit_proposal</dt><dd>Send an action to the gate. Only an operator can approve it.</dd></div>
+      <div><dt>get_action_ledger</dt><dd>Read proposals, outcomes and the audit ledger.</dd></div>
     </dl>
-    <p class="dialog-note">Launch from the project directory with <code>node src/mcp-stdio.js</code>. The server exposes simulated data.</p>
+    <p class="dialog-note">Launch from the project directory with <code>node src/mcp-stdio.js</code>. The server exposes simulated data. Each MCP server process keeps its own action gate session.</p>
   </dialog>
   <noscript><p class="noscript">Enable JavaScript to use the simulator.</p></noscript>
   <script type="module" src="./ui.js"></script>

@@ -10,6 +10,12 @@ const inferenceCapacity = 480;
 const rackTemperatureLimit = 82;
 const rackPowerLimit = 9;
 const plantPower = 7.4;
+// Declared scheduler metadata for Atlas. Checkpoints land at minutes 3, 11 and 19 of the replay.
+const checkpointIntervalMinutes = 8;
+const checkpointOffset = 3;
+// Declared simulation assumption, not a market price: the blended cost of one GPU-hour.
+const gpuHourCost = 2.4;
+const nominalSmClockMhz = 1980;
 const floor = [
   { id: 'rack-a01', label: 'A01', zone: 'A', power: 'pdu-a', cooling: 'cdu-a' },
   { id: 'rack-a02', label: 'A02', zone: 'A', power: 'pdu-a', cooling: 'cdu-a' },
@@ -54,6 +60,24 @@ const scenarios = {
     hypotheses: ['B02 coolant inlet rise', 'Fabric congestion', 'Site power cap'],
     response: 'Move load out of B02 and keep allocations away from racks with unverifiable cooling.',
   },
+  'gpu-xid': {
+    title: 'GPU memory errors',
+    incident: 'Row remapping pending on GPU A01-03',
+    summary: 'An Atlas rank is logging XID 63 and rising correctable ECC errors.',
+    details: 'GPU A01-03 has a pending memory row remap and a climbing correctable error count. In this trace it raises an uncorrectable error (XID 48) at minute 17, which stops the synchronous Atlas job unless the GPU is drained first.',
+    layer: 'fabric', target: 'gpu-a01-03', status: 'warning',
+    hypotheses: ['Degrading HBM on GPU A01-03', 'Driver or application fault', 'Thermal stress'],
+    response: 'Cordon the GPU, drain its rank at the next checkpoint, reset it to apply the remap and open an RMA if errors recur.',
+  },
+  straggler: {
+    title: 'Straggling training rank',
+    incident: 'GPU A02-05 is thermally throttled',
+    summary: 'One hot Atlas rank is setting the pace for all twelve.',
+    details: 'GPU A02-05 reports hardware thermal slowdown and a reduced SM clock. Synchronous training waits for its slowest rank, so the whole job runs at that GPU’s speed.',
+    layer: 'cooling', target: 'gpu-a02-05', status: 'warning',
+    hypotheses: ['GPU A02-05 hardware thermal slowdown', 'A02 uplink congestion', 'Rack power derate'],
+    response: 'Move the slow rank to a spare GPU at the next checkpoint and inspect the GPU’s cold plate.',
+  },
 };
 
 function scenarioOptions() {
@@ -67,6 +91,7 @@ const round = (value, digits = 2) => Number(value.toFixed(digits));
 const sum = (values) => values.reduce((total, value) => total + value, 0);
 const mean = (values) => sum(values) / values.length;
 const capacity = (n) => Array.from({ length: n }, (_, i) => i);
+const number = value => new Intl.NumberFormat('en-GB').format(value);
 
 const entities = [
   { id: 'site-lon01', type: 'site', label: 'London 01' },
@@ -134,6 +159,39 @@ function environment(scenario, tick, seed) {
       capacity: scenario === 'network' && i === 1 ? round(55 + 7 * wave(2.9), 1) : 200,
       errors: scenario === 'network' && i === 1 ? Math.round(30 + 13 * (1 + wave(2.4))) : 0,
     })),
+    gpuFaults: gpuFaults(scenario, tick, wave),
+  };
+}
+
+// GPU-level health faults. Counters follow NVML/DCGM conventions; XID codes follow NVIDIA's driver catalogue.
+function gpuFaults(scenario, tick, wave) {
+  if (scenario === 'gpu-xid') {
+    const xid = [{ code: 63, minute: -2 }, { code: 63, minute: 6 }, { code: 48, minute: 17 }]
+      .filter(event => event.minute <= tick)
+      .map(event => ({ code: event.code, at: new Date(startedAt + event.minute * minute).toISOString() }));
+    return { 'gpu-a01-03': {
+      xid, eccCorrected: 184 + tick * 23, eccUncorrected: tick >= 17 ? 1 : 0, remapPending: true,
+      failed: tick >= 17, clockFactor: 1, throttle: [], hotspot: 0,
+    } };
+  }
+  if (scenario === 'straggler') {
+    return { 'gpu-a02-05': {
+      xid: [], eccCorrected: 0, eccUncorrected: 0, remapPending: false, failed: false,
+      clockFactor: round(.75 - .03 * Math.max(0, wave(3.1)), 3), throttle: ['hw_thermal_slowdown'], hotspot: 14,
+    } };
+  }
+  return {};
+}
+
+// Atlas checkpoint schedule. `last` is the latest completed checkpoint at or before the minute;
+// `next` is the earliest checkpoint at or after it and may fall beyond the replay.
+function checkpointAt(tick) {
+  const phase = ((tick - checkpointOffset) % checkpointIntervalMinutes + checkpointIntervalMinutes) % checkpointIntervalMinutes;
+  const last = tick - phase;
+  return {
+    last, // May be negative: Atlas was already running and checkpointing before the replay began.
+    next: phase === 0 ? tick : last + checkpointIntervalMinutes,
+    intervalMinutes: checkpointIntervalMinutes,
   };
 }
 
@@ -168,7 +226,67 @@ function baseline(state) {
   return { train, infer, cap: 1 };
 }
 
-function plant(state, plan) {
+const powerCapSteps = [1, .92, .84, .76];
+const gpuIds = new Set(entities.filter(entity => entity.type === 'gpu').map(entity => entity.id));
+const noOperations = { unavailable: new Set(), cordoned: new Set(), restarting: false };
+
+// Fill each rack's usable slots in order: training ranks first, then serving replicas.
+function slotJobs(plan, rackIndex, unavailable = noOperations.unavailable) {
+  const jobs = Array(gpuCount).fill(null);
+  const free = capacity(gpuCount).filter(slot => !unavailable.has(gpuId(floor[rackIndex], slot)));
+  free.forEach((slot, k) => {
+    jobs[slot] = k < plan.train[rackIndex] ? 'job-atlas' : k < plan.train[rackIndex] + plan.infer[rackIndex] ? 'job-relay' : null;
+  });
+  return jobs;
+}
+
+// The placement that can actually run once drained or held GPUs are removed from the pool.
+function effectivePlan(plan, unavailable = noOperations.unavailable) {
+  const train = [], infer = [];
+  floor.forEach((rack, i) => {
+    const free = capacity(gpuCount).filter(slot => !unavailable.has(gpuId(rack, slot))).length;
+    train.push(Math.min(plan.train[i], free));
+    infer.push(Math.min(plan.infer[i], free - train[i]));
+  });
+  return { train, infer, cap: plan.cap };
+}
+
+// Validate an operator control overlay at the twin boundary. Only the action gate should construct one.
+function normalizeControl(control) {
+  if (control === undefined || control === null) return null;
+  if (typeof control !== 'object' || Array.isArray(control)) throw new RangeError('Control must be an object');
+  const allowed = ['plan', 'cap', 'unavailable', 'cordoned', 'restarting'];
+  if (Object.keys(control).some(key => !allowed.includes(key))) throw new RangeError('Unexpected control field');
+  const plan = control.plan ?? null;
+  if (plan !== null) validatePlan(plan);
+  const cap = control.cap ?? null;
+  if (cap !== null && !powerCapSteps.includes(cap)) throw new RangeError('Unsupported power setting');
+  const ids = (list, name) => {
+    if (list === undefined) return new Set();
+    if (!Array.isArray(list) || list.length > gpuIds.size || list.some(id => !gpuIds.has(id))) throw new RangeError(`Invalid ${name} GPU list`);
+    return new Set(list);
+  };
+  if (control.restarting !== undefined && typeof control.restarting !== 'boolean') throw new RangeError('Invalid restart flag');
+  return { plan, cap, unavailable: ids(control.unavailable, 'unavailable'), cordoned: ids(control.cordoned, 'cordoned'),
+    restarting: control.restarting ?? false };
+}
+
+function validatePlan(plan) {
+  if (!plan || typeof plan !== 'object' || Array.isArray(plan)) throw new RangeError('Plan must be an object');
+  if (Object.keys(plan).some(key => !['train', 'infer', 'cap'].includes(key))) throw new RangeError('Unexpected plan field');
+  const counts = list => Array.isArray(list) && list.length === floor.length && list.every(n => Number.isInteger(n) && n >= 0 && n <= gpuCount);
+  if (!counts(plan.train) || !counts(plan.infer)) throw new RangeError('Plan needs four rack slot counts from 0 to 8');
+  if (plan.train.some((n, i) => n + plan.infer[i] > gpuCount)) throw new RangeError('Plan exceeds eight slots in a rack');
+  if (!powerCapSteps.includes(plan.cap)) throw new RangeError('Unsupported power setting');
+  return plan;
+}
+
+function gpuCondition(state, id) {
+  return state.gpuFaults[id] ?? null;
+}
+
+function plant(state, requested, operations = noOperations) {
+  const plan = effectivePlan(requested, operations.unavailable);
   const baseRackPower = 3.15;
   const trainingPower = .68 * (.27 + .73 * plan.cap ** 2);
   const request = floor.map((_, i) => plan.train[i] * trainingPower + plan.infer[i] * .5);
@@ -196,24 +314,36 @@ function plant(state, plan) {
     return Math.min(1, rack.capacity / Math.max(1, rack.traffic)) * delivery;
   }));
   const trainScale = Math.min(...racks.map((rack, i) => plan.train[i] ? rack.scale : 1));
-  const trainingRate = sum(plan.train) * 63 * (.72 + .28 * plan.cap) * trainScale * network * (spread > 2 ? .97 : 1);
-  const servingCapacity = sum(racks.map((rack, i) => plan.infer[i] * inferenceCapacity * rack.scale));
+  const jobs = floor.map((_, i) => slotJobs(plan, i, operations.unavailable));
+  const assigned = job => jobs.flatMap((slots, i) => slots.flatMap((value, slot) => value === job ? [gpuId(floor[i], slot)] : []));
+  const atlasGpus = assigned('job-atlas');
+  // Synchronous training waits for its slowest rank and stops if any rank fails or the world size cannot be met.
+  const rankFactors = atlasGpus.map(id => gpuCondition(state, id)?.clockFactor ?? 1);
+  const stragglerFactor = rankFactors.length ? Math.min(...rankFactors) : 1;
+  const halt = sum(plan.train) !== trainingGpus ? 'world-size'
+    : atlasGpus.some(id => gpuCondition(state, id)?.failed) ? 'rank-failed'
+      : operations.restarting ? 'restarting' : null;
+  const trainingRate = halt ? 0
+    : sum(plan.train) * 63 * (.72 + .28 * plan.cap) * trainScale * network * stragglerFactor * (spread > 2 ? .97 : 1);
+  const servingCapacity = sum(racks.map((rack, i) => jobs[i].filter((job, slot) => job === 'job-relay' &&
+    !gpuCondition(state, gpuId(floor[i], slot))?.failed).length * inferenceCapacity * rack.scale));
   const served = Math.min(state.demand, servingCapacity);
   const pressure = servingCapacity ? state.demand / servingCapacity : Infinity;
   const latency = servingCapacity ? Math.min(610, 33 + 25 / Math.max(.045, 1 - pressure)) : null;
   const draw = plantPower + sum(racks.map(rack => rack.draw));
   const requestedDraw = plantPower + sum(racks.map(rack => rack.requestedDraw));
-  return { racks, network, draw, requestedDraw, trainingRate, served, servingCapacity, latency };
+  return { racks, network, draw, requestedDraw, trainingRate, served, servingCapacity, latency,
+    plan, jobs, atlasGpus, stragglerFactor, halt };
 }
 
 function constraintChecks(state, plan, output) {
   return [
-    { id: 'training', label: '12 training ranks preserved', ok: sum(plan.train) === trainingGpus },
+    { id: 'training', label: '12 training ranks preserved', ok: sum(output.plan.train) === trainingGpus },
     { id: 'inference', label: 'Inference P95 within 160 ms', ok: output.latency !== null && output.latency <= inferenceSlo },
     { id: 'site-power', label: 'Requested site power within budget', ok: output.requestedDraw <= state.powerLimit + 1e-8 },
     { id: 'rack-power', label: 'Requested rack power within limit', ok: output.racks.every(r => r.requestedDraw <= rackPowerLimit + 1e-8) },
     { id: 'temperature', label: 'Loaded racks within 82°C limit', ok: output.racks.every(r => r.requestedTemperature <= rackTemperatureLimit + 1e-8) },
-    { id: 'freshness', label: 'Cooling evidence fresh on loaded racks', ok: floor.every((r, i) => r.id !== state.staleRack || !(plan.train[i] + plan.infer[i])) },
+    { id: 'freshness', label: 'Cooling evidence fresh on loaded racks', ok: floor.every((r, i) => r.id !== state.staleRack || !(output.plan.train[i] + output.plan.infer[i])) },
   ];
 }
 
@@ -273,6 +403,70 @@ function propose(states) {
     servingRelocation: winner?.servingRelocation ?? null };
 }
 
+// Search placements for one minute's observed state with some GPUs withheld. This is a persistence
+// forecast: it assumes the current minute's demand and limits hold, unlike `propose`, which sees the trace.
+function searchPlacement({ scenario = 'network', seed = defaultSeed, tick = 0, control, reference } = {}) {
+  validateInput(scenario, tick, seed);
+  const operations = normalizeControl(control) ?? { ...noOperations, plan: null, cap: null };
+  const state = environment(scenario, tick, seed);
+  const current = reference ? validatePlan(reference) : baseline(state);
+  const currentJobs = floor.map((_, i) => slotJobs(current, i));
+  const servingMinimum = Math.ceil(state.demand / (inferenceCapacity * (1 - 25 / (inferenceSlo - 33))));
+  let considered = 0;
+  let feasible = 0;
+  let winner = null;
+  const seen = new Set();
+  const free = floor.map(rack => capacity(gpuCount).filter(slot => !operations.unavailable.has(gpuId(rack, slot))).length);
+  // Local repairs keep the current placement and move only the overflow, in each rack order.
+  const repair = (train, order, wanted) => {
+    const infer = current.infer.map((n, i) => Math.max(0, Math.min(n, free[i] - train[i])));
+    let deficit = Math.max(wanted, sum(current.infer)) - sum(infer);
+    for (const i of order) {
+      const room = Math.max(0, free[i] - train[i] - infer[i]);
+      const amount = Math.min(room, deficit);
+      infer[i] += amount;
+      deficit -= amount;
+    }
+    return infer;
+  };
+  const candidates = [];
+  for (const train of [current.train, ...trainingLayouts]) {
+    for (const order of orders) {
+      for (const requested of [servingMinimum, servingMinimum + 1]) {
+        candidates.push([train, fillSlots(train, requested, order)], [train, repair(train, order, requested)]);
+      }
+    }
+  }
+  for (const [train, infer] of candidates) {
+    for (const cap of operations.cap ? [operations.cap] : powerCapSteps) {
+      const plan = { train, infer, cap };
+      const key = [train.join(), infer.join(), cap].join('/');
+      if (seen.has(key)) continue;
+      seen.add(key);
+      considered++;
+      const fitted = effectivePlan(plan, operations.unavailable);
+      if (fitted.train.some((n, i) => n !== train[i]) || fitted.infer.some((n, i) => n !== infer[i])) continue;
+      const output = plant(state, plan, operations);
+      if (!constraintChecks(state, plan, output).every(check => check.ok) || output.halt) continue;
+      feasible++;
+      const moved = sum(output.jobs.map((slots, i) => slots.filter((job, slot) => job !== currentJobs[i][slot]).length));
+      const atlasMoved = output.atlasGpus.filter(id => {
+        const [rackIndex, slot] = [floor.findIndex(rack => id.startsWith(`gpu-${rack.id.slice(5)}-`)), Number(id.slice(-2)) - 1];
+        return currentJobs[rackIndex][slot] !== 'job-atlas';
+      }).length;
+      const candidate = { plan, trainingRate: output.trainingRate, draw: output.draw, moved, atlasMoved };
+      // Least disruption first: keep training ranks in place, then move as few GPUs as possible.
+      const better = !winner || candidate.atlasMoved < winner.atlasMoved ||
+        (candidate.atlasMoved === winner.atlasMoved && (candidate.moved < winner.moved ||
+          (candidate.moved === winner.moved && (candidate.trainingRate > winner.trainingRate + 1e-6 ||
+            (Math.abs(candidate.trainingRate - winner.trainingRate) <= 1e-6 && candidate.draw < winner.draw - 1e-6)))));
+      if (better) winner = candidate;
+    }
+  }
+  return { plan: winner?.plan ?? null, considered, feasible, gpusReassigned: winner?.moved ?? null,
+    trainingRanksMoved: winner?.atlasMoved ?? null, forecast: 'persistence of the current minute' };
+}
+
 const experimentCache = new Map();
 
 function runComparison(scenario = 'network', seed = defaultSeed) {
@@ -322,33 +516,52 @@ function summarize(states, choosePlan) {
   };
 }
 
-function assignment(plan, rackIndex, slot) {
-  if (slot < plan.train[rackIndex]) return 'job-atlas';
-  if (slot < plan.train[rackIndex] + plan.infer[rackIndex]) return 'job-relay';
-  return null;
+function activePlan(state, scenario, seed, policy, control) {
+  const chosen = control?.plan ?? (policy === 'baseline' ? baseline(state) : runComparison(scenario, seed).plan);
+  if (!chosen) throw new RangeError('No feasible placement is available');
+  return control?.cap ? { ...chosen, cap: control.cap } : chosen;
 }
 
-function getSnapshot({ scenario = 'network', tick = 0, seed = defaultSeed, policy = 'baseline' } = {}) {
+function getSnapshot({ scenario = 'network', tick = 0, seed = defaultSeed, policy = 'baseline', control } = {}) {
   validateInput(scenario, tick, seed);
   if (!['baseline', 'coordinated'].includes(policy)) throw new RangeError('Unknown policy');
+  const operations = normalizeControl(control);
   const state = environment(scenario, tick, seed);
-  const plan = policy === 'baseline' ? baseline(state) : runComparison(scenario, seed).plan;
-  if (!plan) throw new RangeError('No feasible placement is available');
-  const output = plant(state, plan);
+  const plan = activePlan(state, scenario, seed, policy, operations);
+  const output = plant(state, plan, operations ?? noOperations);
+  const unavailable = operations?.unavailable ?? noOperations.unavailable;
+  const cordoned = operations?.cordoned ?? noOperations.cordoned;
   const read = (value, unit, quality, source) => observed(value, unit, tick, quality, source);
   const racks = floor.map((rack, i) => {
     const reading = output.racks[i];
     const quality = rack.id === state.staleRack ? 'stale' : 'fresh';
     const gpus = capacity(gpuCount).map(slot => {
-      const job = assignment(plan, i, slot);
+      const id = gpuId(rack, slot);
+      const job = output.jobs[i][slot];
+      const condition = gpuCondition(state, id);
+      const atlasStopped = job === 'job-atlas' && output.halt;
       const waiting = job === 'job-atlas' && reading.errors > 0 && output.network < .98;
-      const activeUtil = (job === 'job-atlas' ? 93 : 79) * reading.scale * (waiting ? output.network : 1);
+      const throttled = Boolean(job && condition?.clockFactor < .95);
+      const busy = job && !condition?.failed && !atlasStopped;
+      const activeUtil = (job === 'job-atlas' ? 93 : 79) * reading.scale * (waiting ? output.network : 1) *
+        (job === 'job-atlas' ? output.stragglerFactor / (condition?.clockFactor ?? 1) : 1);
       const gpuQuality = job === null && rack.id === state.staleRack && slot === 7 ? 'missing' : quality;
+      const status = gpuQuality !== 'fresh' ? 'unknown' : unavailable.has(id) ? 'drained' : condition?.failed ? 'failed'
+        : atlasStopped ? 'stalled' : throttled ? 'throttled' : waiting ? 'waiting'
+          : job === 'job-atlas' ? 'training' : job ? 'inference' : 'idle';
       return {
-        ...entityById.get(gpuId(rack, slot)), job,
-        status: gpuQuality !== 'fresh' ? 'unknown' : waiting ? 'waiting' : job === 'job-atlas' ? 'training' : job ? 'inference' : 'idle',
-        utilization: read(job ? activeUtil + (slot % 3 - 1) * 2 : 0, '%'),
-        temperature: read(reading.temperature - (job ? 2 + slot % 3 : 7), '°C', gpuQuality),
+        ...entityById.get(id), job, status, cordoned: cordoned.has(id),
+        utilization: read(busy ? activeUtil + (slot % 3 - 1) * 2 : 0, '%'),
+        temperature: read(reading.temperature - (job ? 2 + slot % 3 : 7) + (condition?.hotspot ?? 0), '°C', gpuQuality),
+        health: {
+          smClock: read(busy ? nominalSmClockMhz * (condition?.clockFactor ?? 1) : 345, 'MHz', gpuQuality),
+          nominalSmClockMhz,
+          throttleReasons: gpuQuality === 'fresh' ? [...(condition?.throttle ?? [])] : null,
+          eccCorrected: read(condition?.eccCorrected ?? 0, 'count', gpuQuality),
+          eccUncorrected: read(condition?.eccUncorrected ?? 0, 'count', gpuQuality),
+          remapPending: gpuQuality === 'fresh' ? Boolean(condition?.remapPending) : null,
+          xid: gpuQuality === 'fresh' ? (condition?.xid ?? []).map(event => ({ ...event })) : null,
+        },
       };
     });
     return {
@@ -356,6 +569,7 @@ function getSnapshot({ scenario = 'network', tick = 0, seed = defaultSeed, polic
       status: quality !== 'fresh' ? 'unknown' : reading.errors ? 'degraded' : reading.scale < .98 ? 'derated' : 'nominal',
       draw: read(reading.draw, 'kW'), temperature: read(reading.temperature, '°C', quality),
       inlet: read(state.inlet[i], '°C', quality),
+      derate: read(reading.scale, 'ratio', 'fresh', 'derived'),
       gpus,
     };
   });
@@ -367,9 +581,21 @@ function getSnapshot({ scenario = 'network', tick = 0, seed = defaultSeed, polic
   const allocationEdges = racks.flatMap(rack => rack.gpus.filter(gpu => gpu.job).map(gpu => ({
     id: `assignment-${gpu.id}`, from: gpu.job, to: gpu.id, type: 'assigned-to',
   })));
+  const checkpoint = checkpointAt(tick);
+  const workloads = [
+    { id: 'job-atlas', workloadType: 'training', worldSize: trainingGpus, gpus: output.atlasGpus,
+      running: !output.halt, haltReason: output.halt, stragglerFactor: round(output.stragglerFactor, 3),
+      checkpoint: { ...checkpoint, source: 'declared' } },
+    { id: 'job-relay', workloadType: 'inference', gpus: racks.flatMap(rack => rack.gpus.filter(gpu => gpu.job === 'job-relay').map(gpu => gpu.id)),
+      running: output.servingCapacity > 0, haltReason: null, checkpoint: null },
+  ];
   return {
     schemaVersion, scenario, policy, seed, tick, timestamp: new Date(startedAt + minute * tick).toISOString(),
-    origin: 'simulated', plan, racks, links, entities, edges: [...physicalEdges, ...allocationEdges],
+    origin: 'simulated', plan, effectivePlan: output.plan,
+    control: operations ? { plan: operations.plan, cap: operations.cap, unavailable: [...unavailable], cordoned: [...cordoned],
+      restarting: operations.restarting } : null,
+    racks, links, workloads, entities, edges: [...physicalEdges, ...allocationEdges],
+    constraints: constraintChecks(state, plan, output),
     metrics: {
       training: read(output.trainingRate, 'samples/s', 'fresh', 'derived'),
       p95: read(output.latency, 'ms', output.latency === null ? 'missing' : 'fresh', 'derived'),
@@ -380,18 +606,35 @@ function getSnapshot({ scenario = 'network', tick = 0, seed = defaultSeed, polic
       servingCapacity: read(output.servingCapacity, 'tokens/s', 'fresh', 'derived'),
       siteBudget: read(state.powerLimit, 'kW', 'fresh', 'declared'),
       price: observed(state.price, '£/kWh', tick, 'fresh', 'simulated', 4), slo: read(inferenceSlo, 'ms', 'fresh', 'declared'),
+      gpuHourCost: observed(gpuHourCost, '£/GPU-h', tick, 'fresh', 'declared', 2),
     },
   };
 }
 
-function traceIncident({ scenario = 'network', tick = 0, seed = defaultSeed } = {}) {
+function traceIncident({ scenario = 'network', tick = 0, seed = defaultSeed, control } = {}) {
   const config = supportedScenario(scenario);
-  const snapshot = getSnapshot({ scenario, tick, seed });
+  const snapshot = getSnapshot({ scenario, tick, seed, control });
   const { metrics, racks, links } = snapshot;
   const link = links[1];
   const cooled = racks[3];
   const uncertain = racks[1];
+  const allGpus = racks.flatMap(rack => rack.gpus);
+  const xidGpu = allGpus.find(gpu => gpu.health.xid?.length);
+  const slowGpu = allGpus.find(gpu => gpu.status === 'throttled');
+  const memoryGpu = xidGpu ?? allGpus.find(gpu => gpu.id === 'gpu-a01-03');
+  const thermalGpu = slowGpu ?? allGpus.find(gpu => gpu.id === 'gpu-a02-05');
   const readings = {
+    'gpu-xid': [
+      { label: 'A01-03 XID events', metric: observed(memoryGpu.health.xid?.length ?? 0, 'events', tick, memoryGpu.health.xid ? 'fresh' : 'stale', 'simulated', 0),
+        reference: (memoryGpu.health.xid ?? []).map(event => `XID ${event.code}`).join(' · ') || 'None recorded', entityId: memoryGpu.id },
+      { label: 'A01-03 correctable ECC', metric: memoryGpu.health.eccCorrected, reference: 'Lifetime count · rising', entityId: memoryGpu.id },
+      { label: 'A01-03 uncorrectable ECC', metric: memoryGpu.health.eccUncorrected, reference: 'Any increment stops the job', entityId: memoryGpu.id },
+    ],
+    straggler: [
+      { label: 'A02-05 SM clock', metric: thermalGpu.health.smClock, reference: `${number(nominalSmClockMhz)} MHz nominal`, entityId: thermalGpu.id },
+      { label: 'A02-05 temperature', metric: thermalGpu.temperature, reference: 'Hardware thermal slowdown', entityId: thermalGpu.id },
+      { label: 'Atlas training rate', metric: metrics.training, reference: 'Paced by the slowest rank', entityId: 'job-atlas' },
+    ],
     network: [
       { label: 'A02 link capacity', metric: link.capacity, reference: '200 Gbps rated', entityId: link.id },
       { label: 'A02 link errors', metric: link.errors, reference: '0 errors/min on healthy links', entityId: link.id },
@@ -421,15 +664,18 @@ function traceIncident({ scenario = 'network', tick = 0, seed = defaultSeed } = 
     { id: 'site-power', scope: 'Site', entityId: 'grid-01', active: exceeds(metrics.requestedDraw, metrics.siteBudget.value) },
     { id: 'hot-rack', scope: 'Rack', entityId: cooled.id, active: exceeds(cooled.inlet, 39) && exceeds(cooled.temperature, 78) },
     { id: 'stale-cooling', scope: 'Rack', entityId: uncertain.id, active: uncertain.inlet.quality === 'stale' },
+    { id: 'gpu-xid', scope: 'GPU', entityId: xidGpu?.id ?? null, active: Boolean(xidGpu) },
+    { id: 'straggler', scope: 'Job', entityId: slowGpu?.id ?? null, active: Boolean(slowGpu?.job === 'job-atlas') },
   ];
-  const primarySignals = { network: 'fabric-fault', demand: 'serving-slo', power: 'site-power', thermal: 'hot-rack' };
+  const primarySignals = { network: 'fabric-fault', demand: 'serving-slo', power: 'site-power', thermal: 'hot-rack',
+    'gpu-xid': 'gpu-xid', straggler: 'straggler' };
   const detected = signals.some(signal => signal.id === primarySignals[scenario] && signal.active);
   return { schemaVersion, scenario, tick, origin: 'simulated', ...config, detected,
     signals: signals.filter(signal => signal.active), evidence: readings[scenario] };
 }
 
-function inspectEntity({ entityId, scenario = 'network', tick = 0, seed = defaultSeed, policy = 'baseline' }) {
-  const snapshot = getSnapshot({ scenario, tick, seed, policy });
+function inspectEntity({ entityId, scenario = 'network', tick = 0, seed = defaultSeed, policy = 'baseline', control }) {
+  const snapshot = getSnapshot({ scenario, tick, seed, policy, control });
   const entity = entityById.get(entityId);
   const link = snapshot.links.find(item => item.id === entityId);
   const connection = !entity && !link && snapshot.edges.find(edge => edge.id === entityId && ['power', 'cooling', 'fabric'].includes(edge.type));
@@ -451,4 +697,4 @@ function inspectEntity({ entityId, scenario = 'network', tick = 0, seed = defaul
   return { schemaVersion, scenario, tick, policy, origin: 'simulated', entity: entity ?? { id: link.id, label: link.label, type: 'link' }, reading, related };
 }
 
-export { scenarioOptions, getSnapshot, inspectEntity, runComparison, traceIncident, schemaVersion, duration, defaultSeed, inferenceSlo };
+export { scenarioOptions, getSnapshot, inspectEntity, runComparison, traceIncident, schemaVersion, duration, defaultSeed, inferenceSlo, physicalEdges, entities, powerCapSteps, gpuHourCost, checkpointAt, trainingGpus, validatePlan, searchPlacement };

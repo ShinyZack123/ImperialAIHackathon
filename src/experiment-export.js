@@ -1,9 +1,13 @@
 // Flattens the twin's policy comparison into rows for the Databricks policy_runs and
 // policy_timeline tables. Pure and deterministic: no clock, no filesystem, no randomness.
-import { runComparison, scenarioOptions, schemaVersion } from './twin.js';
+import { runComparison, schemaVersion } from './twin.js';
 
 // The twin's trace varies with seed % 11, so seeds 0-10 cover every distinct replay.
 const defaultSeeds = Array.from({ length: 11 }, (_, seed) => seed);
+// The Databricks policy ledger covers the four optimiser scenarios. The operations scenarios
+// (gpu-xid, straggler) exercise the action gate and are deliberately left out so the committed
+// fixture and the loaded Delta tables stay in step.
+const policyScenarios = ['network', 'demand', 'power', 'thermal'];
 const notEvaluated = {
   plan_json: null, constraints_passed: null, constraint_checks_json: null,
   candidates_considered: null, candidates_feasible: null, training_ranks_moved: null, serving_slots_moved: null,
@@ -12,7 +16,7 @@ const notEvaluated = {
 function buildPolicyExperiments(seeds = defaultSeeds) {
   const runs = [];
   const timeline = [];
-  for (const { id: scenario } of scenarioOptions()) {
+  for (const scenario of policyScenarios) {
     for (const seed of seeds) {
       const result = runComparison(scenario, seed);
       const add = (policy, policyKind, summary, details) => {
@@ -60,4 +64,4 @@ function serializePolicyExperiments(document) {
   return `{\n${head},\n"runs": [\n${rows(runs)}\n],\n"timeline": [\n${rows(timeline)}\n]\n}\n`;
 }
 
-export { buildPolicyExperiments, serializePolicyExperiments, defaultSeeds };
+export { buildPolicyExperiments, serializePolicyExperiments, defaultSeeds, policyScenarios };

@@ -2,11 +2,13 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFile } from 'node:fs/promises';
 import { duration, scenarioOptions } from '../src/twin.js';
-import { buildPolicyExperiments, defaultSeeds, serializePolicyExperiments } from '../src/experiment-export.js';
+import { buildPolicyExperiments, defaultSeeds, policyScenarios, serializePolicyExperiments } from '../src/experiment-export.js';
 
 test('policy experiment export has one baseline and one coordinated run per scenario and seed', () => {
   const document = buildPolicyExperiments([0, 73]);
-  const scenarios = scenarioOptions().map(scenario => scenario.id);
+  const scenarios = policyScenarios;
+  const known = scenarioOptions().map(scenario => scenario.id);
+  assert.ok(scenarios.every(id => known.includes(id)));
   assert.equal(document.origin, 'simulated');
   assert.equal(document.runs.length, scenarios.length * 2 * 2);
   assert.equal(document.timeline.length, document.runs.length * duration);

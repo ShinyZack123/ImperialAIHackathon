@@ -2,6 +2,8 @@ import { scenarioOptions, getSnapshot, inspectEntity, runComparison, traceIncide
 import { invokeMcpTool, mcpToolCatalog } from './tool-catalog.js';
 import { escapeHtml, fetchFlagCatalog, fetchFlagAnalysis, fetchFlagEntity, worstState, flagStateNames, seriesKey, sortSeries, isoSeconds, shortMetric, compactValue, drawFlagChart } from './flagging.js';
 import { mountDatabricksView } from './databricks.js';
+import { getActionGate } from './operations.js';
+import { mountOperationsView } from './operations-view.js';
 
 const byId = id => document.getElementById(id);
 const databricksView = mountDatabricksView(byId('databricks'), renderDatabricksSource);
@@ -18,6 +20,7 @@ const statusNames = {
   nominal: 'Nominal', degraded: 'Degraded', derated: 'Derated', unknown: 'Unknown',
   critical: 'Critical', warning: 'Warning',
   training: 'Training', inference: 'Inference', waiting: 'Waiting on fabric', idle: 'Idle',
+  drained: 'Drained', failed: 'Failed', stalled: 'Job stopped', throttled: 'Throttled',
 };
 const relationNames = {
   fabric: 'Fabric', cooling: 'Cooling', power: 'Power', contains: 'Contains',
@@ -73,10 +76,15 @@ const profiles = {
   powerKw: { name: 'Site power draw', label: 'Kilowatts', short: 'Power' },
 };
 
+// Once an operator approves an action, every view reads the gate-operated twin, not a private copy.
+let operatedControl;
 function refreshModel() {
-  snapshot = getSnapshot({ scenario: state.scenario, tick: state.tick, policy: state.policy });
+  const gate = getActionGate(state.scenario);
+  operatedControl = gate.hasControl() ? gate.controlAt(state.tick) : undefined;
+  if (operatedControl) state.policy = 'baseline';
+  snapshot = getSnapshot({ scenario: state.scenario, tick: state.tick, policy: state.policy, control: operatedControl });
   benchmark = runComparison(state.scenario);
-  incident = traceIncident({ scenario: state.scenario, tick: state.tick });
+  incident = traceIncident({ scenario: state.scenario, tick: state.tick, control: operatedControl });
 }
 
 function canvasFrame(canvas) {
@@ -169,8 +177,22 @@ function renderMetrics() {
     </div>`).join('');
 }
 
+// With approved actions, plot the gate-operated trace so the overview matches every other view.
+let operatedTrace = { key: null, timeline: null };
+function operatedTimeline() {
+  const gate = getActionGate(state.scenario);
+  const key = `${state.scenario}/${gate.state().ledger.length}`;
+  if (operatedTrace.key !== key) {
+    operatedTrace = { key, timeline: Array.from({ length: duration }, (_, tick) => {
+      const { metrics } = gate.snapshotAt(tick);
+      return { samplesPerSecond: metrics.training.value, p95Ms: metrics.p95.value, powerKw: metrics.draw.value };
+    }) };
+  }
+  return operatedTrace.timeline;
+}
+
 function drawSparklines() {
-  const timeline = flagMode() ? analysis?.steps : benchmark[state.policy]?.timeline;
+  const timeline = flagMode() ? analysis?.steps : operatedControl ? operatedTimeline() : benchmark[state.policy]?.timeline;
   if (!timeline) return;
   for (const canvas of document.querySelectorAll('.sparkline')) {
     const rect = canvasFrame(canvas);
@@ -491,6 +513,11 @@ function selectionRows(info) {
     ['Workload', reading.job ? relatedLabel(reading.job) : 'Unassigned', `Slot ${entity.slot} · ${relatedLabel(entity.rackId)}`],
     ['GPU utilization', metricText(reading.utilization), 'Simulated device counter'],
     ['Temperature', metricText(reading.temperature), reading.temperature.sampledAt ? `Last sample ${clock(reading.temperature.sampledAt)} UTC` : 'No temperature sample'],
+    ['SM clock', metricText(reading.health.smClock), reading.health.throttleReasons?.length ? reading.health.throttleReasons.join(', ').replaceAll('_', ' ') : `${number(reading.health.nominalSmClockMhz)} MHz nominal`],
+    ['ECC errors', reading.health.eccUncorrected.quality === 'fresh' ? `${number(reading.health.eccCorrected.value)} / ${number(reading.health.eccUncorrected.value)}` : qualityName(reading.health.eccUncorrected.quality),
+      `Corrected / uncorrectable${reading.health.remapPending ? ' · row remap pending' : ''}`],
+    ...(reading.health.xid?.length ? [['XID events', reading.health.xid.map(event => event.code).join(', '), 'See Operations · GPU health triage']] : []),
+    ...(reading.cordoned ? [['Scheduler', 'Cordoned', 'No new work is placed here']] : []),
   ];
   if (entity.type === 'rack') return [
     ['Rack power', metricText(reading.draw, 1), 'Includes cooling-independent rack base draw'],
@@ -533,7 +560,7 @@ function selectionRows(info) {
 function selectionInspector() {
   if (!state.selection) return `<div class="inspector-content"><h2 class="inspector-title" id="inspector-title">Inspect the map</h2>
     <p class="inspector-copy">Select a rack, GPU, or connection to see its telemetry and dependencies.</p></div>`;
-  const info = inspectEntity({ entityId: state.selection, scenario: state.scenario, tick: state.tick, policy: state.policy });
+  const info = inspectEntity({ entityId: state.selection, scenario: state.scenario, tick: state.tick, policy: state.policy, control: operatedControl });
   const { entity, reading, related } = info;
   const status = entity.type === 'link' ? reading.errors.value > 0 ? 'degraded' : 'nominal'
     : reading?.status ?? 'nominal';
@@ -779,16 +806,17 @@ function renderReplay() {
   range.setAttribute('aria-valuetext', `${clock(snapshot.timestamp)} UTC, minute ${state.tick + 1} of ${duration}`);
   byId('replay-timestamp').textContent = `${clock(snapshot.timestamp)} UTC · ${state.tick + 1}/${duration}`;
   const policy = byId('policy');
-  policy.hidden = !state.compared.has(state.scenario) || !benchmark.plan;
+  policy.hidden = !state.compared.has(state.scenario) || !benchmark.plan || Boolean(operatedControl);
   policy.setAttribute('aria-pressed', String(state.policy === 'coordinated'));
   policy.textContent = state.policy === 'coordinated' ? 'View baseline layout' : 'View coordinated layout';
-  byId('topology-summary').textContent = `4 racks · 32 GPUs · ${state.policy === 'coordinated' ? 'Coordinated' : 'Baseline'}`;
+  byId('topology-summary').textContent = `4 racks · 32 GPUs · ${operatedControl ? 'Operated via action gate' : state.policy === 'coordinated' ? 'Coordinated' : 'Baseline'}`;
   byId('play').setAttribute('aria-label', state.timer ? 'Pause telemetry replay' : 'Play telemetry replay');
   byId('play').firstElementChild.classList.toggle('playing', Boolean(state.timer));
 }
 
 const legends = {
-  twin: [['training', 'Training'], ['inference', 'Inference'], ['waiting', 'Waiting on fabric'], ['idle', 'Idle'], ['unknown', 'Unknown']],
+  twin: [['training', 'Training'], ['inference', 'Inference'], ['waiting', 'Waiting on fabric'], ['throttled', 'Throttled'],
+    ['failed', 'Failed / job stopped'], ['drained', 'Drained'], ['idle', 'Idle'], ['unknown', 'Unknown']],
   flag: [['training', 'Training'], ['inference', 'Inference'], ['idle', 'Idle'], ['flag-critical', 'Flagged critical'],
     ['flag-warning', 'Flagged warning'], ['flag-impacted', 'Blast radius'], ['unknown', 'Unknown / no data']],
 };
@@ -947,17 +975,48 @@ function stopReplay() {
 
 function updateMinute(minute) {
   state.tick = minute;
+  // Moving forward advances the gate clock, which executes scheduled actions and runs verification.
+  if (!flagMode()) getActionGate(state.scenario).advance(minute);
   refreshModel();
-  renderOverview();
+  if (state.view === 'operations') renderOperations();
+  else renderOverview();
+}
+
+const operationsView = mountOperationsView(byId('operations'), {
+  context: () => ({ scenario: state.scenario, tick: state.tick, snapshot, control: operatedControl }),
+  setTick: minute => updateMinute(minute),
+  changed: (request = {}) => {
+    refreshModel();
+    if (request.select) {
+      state.inspector = 'selection';
+      state.selection = request.select;
+      openView('overview');
+      return;
+    }
+    renderOperations();
+  },
+});
+
+function renderOperations() {
+  if (flagMode()) {
+    byId('operations').innerHTML = '<p class="db-status">Operations runs on the twin simulation. Choose a twin scenario in Incident scenario.</p>';
+    return;
+  }
+  const focused = document.activeElement?.closest?.('#operations') ? document.activeElement : null;
+  const key = focused && (focused.id || [...Object.entries(focused.dataset)].map(([name, value]) => `[data-${name.replace(/[A-Z]/g, c => `-${c.toLowerCase()}`)}="${CSS.escape(value)}"]`).join(''));
+  operationsView.render();
+  if (key) byId('operations').querySelector(focused.id ? `#${CSS.escape(focused.id)}` : key)?.focus({ preventScroll: true });
 }
 
 function changeView() {
-  const view = location.hash === '#databricks' ? 'databricks' : location.hash === '#experiments' ? 'experiments' : 'overview';
+  const view = location.hash === '#databricks' ? 'databricks' : location.hash === '#experiments' ? 'experiments'
+    : location.hash === '#operations' ? 'operations' : 'overview';
   state.view = view;
   stopReplay();
   byId('overview').hidden = view !== 'overview';
   byId('experiments').hidden = view !== 'experiments';
   byId('databricks').hidden = view !== 'databricks';
+  byId('operations').hidden = view !== 'operations';
   document.querySelector('.scenario-control').hidden = view === 'databricks';
   byId('open-tools').hidden = view === 'databricks';
   if (view === 'databricks') renderDatabricksSource();
@@ -967,8 +1026,10 @@ function changeView() {
     byId('footer-meta').textContent = `Twin schema ${schemaVersion} · Seed ${defaultSeed}`;
   }
   const title = byId('page-title');
-  title.textContent = view === 'databricks' ? 'GPU evidence workspace' : view === 'overview' ? 'Infrastructure overview' : 'Policy experiments';
-  byId('page-summary').textContent = view === 'databricks' ? 'Explore stored GPU readings and investigate findings from the team’s deterministic detector.' : view === 'overview'
+  title.textContent = view === 'databricks' ? 'GPU evidence workspace' : view === 'overview' ? 'Infrastructure overview'
+    : view === 'operations' ? 'Operations' : 'Policy experiments';
+  byId('page-summary').textContent = view === 'databricks' ? 'Explore stored GPU readings and investigate findings from the team’s deterministic detector.'
+    : view === 'operations' ? 'Review proposed changes, approve them, and check they worked.' : view === 'overview'
     ? flagMode() ? 'Replay GPU and facility telemetry through the deterministic flagger. Click any GPU to read its log.'
       : 'Trace workload performance across the compute, network and facility layers.'
     : 'Replay an incident under two scheduling policies and compare useful work, latency and energy.';
@@ -981,7 +1042,13 @@ function changeView() {
   if (view === 'experiments') {
     state.compared.add(state.scenario);
     renderExperiment();
-  } else if (view === 'overview') renderOverview();
+  } else if (view === 'operations') {
+    refreshModel();
+    renderOperations();
+  } else if (view === 'overview') {
+    refreshModel();
+    renderOverview();
+  }
   window.scrollTo(0, 0);
 }
 
@@ -1165,7 +1232,8 @@ scenarioSelect.addEventListener('change', () => {
   state.scenario = selected.id;
   state.layer = selected.layer;
   state.policy = 'baseline';
-  state.chartMetric = { network: 'samplesPerSecond', demand: 'p95Ms', power: 'powerKw', thermal: 'p95Ms' }[state.scenario];
+  state.chartMetric = { network: 'samplesPerSecond', demand: 'p95Ms', power: 'powerKw', thermal: 'p95Ms' }[state.scenario] ?? 'samplesPerSecond';
+  operationsView.resetTarget();
   state.inspector = 'incident';
   state.selection = null;
   state.tick = 0;

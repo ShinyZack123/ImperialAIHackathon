@@ -27,6 +27,8 @@ const paths = new Map([
   ['/flagging.js', ['flagging.js', 'text/javascript']],
   ['/databricks.js', ['databricks.js', 'text/javascript']],
   ['/twin.js', ['twin.js', 'text/javascript']],
+  ['/operations.js', ['operations.js', 'text/javascript']],
+  ['/operations-view.js', ['operations-view.js', 'text/javascript']],
   ['/tool-catalog.js', ['tool-catalog.js', 'text/javascript']],
   ['/ai-infrastructure-optimisation-platform.html', ['ai-infrastructure-optimisation-platform.html', 'text/html']],
   ['/Crosslayer.html', ['Crosslayer.html', 'text/html']],
