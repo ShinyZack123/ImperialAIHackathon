@@ -6,6 +6,7 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "dev": "npm run build && node scripts/preview.mjs",
+    "export:experiments": "node scripts/export-policy-experiments.mjs",
     "test": "node --test"
   },
   "engines": {
