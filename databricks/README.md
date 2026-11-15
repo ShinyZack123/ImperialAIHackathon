@@ -91,6 +91,10 @@ These six rules are comparison fixtures, not official escalations. They store ac
 
 The notebook supports Databricks Job parameters `catalog`, `schema`, `run_id`, `as_of_ts`. A repeated fixed cursor is only a repeatable replay; a simulator or collector must advance it to create continuous monitoring. See [CONNECT.md](CONNECT.md) for the demo flow and team handoff.
 
+## Lakehouse control plane
+
+`python -m backend.lakehouse` builds a governed workbench on top of the evidence tables: incident and GPU-state timelines parsed from the official detector's saved assessments, a topology graph, eight cursor-bound agent tools as Unity Catalog SQL functions, an evaluation schema with the scenario answer key and a detection scorecard, and a ledger of the twin's scheduling decisions and outcomes. Notebook 03 reads all of it. See [lakehouse/README.md](lakehouse/README.md).
+
 ## What the demo does and does not establish
 
 The four fixtures are a shared cooling problem, a healthy workload increase, missing GPU telemetry and an individual GPU error. Their recovery is **scheduled in prerecorded data**, not caused by an agent action. These fixtures can test diagnosis and recovery detection. To claim autonomous mitigation, a later live simulator must change state in response to the agent's action and report whether it actually helped.
