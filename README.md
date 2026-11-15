@@ -14,7 +14,7 @@ GPU clusters are run by separate tools for the scheduler, the GPUs, the network 
 |---|---|---|
 | Digital twin | 32 GPUs in four racks, with fabric, power and cooling dependencies, training and inference jobs, and four incident scenarios | [`src/twin.js`](src/twin.js) |
 | Deterministic detector | Validates, de-spikes and runs 8 statistical detectors, then context gates and graph correlation. Sends one plain-English message per root cause | [`flagging/`](flagging/README.md) |
-| Databricks lakehouse | Evidence in Delta, the detector's audit trail, incident timelines, a topology graph, cursor-bound agent tools as Unity Catalog functions, an evaluation scorecard and a ledger of scheduling decisions | [`databricks/`](databricks/README.md) |
+| Databricks lakehouse | Evidence in Delta, the detector running as a scheduled serverless job, its audit trail, incident timelines, a topology graph, cursor-bound agent tools as Unity Catalog functions, an evaluation scorecard and a ledger of scheduling decisions | [`databricks/`](databricks/README.md) |
 | Coordinated optimiser | Searches rack placement, serving capacity and power caps together. Every candidate must pass six hard constraints at every simulated minute | [`src/twin.js`](src/twin.js) |
 | Operator console | Infrastructure map, incident inspector, policy experiments and the Databricks evidence workspace | [`public/`](public/) |
 | MCP server | The twin as four read-only tools any agent can call | [`src/mcp.js`](src/mcp.js) |
@@ -37,11 +37,11 @@ All figures come from synthetic data and simulation, not real hardware.
 
 - **Detector:** all 23 hand-labelled scenarios correct (12 faults flagged with the right root cause, 11 benign near-misses left quiet), and 340 of 340 runs correct on freshly generated scenarios over 10 noise seeds. See [FLAGGER_METHODS.md](flagging/FLAGGER_METHODS.md).
 - **Optimiser, mean of 11 seeded replays per scenario:** network degradation +86% training throughput at the same energy; inference demand surge from 0 to 24 of 24 minutes inside the 160 ms P95 target; power-budget cut +3% throughput with 2.5% less energy; thermal constraint 13 more minutes inside the latency target. The coordinated plan sees the whole 24-minute trace and is applied at minute 0 without a migration cost.
-- **Databricks:** the official detector assessed every 30-second point of the four Databricks replays: 122 assessments over about 2.5 million metric records, saved in Delta, raising 6 distinct incidents. Graded against the answer key, all 4 replays are correct. The isolated GPU error was named at onset, the telemetry gap after 30 seconds and the shared cooling zone after 330 seconds; the healthy load increase raised nothing. These are four scenarios written by the same team as the detector. See [the lakehouse guide](databricks/lakehouse/README.md).
+- **Databricks:** the official detector runs as a Databricks job on serverless compute and has assessed every 15-second point of the four Databricks replays: 240 assessments over about 4.9 million metric records, saved in Delta, raising 6 distinct incidents. Graded against the answer key, all 4 replays are correct. The isolated GPU error was named at onset, the telemetry gap after 15 seconds and the shared cooling zone after 315 seconds; the healthy load increase raised nothing. These are four scenarios written by the same team as the detector. See [the lakehouse guide](databricks/lakehouse/README.md).
 
 ## APIs, models and datasets
 
-- **Databricks Free Edition:** Unity Catalog, Delta tables, a SQL warehouse through the Statement Execution API, SQL table functions, serverless notebooks and jobs, the Databricks SDK for Python and the Databricks CLI (OAuth sign-in).
+- **Databricks Free Edition:** Unity Catalog, Delta tables, a SQL warehouse through the Statement Execution API, SQL table functions, serverless notebooks, a scheduled serverless job, the Databricks SDK for Python and the Databricks CLI (OAuth sign-in).
 - **Figma:** the operator console was designed in Figma.
 - **Datasets:** synthetic only. [`databricks/generate.py`](databricks/generate.py) creates 24 GPUs and four 15-minute replays; [`flagging/generate.py`](flagging/generate.py) and [`flagging/gen.py`](flagging/gen.py) create the 32-GPU hall and its 23 labelled and 12 showcase scenarios; [`src/twin.js`](src/twin.js) is a seeded simulator.
 - **Libraries:** FastAPI, Uvicorn, python-dotenv and httpx in the Databricks backend. The detector uses the Python standard library; the console and MCP server use Node.js with no dependencies.

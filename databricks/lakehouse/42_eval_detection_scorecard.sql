@@ -1,6 +1,6 @@
 -- Scores the official detector against the answer key, entirely from persisted assessments.
 CREATE OR REPLACE VIEW ${eval}.detection_scorecard
-COMMENT 'Per replay: did the official detector flag when it should, did an incident name the expected root, and how long after onset each happened. Latency includes the detector''s 300-second persistence requirement and the 30-second spacing of assessed cursors.'
+COMMENT 'Per replay: did the official detector flag when it should, did an incident name the expected root, and how long after onset each happened. Latency includes the detector''s 300-second persistence requirement and the spacing of assessed cursors.'
 AS
 WITH coverage AS (
   SELECT run_id, COUNT(*) AS cursors_assessed FROM ${evidence}.detector_snapshots GROUP BY run_id

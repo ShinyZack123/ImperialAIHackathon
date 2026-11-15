@@ -93,7 +93,7 @@ The notebook supports Databricks Job parameters `catalog`, `schema`, `run_id`, `
 
 ## Lakehouse control plane
 
-`python -m backend.lakehouse` builds a governed workbench on top of the evidence tables: incident and GPU-state timelines parsed from the official detector's saved assessments, a topology graph, eight cursor-bound agent tools as Unity Catalog SQL functions, an evaluation schema with the scenario answer key and a detection scorecard, and a ledger of the twin's scheduling decisions and outcomes. Notebook 03 reads all of it. See [lakehouse/README.md](lakehouse/README.md).
+`python -m backend.detector_job deploy` runs the official detector as a scheduled Databricks job on serverless compute (notebook 04), saving to the same `official_detector_results` table under the same detector version. `python -m backend.lakehouse` builds a governed workbench on top of the evidence tables: incident and GPU-state timelines parsed from the official detector's saved assessments, a topology graph, eight cursor-bound agent tools as Unity Catalog SQL functions, an evaluation schema with the scenario answer key and a detection scorecard, and a ledger of the twin's scheduling decisions and outcomes. Notebook 03 reads all of it. See [lakehouse/README.md](lakehouse/README.md).
 
 ## What the demo does and does not establish
 
