@@ -4,6 +4,8 @@ An autonomous operations layer for AI datacenters. It treats compute, network, p
 
 Built at Imperial AI Hack 2026, Autonomous Agents track. All data is synthetic.
 
+**Try it:** with Node.js 22.18+ and Python 3.9+, run `npm run dev` from the repository root and open http://127.0.0.1:4397. No accounts, keys or installs are needed. See [Run after cloning](#run-after-cloning).
+
 ## The problem
 
 GPU clusters are run by separate tools for the scheduler, the GPUs, the network fabric, power and cooling. A slow training job can come from a degraded uplink, a failing cooling loop, a power cap or one straggling GPU, and each tool sees only its own layer. Operators either drown in alerts or fix one layer at the expense of another, and 100% GPU utilisation is not the same as useful work.
@@ -45,6 +47,27 @@ All figures come from synthetic data and simulation, not real hardware.
 - **Figma:** the operator console was designed in Figma.
 - **Datasets:** synthetic only. [`databricks/generate.py`](databricks/generate.py) creates 24 GPUs and four 15-minute replays; [`flagging/generate.py`](flagging/generate.py) and [`flagging/gen.py`](flagging/gen.py) create the 32-GPU hall and its 23 labelled and 12 showcase scenarios; [`src/twin.js`](src/twin.js) is a seeded simulator.
 - **Libraries:** FastAPI, Uvicorn, python-dotenv and httpx in the Databricks backend. The detector uses the Python standard library; the console and MCP server use Node.js with no dependencies.
+
+## Repository layout
+
+| Path | Contents |
+|---|---|
+| [`public/`](public/) | Operator console: HTML, CSS and browser modules |
+| [`src/`](src/) | Digital twin and optimiser, MCP server and tool catalogue, twin experiment export |
+| [`scripts/`](scripts/) | Local server, build, Databricks proxy and replay bridges |
+| [`flagging/`](flagging/README.md) | Deterministic detector, scenario generator, 23 labelled scenarios and their tests |
+| [`databricks/`](databricks/README.md) | Databricks backend and API, SQL, notebooks 01–04, lakehouse objects, detector job, saved replay and tests |
+| [`test/`](test/) | Node tests for the twin, MCP server, detector bridge, Databricks proxy, console data handling and experiment export |
+| [`AGENTS.md`](AGENTS.md) | Engineering and safety principles the team built to |
+
+## Tests
+
+```sh
+npm test                                                   # Node: twin, MCP, Databricks proxy and UI data handling
+cd flagging && python3 test_scenarios.py                   # detector: 23 labelled scenarios
+cd flagging && python3 test_incidents.py                   # detector: incident grouping and identity
+cd databricks && .venv/bin/python -m unittest discover -s tests   # Databricks backend, lakehouse and job (needs requirements-backend.txt)
+```
 
 ## Run after cloning
 

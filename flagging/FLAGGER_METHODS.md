@@ -2,9 +2,9 @@
 
 `flagger.py` takes the topology and a window of telemetry. It returns incidents, each with a plain-text `message` for the low-level agent. It is deterministic: the same input always gives the same output, with no ML model and no randomness.
 
-**Result:** all 23 labelled scenarios are correct (12/12 faults flagged, 0/11 benign flagged), and each names the right root-cause entity. On 34 fresh generated scenarios (new seeds, entities, timings and magnitudes) it is 340/340 over 10 noise seeds, after three rule fixes found by that check (see `datacentre-scenarios/WORKLOG.md`).
+**Result:** all 23 labelled scenarios are correct (12/12 faults flagged, 0/11 benign flagged), and each names the right root-cause entity. On 34 fresh generated scenarios (new seeds, entities, timings and magnitudes) it is 340/340 over 10 noise seeds, after three rule fixes found by that check (see [WORKLOG.md](WORKLOG.md)).
 
-Run from `datacentre-scenarios/`:
+Run from `flagging/`:
 - `python3 build_context.py` builds `topology.enriched.json` (limits, measured baselines, interventions). The flagger reads this file.
 - `python3 test_scenarios.py` runs one test per labelled scenario and writes the agent messages to `flagger_results.json`.
 - `python3 generalise.py` runs the fresh-scenario check. `python3 demo.py` replays a fault and its benign twin side by side.

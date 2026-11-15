@@ -1,6 +1,6 @@
 # GPU operations: Databricks integration
 
-This module connects the hackathon's Databricks evidence tables to the Crosslayer website and the team's deterministic detector. It contains the evidence notebook, bounded SQL queries, connector adapter, local HTTP API and persisted official results.
+This module connects the hackathon's Databricks evidence tables to the operator console and the team's deterministic detector. It contains the evidence notebook, bounded SQL queries, connector adapter, local HTTP API and persisted official results.
 
 The fixture contains synthetic data for 24 GPUs (8 each labelled NVIDIA, AMD and Intel), three racks and four independent replays. All hardware models and limits are illustrative. It does not connect to physical GPUs or establish cross-vendor hardware compatibility.
 
@@ -40,7 +40,7 @@ If an older imported version reports `[UNSUPPORTED_OPERATION] errorifexists is n
 
 - **Figma / frontend:** the implemented Databricks tab in `../public/databricks.js` uses the official snapshot and GPU history endpoints. `contracts/data-contract.md` describes those responses. `examples/dashboard.json` is an older static query fixture, not an official detector result or live response.
 - **Deterministic detector:** `backend/flagging_adapter.py` supplies the existing `flagging.flagger.flag_window` with validated inventory, metrics and workload context. Changes to the detector must preserve units, evidence cutoffs and missing-data semantics.
-- **Fine-tuning / diagnostic model:** `examples/model_adapter.py` exposes cursor-bound evidence methods. `.health_assessments()` runs the official service and saves its output; `.comparison_baseline()` is explicitly for testing only. Calling the adapter does not run a diagnostic LLM.
+- **Fine-tuning / diagnostic model:** the eight `tool_*` Unity Catalog functions in [lakehouse/](lakehouse/README.md) are the agent's tools: each takes the replay time and cannot return later samples. In Python, `examples/model_adapter.py` exposes the same cursor-bound evidence. To compare a model's scheduling decisions with the heuristic and the optimiser, add its rows to `policy_runs` with `policy_kind` `llm_base` or `llm_finetuned`; `policy_uplift` pairs them by scenario and seed. `.comparison_baseline()` is for testing only.
 - **You:** keep the shared tables, warehouse access and connected backend working. Each connected backend operator needs their own server-side login plus permission to read evidence and create/modify the official result table. Teammates using the saved replay need none of those credentials. Never send an API token to the browser or put one in Git.
 
 The investigating model should receive retrieved observations, never the scenario name or correct answer. Ground-truth labels stay in the evaluation workflow.
@@ -101,7 +101,7 @@ The four fixtures are a shared cooling problem, a healthy workload increase, mis
 
 The connected path was validated against Databricks on 2026-11-14: the selected 24-GPU replay produced an official `zone-b` incident, and its saved result matched the API response on readback. See [validation details](CONNECT.md#validation-boundaries) for the exact run/cursor and test coverage. This validates a synthetic replay, not real hardware fault detection.
 
-MLflow tracing, a continuously running monitor, diagnostic model training/inference and real vendor adapters remain subsequent integrations. The local server has no application-user authorization and is not a public deployment.
+MLflow tracing, live telemetry ingestion, diagnostic model inference inside this backend and real vendor adapters remain subsequent integrations. The detector job is scheduled but paused, and the replays are a fixed recording. The local server has no application-user authorization and is not a public deployment.
 
 ## Official references
 

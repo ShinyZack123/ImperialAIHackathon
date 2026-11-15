@@ -1,5 +1,7 @@
 # Saved Databricks evidence
 
+`twin_policy_experiments.json` holds the digital twin's baseline and coordinated results for four scenarios and 11 seeds; `npm run export:experiments` regenerates it and `python -m backend.lakehouse experiments` loads it into Databricks.
+
 `evidence.json.gz` contains the four synthetic replays read from the team's Databricks tables on the UTC date in `manifest.json`. It contains 24 inventory rows, 17,280 GPU readings, 17,280 workload readings and 2,160 cooling readings. The manifest records replay UUIDs, time bounds, counts, and SHA-256 hashes of both the compressed archive and its uncompressed JSON.
 
 There are no workspace URLs, credentials, scenario answer keys or cached detector assessments in this bundle. The local replay bridge runs the repository's current `flagging.flagger.flag_window` for each requested cursor. Readings retain native IDs, timestamps, units and nulls. The website labels this as a saved export and never claims that local assessments were saved back to Databricks.
